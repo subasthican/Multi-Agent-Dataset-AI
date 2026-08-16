@@ -23,12 +23,22 @@ Red Team member testing your own team's system — not writing new features.
 | 3 | Responsible AI & Bias Assessment | Hallucinations, bias, toxic responses, fairness, transparency, explainability, harmful content generation | Responsible AI compliance and vulnerability assessment |
 | 4 | Information Retrieval & Security Assessment | Retrieval accuracy, retrieval manipulation, hallucination due to retrieval, source reliability, authentication, authorization, API security, communication protocol security | Technical security assessment of the IR pipeline |
 
-> **Open question:** the brief defines 4 specializations ("Student 1–4"), but
-> `docs/members.md` currently has 3 confirmed members (you, Gowsika, Kageepan).
-> Either there's a 4th group member not yet reflected in this repo's docs, or
-> only 3 of these 4 specializations apply to your group — confirm with your
-> lecturer/team which specialization **you specifically** were assigned, since
-> that determines which system component you test and write about.
+### Proposed mapping (pending lecturer/team confirmation)
+
+The brief defines 4 specializations, but `docs/members.md` has 3 confirmed
+members. Mapping proposed here follows who actually built and understands each
+part of the system — swap freely once the lecturer assigns for real, or if
+there's a 4th member not yet reflected in this repo:
+
+| Member | Specialization | Why |
+|---|---|---|
+| **Member 1 (you)** | Prompt Injection & Jailbreak Analysis | You built the NLP Agent and the Gemini prompt/LLM integration (`backend/agents/nlp_agent/`, `backend/llm/`) — you know exactly what the prompt does and doesn't guard against. |
+| **Member 2 (Gowsika)** | Privacy & Data Leakage Assessment | She owns the auth system (`backend/security/`) — JWT, password hashing, the reset-token flow — the exact surface this specialization tests. |
+| **Member 3 (Kageepan)** | Responsible AI & Bias Assessment | Closest fit to the frontend's transparency/explanation UI (`ExplanationCard`) and the system's Responsible AI story generally, given Information Retrieval & Security overlaps heavily with Member 1's Discovery/Kaggle work. |
+| *(unassigned)* | Information Retrieval & Security Assessment | No 4th member confirmed yet. If your group is actually 4 people, this is the natural specialization for whoever isn't listed in `docs/members.md` yet — otherwise someone doubles up, or confirm with the lecturer whether groups of 3 only get 3 specializations. |
+
+This is my proposal based on system ownership, not a lecturer assignment —
+confirm the real assignment before committing significant testing time to it.
 
 ## Testing requirements
 
