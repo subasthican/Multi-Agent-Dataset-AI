@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
 import type { AgentStage } from "./AgentFlow";
 
 const MESSAGES: Record<AgentStage, string> = {
@@ -13,11 +12,7 @@ const MESSAGES: Record<AgentStage, string> = {
 };
 
 export default function LoadingAnimation({ stage }: { stage: AgentStage }) {
-  const [message, setMessage] = useState(MESSAGES[stage]);
-
-  useEffect(() => {
-    setMessage(MESSAGES[stage]);
-  }, [stage]);
+  const message = MESSAGES[stage];
 
   return (
     <div className="h-5 text-center text-xs text-white/40">
