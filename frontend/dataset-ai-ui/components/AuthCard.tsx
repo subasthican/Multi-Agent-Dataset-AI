@@ -47,7 +47,7 @@ export function AuthInput({
       <span className="text-white/60">{label}</span>
       <input
         {...props}
-        className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-white/30 focus:border-nebula-cyan/50 focus:outline-none"
+        className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-white/30 transition-shadow duration-200 focus:border-nebula-cyan/50 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.15)] focus:outline-none"
       />
     </label>
   );
@@ -62,7 +62,7 @@ export function AuthButton({
     <button
       {...props}
       disabled={props.disabled || loading}
-      className="mt-2 rounded-xl bg-gradient-to-r from-nebula-cyan to-nebula-purple px-4 py-2.5 text-sm font-medium text-black transition-opacity disabled:opacity-40"
+      className={`btn-primary mt-2 rounded-xl px-4 py-2.5 text-sm ${props.className ?? ""}`}
     >
       {loading ? "Please wait..." : children}
     </button>

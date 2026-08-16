@@ -81,11 +81,80 @@ body {
 }
 
 /* Keyboard users need a visible focus target; the default ring is invisible
-   against the dark theme. */
+   against the dark theme. box-shadow (not outline) so the ring follows each
+   element's own border-radius instead of drawing a hard rectangle over
+   rounded/pill shapes. */
 :focus-visible {
-  outline: 2px solid var(--nebula-cyan);
-  outline-offset: 2px;
-  border-radius: 0.5rem;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(34, 211, 238, 0.7);
+}
+
+/* Text inputs define their own focus treatment (border colour / the parent
+   search bar's glow) so they opt out of the generic ring above — otherwise
+   a plain rectangular ring shows through around the rounded pill/field. */
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: none;
+}
+
+/* Premium button system — a soft top highlight plus a coloured glow gives
+   real depth instead of a flat gradient fill, with a gentle lift on hover. */
+.btn-primary {
+  background: linear-gradient(135deg, var(--nebula-cyan), var(--nebula-purple));
+  color: #06060f;
+  font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 24px -8px rgba(124, 58, 237, 0.6);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 30px -6px rgba(124, 58, 237, 0.8);
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: white;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 @media (prefers-reduced-motion: reduce) {
