@@ -1,6 +1,8 @@
+import os
 from typing import List
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ValidationError
 
 from agents.dataset_collection_agent.agent import collect_external_datasets
@@ -12,6 +14,16 @@ from agents.nlp_agent.agent import analyze_query
 from agents.nlp_agent.models import QueryAnalysisResult
 
 app = FastAPI(title="Dataset AI Agent System")
+
+DEFAULT_ALLOWED_ORIGINS = "http://localhost:3000,http://127.0.0.1:3000"
+allowed_origins = os.getenv("ALLOWED_ORIGINS", DEFAULT_ALLOWED_ORIGINS).split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DEFAULT_RESULT_COUNT = 3
 
