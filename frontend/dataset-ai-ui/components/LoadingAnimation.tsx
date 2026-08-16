@@ -1,5 +1,37 @@
-// Member 3 — TODO: loading state shown while an agent request is in flight.
+"use client";
 
-export default function LoadingAnimation() {
-  return null;
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import type { AgentStage } from "./AgentFlow";
+
+const MESSAGES: Record<AgentStage, string> = {
+  idle: "",
+  nlp: "Understanding your request...",
+  discovery: "Searching the dataset universe...",
+  evaluation: "Ranking and explaining results...",
+  done: "Done.",
+};
+
+export default function LoadingAnimation({ stage }: { stage: AgentStage }) {
+  const [message, setMessage] = useState(MESSAGES[stage]);
+
+  useEffect(() => {
+    setMessage(MESSAGES[stage]);
+  }, [stage]);
+
+  return (
+    <div className="h-5 text-center text-xs text-white/40">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={message}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          {message}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
 }
