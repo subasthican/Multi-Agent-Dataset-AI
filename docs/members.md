@@ -3,6 +3,13 @@
 Source: `Group Assignment Brief.pdf` (IT3041 – Information Retrieval and Web Analytics)
 and `IRWA CHATGPT FULL REPORT.docx`.
 
+> **Also see [`docs/individual-assignment.md`](individual-assignment.md)** — a
+> *separate, individually graded* 100-mark assignment (80 report + 20 viva)
+> where each member independently red-teams this same system from an assigned
+> angle (prompt injection, privacy/data leakage, Responsible AI/bias, or IR
+> security) and submits their own vulnerability assessment report. Everyone on
+> the team needs to read that file — it's graded per-person, not per-group.
+
 ## Project
 
 Multi-agent AI system for natural-language dataset discovery. User describes a need in
