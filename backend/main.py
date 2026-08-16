@@ -15,6 +15,11 @@ app = FastAPI(title="Dataset AI Agent System")
 
 DEFAULT_RESULT_COUNT = 3
 
+# Terms too generic to help either search, and that flood Kaggle's search with
+# noise now that it's not just feeding an embedding.
+GENERIC_KEYWORDS = {"dataset", "datasets", "data", "machine", "learning", "predicting", "prediction"}
+MAX_KAGGLE_KEYWORDS = 2
+
 
 class DiscoverResponse(BaseModel):
     understanding: QueryAnalysisResult
@@ -22,14 +27,32 @@ class DiscoverResponse(BaseModel):
 
 
 def _discovery_query(understanding: QueryAnalysisResult) -> str:
+    """Query for the FAISS-embedded catalog search — embeddings handle a
+    longer, denser bag of terms fine."""
     return " ".join([understanding.domain, understanding.task, *understanding.keywords])
 
 
-def _candidate_datasets(query: str, k: int) -> List[DatasetMatch]:
+def _kaggle_query(understanding: QueryAnalysisResult) -> str:
+    """Query for Kaggle's own search endpoint, which — unlike FAISS similarity
+    — returns zero results for long multi-keyword strings, so this stays to a
+    short domain + a couple of meaningful keywords."""
+    meaningful_keywords = [k for k in understanding.keywords if k.lower() not in GENERIC_KEYWORDS]
+    terms = [understanding.domain, *meaningful_keywords[:MAX_KAGGLE_KEYWORDS]]
+
+    deduped = []
+    for term in terms:
+        if term and term not in deduped:
+            deduped.append(term)
+    return " ".join(deduped)
+
+
+def _candidate_datasets(understanding: QueryAnalysisResult, k: int) -> List[DatasetMatch]:
     """Curated catalog matches plus any live Kaggle matches (best-effort;
     empty when KAGGLE_API_TOKEN isn't configured)."""
-    catalog_matches = search_datasets(query, k=k).matches
-    external_matches = [DatasetMatch(**item) for item in collect_external_datasets(query, limit=k)]
+    catalog_matches = search_datasets(_discovery_query(understanding), k=k).matches
+    external_matches = [
+        DatasetMatch(**item) for item in collect_external_datasets(_kaggle_query(understanding), limit=k)
+    ]
     return catalog_matches + external_matches
 
 
@@ -63,7 +86,7 @@ def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=exc.errors()) from exc
 
-    candidates = _candidate_datasets(_discovery_query(understanding), k)
+    candidates = _candidate_datasets(understanding, k)
     return evaluate_datasets(candidates, understanding)
 
 
@@ -76,7 +99,7 @@ def discover(query: str, k: int = DEFAULT_RESULT_COUNT):
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=exc.errors()) from exc
 
-    candidates = _candidate_datasets(_discovery_query(understanding), k)
+    candidates = _candidate_datasets(understanding, k)
     recommendations = evaluate_datasets(candidates, understanding)
 
     return DiscoverResponse(understanding=understanding, recommendations=recommendations)
