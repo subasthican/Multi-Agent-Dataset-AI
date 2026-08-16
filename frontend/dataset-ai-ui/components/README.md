@@ -1,28 +1,36 @@
 # Member 3 — Frontend & UX
 
-Scaffolding only — stub components, no implementation. See
-[`docs/members.md`](../../../docs/members.md) for the full task list and the
-"AI Galaxy Data Explorer" design direction from the source report.
+See [`docs/members.md`](../../../docs/members.md) for context and the source
+report's design direction.
 
 ## Setup
 
 ```bash
 cd frontend/dataset-ai-ui
-npm install framer-motion lucide-react
+npm install
+npm run dev
 ```
 
-## Files to implement
+## Status
 
-| File | Purpose |
+| File | Status |
 |---|---|
-| `Navbar.tsx` | Site navbar |
-| `SearchBox.tsx` | Query input, calls `services/api.ts` |
-| `DatasetCard.tsx` | One recommended dataset |
-| `AgentFlow.tsx` | NLP → IR → Evaluation agent activity visualization |
-| `LoadingAnimation.tsx` | In-flight request state |
-| `ExplanationCard.tsx` | Responsible AI explanation display |
-| `../services/api.ts` | Typed API client (env-configured base URL) |
-| `../app/dashboard/page.tsx` | Dashboard page wiring the above together |
+| `Navbar.tsx` | **Done** — auth-aware (Sign In/Sign Up vs. profile link) |
+| `SearchBox.tsx` | **Done** — calls `services/api.ts` `discover()` |
+| `DatasetCard.tsx` | **Done** — name, domain/task, source badge, score bar, explanation |
+| `AgentFlow.tsx` | **Done** — live NLP → Discovery → Evaluation stage visualization |
+| `LoadingAnimation.tsx` | **Done** |
+| `ExplanationCard.tsx` | **Done** — shows NLP understanding + llm/rule-based source |
+| `GalaxyBackground.tsx` | **Done** — rotating 3D starfield (`@react-three/fiber` + drei) |
+| `AuthCard.tsx` | **Done** — shared wrapper for login/register/forgot/reset pages |
+| `../services/api.ts` | **Done** — typed client, `NEXT_PUBLIC_API_BASE_URL`-configurable |
+| `../app/page.tsx` | **Done** — search + results assembled here (there's no separate `/dashboard`) |
+| `../app/{login,register,forgot-password,reset-password,profile,pricing}/page.tsx` | **Done** |
 
-Keep colors/theme tokens in `app/globals.css` rather than hardcoded inline
-styles, so the space theme stays consistent across components.
+Nothing left stubbed on the frontend. Open items are backend-side (Member 2's
+`input_filter.py`/`encryption.py`/`responsible_ai/*` and search quota
+enforcement for the Pro tier) — see `docs/members.md` and
+`backend/security/README.md`.
+
+Theme tokens live in `app/globals.css` (`.glass`, `.text-gradient`, the
+`nebula-*` colors) — reuse those rather than hardcoding colors inline.

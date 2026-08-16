@@ -18,10 +18,8 @@ export default function ProfilePage() {
     if (!loading && !user) router.push("/login");
   }, [loading, user, router]);
 
-  const [name, setName] = useState(user?.name ?? "");
-  useEffect(() => {
-    if (user) setName(user.name);
-  }, [user]);
+  const [draftName, setDraftName] = useState<string | null>(null);
+  const name = draftName ?? user?.name ?? "";
 
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileMessage, setProfileMessage] = useState<string | null>(null);
@@ -108,7 +106,7 @@ export default function ProfilePage() {
           )}
 
           <form onSubmit={handleProfileSave} className="mt-6 flex flex-col gap-4">
-            <AuthInput label="Name" required value={name} onChange={(e) => setName(e.target.value)} />
+            <AuthInput label="Name" required value={name} onChange={(e) => setDraftName(e.target.value)} />
             <AuthInput label="Email" value={user.email} disabled />
             {profileMessage && <p className="text-xs text-nebula-cyan">{profileMessage}</p>}
             <AuthError message={profileError} />
