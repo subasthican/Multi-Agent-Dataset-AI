@@ -28,9 +28,9 @@ so each member's branch/commits should reflect work that member actually did.
 ```
 main
  └── dev
-      ├── member1-nlp-agent        (created)
-      ├── member2-security-agent   (scaffolded — see note below)
-      └── member3-frontend-ui      (scaffolded — see note below)
+      ├── member1-nlp-agent        (NLP/Discovery/Evaluation agents, CORS, architecture)
+      ├── member2-security-agent   (auth backend implemented)
+      └── member3-frontend-ui      (full UI implemented)
 ```
 
 > **Open question to confirm with your group:** the source report contains two
@@ -142,47 +142,34 @@ Agent can be split out and run as its own service (the source report's Step 6 sh
 HTTP instead of importing it directly. Optional — not done here to keep initial scope
 manageable.
 
-## Member 2 — Security Agent + Responsible AI (`member2-security-agent`, scaffolded)
+## Member 2 — Security Agent + Responsible AI (`member2-security-agent`)
 
-Folder structure to fill in:
-```
-backend/security/
-  authentication.py   # JWT issuing/verification
-  jwt_manager.py
-  input_filter.py      # prompt-injection / malicious input filtering
-  encryption.py         # Fernet-based field encryption
-backend/responsible_ai/
-  fairness.py            # bias/fairness check on ranked results
-  explainability.py    # human-readable reasoning for a recommendation
-  privacy.py               # strip sensitive fields before storage/logging
-```
-Tasks:
-1. JWT authentication protecting the FastAPI endpoints.
-2. Input sanitization layer (block prompt-injection patterns) applied before queries reach the LLM/agents.
-3. Encryption helpers for any stored user data.
-4. Responsible AI layer: explanation generator, fairness check, privacy scrubber.
-5. Wire sanitization + auth into the shared API (coordinate with Member 1 on `main.py`).
-6. `docs/security.md` write-up for the report.
+**Status: auth is implemented and live; Responsible AI + input sanitization
+are still open.** See `backend/security/README.md` for the exact file-by-file
+status and the full `/auth/*` API reference. Summary:
 
-## Member 3 — Frontend + UX (`member3-frontend-ui`, scaffolded)
+- **Done** — `db.py`/`db_models.py` (SQLite via SQLAlchemy), `jwt_manager.py`
+  (PyJWT), `authentication.py` (bcrypt + `get_current_user` dependency),
+  `password_reset.py`, `schemas.py`, `router.py`. Register/login/profile
+  update/change-password/forgot-password/reset-password all work and are
+  verified end-to-end (see commit history on `member2-security-agent`).
+- **Open** — `input_filter.py` (prompt-injection filtering in front of the
+  NLP agent's LLM calls — nothing sanitizes user queries before they reach
+  Gemini right now), `encryption.py` (not yet needed — nothing sensitive
+  beyond password hashes is stored), `responsible_ai/{fairness,explainability,privacy}.py`
+  (the Evaluation Agent already generates its own explanation strings;
+  these would add a dedicated bias/fairness angle on top).
+- `docs/security.md` for the report is still to be written.
 
-Folder structure to fill in (inside `frontend/dataset-ai-ui`):
-```
-app/dashboard/page.tsx
-components/Navbar.tsx
-components/SearchBox.tsx
-components/DatasetCard.tsx
-components/AgentFlow.tsx
-components/LoadingAnimation.tsx
-components/ExplanationCard.tsx
-services/api.ts
-```
-Tasks:
-1. Space-themed UI (dark gradient background, glassmorphism cards, framer-motion animations).
-2. Search box that calls `POST /nlp-agent` (and later the IR/Evaluation endpoints) via `services/api.ts`.
-3. Dataset result cards + an "agent activity" visualization (NLP → IR → Evaluation flow).
-4. Responsive layout, loading states, error states.
-5. Connect to Member 2's auth flow once available.
+## Member 3 — Frontend + UX (`member3-frontend-ui`)
+
+**Status: implemented.** Real components, not stubs — see
+`frontend/dataset-ai-ui/components/README.md` for the file-by-file status.
+Space-themed UI (3D starfield via `@react-three/fiber`, glassmorphism,
+framer-motion), search wired to `POST /discover`, agent-pipeline
+visualization, dataset result cards, and the full auth UI (login, register,
+forgot/reset password, profile) plus a pricing page for the
+commercialization section. Nothing left stubbed on the frontend.
 
 ## Deliverables checklist (from the brief)
 
