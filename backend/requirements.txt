@@ -2,3 +2,7 @@ fastapi>=0.110
 uvicorn>=0.29
 spacy>=3.7
 pydantic>=2.6
+google-genai>=0.3
+python-dotenv>=1.0
+faiss-cpu>=1.8
+sentence-transformers>=3.0
