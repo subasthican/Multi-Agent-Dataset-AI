@@ -124,10 +124,8 @@ export default function PricingPage() {
 
               <Link
                 href={user ? tier.href : "/register"}
-                className={`mt-8 rounded-xl border px-4 py-3 text-center text-sm font-semibold transition-colors ${
-                  tier.highlighted
-                    ? "border-transparent bg-gradient-to-r from-nebula-cyan to-nebula-purple text-black hover:opacity-90"
-                    : "border-white/15 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
+                className={`mt-8 rounded-xl px-4 py-3 text-center text-sm ${
+                  tier.highlighted ? "btn-primary" : "btn-secondary"
                 }`}
               >
                 {tier.cta}
