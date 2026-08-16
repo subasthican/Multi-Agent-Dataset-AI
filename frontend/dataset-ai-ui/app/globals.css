@@ -18,27 +18,38 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Flat base colour only. The nebula gradient lives on the fixed
+   GalaxyBackground layer instead, so it stays anchored to the viewport rather
+   than stretching over the full document height — and, critically, so it can't
+   paint over the starfield canvas on long scrolling pages. */
 body {
-  background: radial-gradient(circle at 20% 10%, #1b1645 0%, #050510 45%, #030308 100%);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
+/* Frosted panels are painted with a layered translucent gradient rather than
+   backdrop-filter: over the always-animating WebGL starfield, a blur forces
+   Chrome to recompute the full-screen backdrop every frame, which both costs
+   real performance and produces horizontal compositing seams across the page.
+   The inset highlight supplies the glass edge the blur used to imply. */
 .glass {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(160deg, rgba(31, 29, 62, 0.72), rgba(12, 12, 28, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 12px 32px -16px rgba(0, 0, 0, 0.7);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.09);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(160deg, rgba(44, 38, 88, 0.8), rgba(16, 15, 36, 0.88));
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 1.5rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px -20px rgba(0, 0, 0, 0.8);
 }
 
 .text-gradient {
@@ -69,6 +80,24 @@ body {
   animation: pulse-ring 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Keyboard users need a visible focus target; the default ring is invisible
+   against the dark theme. */
+:focus-visible {
+  outline: 2px solid var(--nebula-cyan);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -80,4 +109,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }

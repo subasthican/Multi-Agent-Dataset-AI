@@ -16,6 +16,7 @@ interface Tier {
   cta: string;
   href: string;
   highlighted?: boolean;
+  badge?: string;
 }
 
 const TIERS: Tier[] = [
@@ -48,6 +49,7 @@ const TIERS: Tier[] = [
     cta: "Upgrade to Pro",
     href: "/profile",
     highlighted: true,
+    badge: "Most Popular",
   },
   {
     name: "Enterprise",
@@ -82,39 +84,50 @@ export default function PricingPage() {
           </p>
         </div>
 
-        <div className="grid w-full max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="grid w-full max-w-5xl grid-cols-1 items-stretch gap-6 md:grid-cols-3">
           {TIERS.map((tier, index) => (
             <motion.div
               key={tier.name}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className={`flex flex-col gap-4 p-6 ${
-                tier.highlighted ? "glass-strong glow-purple border-nebula-purple/40" : "glass"
+              className={`relative flex flex-col p-6 ${
+                tier.highlighted ? "glass-strong glow-purple md:-my-2 md:pt-8" : "glass"
               }`}
             >
-              <div>
-                <h2 className="text-lg font-semibold">{tier.name}</h2>
-                <p className="mt-1 text-xs text-white/40">{tier.description}</p>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold">{tier.price}</span>
+              {tier.badge && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-nebula-cyan to-nebula-purple px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-black">
+                  {tier.badge}
+                </span>
+              )}
+
+              <h2 className="text-lg font-semibold">{tier.name}</h2>
+              {/* Fixed height keeps the price and feature rows aligned across
+                  cards whether the description wraps to one line or two. */}
+              <p className="mt-1 min-h-[2rem] text-xs leading-4 text-white/45">{tier.description}</p>
+
+              <div className="mt-4 flex items-baseline gap-1">
+                <span className="text-3xl font-bold tracking-tight">{tier.price}</span>
                 {tier.period && <span className="text-sm text-white/40">{tier.period}</span>}
               </div>
-              <ul className="flex flex-1 flex-col gap-2 text-sm text-white/60">
+
+              <div className="mt-5 mb-6 h-px bg-white/10" />
+
+              <ul className="flex flex-1 flex-col gap-2.5 text-sm text-white/65">
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2">
+                  <li key={feature} className="flex items-start gap-2.5">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-nebula-cyan" />
-                    {feature}
+                    <span className="leading-5">{feature}</span>
                   </li>
                 ))}
               </ul>
+
               <Link
                 href={user ? tier.href : "/register"}
-                className={`mt-2 rounded-xl px-4 py-2.5 text-center text-sm font-medium transition-opacity hover:opacity-90 ${
+                className={`mt-8 rounded-xl border px-4 py-3 text-center text-sm font-semibold transition-colors ${
                   tier.highlighted
-                    ? "bg-gradient-to-r from-nebula-cyan to-nebula-purple text-black"
-                    : "border border-white/15 text-white"
+                    ? "border-transparent bg-gradient-to-r from-nebula-cyan to-nebula-purple text-black hover:opacity-90"
+                    : "border-white/15 bg-white/5 text-white hover:border-white/30 hover:bg-white/10"
                 }`}
               >
                 {tier.cta}
@@ -123,7 +136,7 @@ export default function PricingPage() {
           ))}
         </div>
 
-        <p className="max-w-lg text-center text-xs text-white/30">
+        <p className="mt-6 max-w-lg text-center text-xs leading-5 text-white/30">
           Target market: students, independent ML practitioners, and small research teams who need faster
           dataset discovery than manual search across Kaggle/OpenML/HuggingFace. Pro tier upgrade billing is
           not yet wired to a payment provider in this build — this page reflects the commercialization plan
