@@ -6,3 +6,4 @@ google-genai>=0.3
 python-dotenv>=1.0
 faiss-cpu>=1.8
 sentence-transformers>=3.0
+kaggle>=2.2
