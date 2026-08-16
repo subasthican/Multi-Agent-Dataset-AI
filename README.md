@@ -31,9 +31,10 @@ recommendations.
 Multi-Agent-Dataset-AI/
 ├── backend/
 │   ├── agents/
-│   │   ├── nlp_agent/         # Query understanding (LLM + rule-based fallback)
-│   │   ├── discovery_agent/   # Semantic dataset search (FAISS)
-│   │   └── evaluation_agent/  # Ranking + explanation
+│   │   ├── nlp_agent/               # Query understanding (LLM + rule-based fallback)
+│   │   ├── discovery_agent/         # Semantic dataset search (FAISS)
+│   │   ├── dataset_collection_agent/ # Live Kaggle search (optional)
+│   │   └── evaluation_agent/        # Ranking + explanation
 │   ├── llm/                   # Gemini API client + prompt templates
 │   ├── security/              # Auth, input sanitization, encryption (Member 2)
 │   ├── responsible_ai/        # Explainability, fairness, privacy (Member 2)

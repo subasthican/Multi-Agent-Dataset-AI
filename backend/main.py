@@ -3,8 +3,9 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, ValidationError
 
+from agents.dataset_collection_agent.agent import collect_external_datasets
 from agents.discovery_agent.agent import search_datasets
-from agents.discovery_agent.models import DiscoveryResult
+from agents.discovery_agent.models import DatasetMatch, DiscoveryResult
 from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
 from agents.nlp_agent.agent import analyze_query
@@ -22,6 +23,14 @@ class DiscoverResponse(BaseModel):
 
 def _discovery_query(understanding: QueryAnalysisResult) -> str:
     return " ".join([understanding.domain, understanding.task, *understanding.keywords])
+
+
+def _candidate_datasets(query: str, k: int) -> List[DatasetMatch]:
+    """Curated catalog matches plus any live Kaggle matches (best-effort;
+    empty when KAGGLE_API_TOKEN isn't configured)."""
+    catalog_matches = search_datasets(query, k=k).matches
+    external_matches = [DatasetMatch(**item) for item in collect_external_datasets(query, limit=k)]
+    return catalog_matches + external_matches
 
 
 @app.get("/")
@@ -42,6 +51,11 @@ def discovery_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
     return search_datasets(query, k=k)
 
 
+@app.post("/dataset-collection-agent", response_model=List[DatasetMatch])
+def dataset_collection_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
+    return [DatasetMatch(**item) for item in collect_external_datasets(query, limit=k)]
+
+
 @app.post("/evaluation-agent", response_model=List[EvaluatedDataset])
 def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
     try:
@@ -49,19 +63,20 @@ def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=exc.errors()) from exc
 
-    discovery_result = search_datasets(_discovery_query(understanding), k=k)
-    return evaluate_datasets(discovery_result.matches, understanding)
+    candidates = _candidate_datasets(_discovery_query(understanding), k)
+    return evaluate_datasets(candidates, understanding)
 
 
 @app.post("/discover", response_model=DiscoverResponse)
 def discover(query: str, k: int = DEFAULT_RESULT_COUNT):
-    """Full pipeline: NLP Agent -> Discovery Agent -> Evaluation Agent."""
+    """Full pipeline: NLP Agent -> Discovery Agent (+ live Kaggle results when
+    configured) -> Evaluation Agent."""
     try:
         understanding = analyze_query(query)
     except ValidationError as exc:
         raise HTTPException(status_code=400, detail=exc.errors()) from exc
 
-    discovery_result = search_datasets(_discovery_query(understanding), k=k)
-    recommendations = evaluate_datasets(discovery_result.matches, understanding)
+    candidates = _candidate_datasets(_discovery_query(understanding), k)
+    recommendations = evaluate_datasets(candidates, understanding)
 
     return DiscoverResponse(understanding=understanding, recommendations=recommendations)
