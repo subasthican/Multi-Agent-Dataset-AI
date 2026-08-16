@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "name": "Diabetes Prediction Dataset",
+    "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+    "domain": "healthcare",
+    "task": "classification"
+  },
+  {
+    "id": 2,
+    "name": "Heart Disease Dataset",
+    "description": "Clinical patient records used to predict the presence of heart disease",
+    "domain": "healthcare",
+    "task": "classification"
+  },
+  {
+    "id": 3,
+    "name": "Credit Card Fraud Dataset",
+    "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+    "domain": "finance",
+    "task": "classification"
+  },
+  {
+    "id": 4,
+    "name": "Stock Price History Dataset",
+    "description": "Historical stock market prices and trading volumes for financial forecasting",
+    "domain": "finance",
+    "task": "regression"
+  },
+  {
+    "id": 5,
+    "name": "Solar Energy Forecast Dataset",
+    "description": "Renewable energy generation data for predicting solar power output",
+    "domain": "environment",
+    "task": "regression"
+  },
+  {
+    "id": 6,
+    "name": "Air Quality Dataset",
+    "description": "Pollution and weather sensor readings for environmental monitoring and forecasting",
+    "domain": "environment",
+    "task": "regression"
+  },
+  {
+    "id": 7,
+    "name": "House Price Prediction Dataset",
+    "description": "Real estate property information for predicting housing prices",
+    "domain": "business",
+    "task": "regression"
+  },
+  {
+    "id": 8,
+    "name": "Customer Churn Dataset",
+    "description": "Customer subscription and usage records used to predict business customer churn",
+    "domain": "business",
+    "task": "classification"
+  },
+  {
+    "id": 9,
+    "name": "Student Performance Dataset",
+    "description": "Student demographics and grades used to predict academic performance and dropout risk",
+    "domain": "education",
+    "task": "classification"
+  },
+  {
+    "id": 10,
+    "name": "Course Completion Dataset",
+    "description": "Online learning platform records for predicting course completion rates",
+    "domain": "education",
+    "task": "classification"
+  }
+]
