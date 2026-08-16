@@ -1,9 +1,15 @@
 import os
 from functools import lru_cache
+from pathlib import Path
 
+from dotenv import load_dotenv
 from google import genai
 
-DEFAULT_MODEL_NAME = "gemini-2.5-flash"
+# Repo-root .env (backend/llm/gemini_client.py -> llm -> backend -> repo root),
+# so the key can live in one place alongside the rest of the project's .env.
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+
+DEFAULT_MODEL_NAME = "gemini-3.5-flash"
 
 
 class LLMUnavailableError(Exception):
