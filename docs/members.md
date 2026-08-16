@@ -35,33 +35,72 @@ main
 >
 > The scaffolding below follows **Split B** since it's the more fully worked-out plan
 > in the report, which leaves the IR/Discovery and Evaluation agents as part of Member
-> 1's backend/agents work. Confirm this with Gowsika and Kageepan before they start —
+> 1's backend/agents work (confirmed — see below, all three are now implemented on
+> `member1-nlp-agent`). Confirm this split with Gowsika and Kageepan before they start —
 > if you actually want Split A, the folder names just need swapping and the IR module
 > requirement moves to Member 2's branch instead.
 
-## Member 1 — NLP Agent + Architecture Lead (this repo, `member1-nlp-agent`)
+## Member 1 — NLP + Discovery + Evaluation Agents, Architecture Lead (`member1-nlp-agent`)
 
-**Status: implemented.**
+**Status: implemented — all 3 core AI agents + orchestrator.**
 
-- `backend/agents/nlp_agent/`
-  - `agent.py` — orchestrates a query: validate → clean → spaCy pipeline → classify.
-  - `preprocessing.py` — spaCy model loading, keyword/entity extraction.
-  - `models.py` — Pydantic request/response schemas (`QueryInput`, `QueryAnalysisResult`).
-  - `config.json` — domain/task/data-type trigger keywords. Editable without touching code.
-- `backend/main.py` — FastAPI gateway, exposes `POST /nlp-agent`.
-- `backend/requirements.txt` — fastapi, uvicorn, spacy, pydantic.
+### NLP Agent — `backend/agents/nlp_agent/`
+- `agent.py` — validate → spaCy pipeline (keywords/entities) → Gemini LLM understanding,
+  falling back to the rule-based classifier (`config.json`) when no `GEMINI_API_KEY` is
+  set or the LLM call fails. `understanding_source` on the response says which path ran
+  (`llm` or `rule_based`) — transparency for the Responsible AI section.
+- `preprocessing.py` — spaCy model loading, keyword/entity extraction.
+- `models.py` — `QueryInput`, `QueryAnalysisResult`.
+- `config.json` — domain/task/data-type trigger keywords for the fallback classifier.
+
+### Discovery (IR) Agent — `backend/agents/discovery_agent/`
+- `datasets.json` — dataset catalog (10 sample entries across the 5 domains). Swap in a
+  real dataset source (Kaggle/OpenML/HuggingFace APIs) later without touching code.
+- `embeddings.py` — `sentence-transformers` (`all-MiniLM-L6-v2`) text embeddings.
+- `vector_store.py` — FAISS `IndexFlatL2` semantic search over the catalog.
+- `agent.py` — `search_datasets(query, k)`.
+
+### Evaluation Agent — `backend/agents/evaluation_agent/`
+- `scorer.py` — weighted score: FAISS similarity + domain match + task match + keyword
+  overlap (weights are named constants, not magic numbers).
+- `agent.py` — `evaluate_datasets(datasets, requirement)`, sorted by score, each with a
+  generated explanation string (Responsible AI explainability).
+
+### LLM client — `backend/llm/`
+- `gemini_client.py` — wraps the `google-genai` SDK. Reads `GEMINI_API_KEY` from the
+  environment (never hardcode it). Raises `LLMUnavailableError` on a missing key or any
+  API error, which `nlp_agent/agent.py` catches to fall back to the rule-based path.
+- `prompts.py` — the structured-JSON prompt template.
+
+### Gateway — `backend/main.py`
+| Endpoint | Purpose |
+|---|---|
+| `POST /nlp-agent?query=...` | NLP Agent only |
+| `POST /discovery-agent?query=...&k=` | Discovery Agent only |
+| `POST /evaluation-agent?query=...&k=` | NLP → Discovery → Evaluation, scores only |
+| `POST /discover?query=...&k=` | Full pipeline: understanding + ranked, explained recommendations |
 
 Run it:
 ```bash
 cd backend
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
+echo "GEMINI_API_KEY=your_key_here" >> .env   # optional — get one free at aistudio.google.com
 uvicorn main:app --reload
 ```
-Test at `http://localhost:8000/docs`, `POST /nlp-agent?query=Find healthcare datasets for cancer prediction`.
+Test at `http://localhost:8000/docs`, or:
+```bash
+curl -X POST "http://localhost:8000/discover?query=I%20need%20datasets%20for%20predicting%20diabetes"
+```
 
-Still open for Member 1: Discovery/IR Agent (semantic search over a dataset index,
-e.g. FAISS + embeddings) and Evaluation Agent (ranking + explanation), per Split B above.
+**Note on the "agent communication protocol" requirement:** the three agents currently
+communicate via direct Python function calls inside one FastAPI process (structured
+Pydantic messages between them). This is a legitimate multi-agent design, but if you
+want a literal separate-process HTTP protocol for extra marks/viva depth, the Discovery
+Agent can be split out and run as its own service (the source report's Step 6 shows this:
+`uvicorn agents.discovery_agent.api:app --port 8001`) with the gateway calling it over
+HTTP instead of importing it directly. Optional — not done here to keep initial scope
+manageable.
 
 ## Member 2 — Security Agent + Responsible AI (`member2-security-agent`, scaffolded)
 
