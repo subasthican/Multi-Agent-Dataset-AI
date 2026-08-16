@@ -34,6 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Session check against the backend on mount — an external-system sync,
+    // not derived state, so this is the sanctioned use of an effect despite
+    // the set-state-in-effect lint rule flagging the setLoading(false) below.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshUser().finally(() => setLoading(false));
   }, [refreshUser]);
 
