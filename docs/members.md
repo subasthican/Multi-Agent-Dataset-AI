@@ -85,13 +85,24 @@ Run it:
 cd backend
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-echo "GEMINI_API_KEY=your_key_here" >> .env   # optional — get one free at aistudio.google.com
 uvicorn main:app --reload
 ```
+`GEMINI_API_KEY` (optional — get one free at aistudio.google.com) goes in the
+**repo-root** `.env`, loaded explicitly by `llm/gemini_client.py` regardless of which
+directory you run uvicorn from. Without it, the NLP agent uses the rule-based fallback.
+
+**Model note:** newly-created Gemini API keys currently can't access `gemini-2.5-flash`,
+`gemini-2.5-pro`, or `gemini-2.5-flash-lite` (Google returns a 404 "no longer available
+to new users" even though those models are listed). `gemini-3.5-flash` works and is set
+as the default (`llm/gemini_client.py`, override with the `GEMINI_MODEL` env var). If
+Google changes this again, run `client.models.list()` to see what your key can access.
+
 Test at `http://localhost:8000/docs`, or:
 ```bash
 curl -X POST "http://localhost:8000/discover?query=I%20need%20datasets%20for%20predicting%20diabetes"
 ```
+Verified live against the real Gemini API on 2026-08-16 — `understanding_source: "llm"`
+in the response confirms the LLM path (not the fallback) is running.
 
 **Note on the "agent communication protocol" requirement:** the three agents currently
 communicate via direct Python function calls inside one FastAPI process (structured
