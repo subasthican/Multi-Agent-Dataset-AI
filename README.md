@@ -56,9 +56,13 @@ branch layout, and API reference.
 cd backend
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
-cp .env.example .env   # add GEMINI_API_KEY (optional — falls back to rule-based NLP without it)
 uvicorn main:app --reload
 ```
+
+Add `GEMINI_API_KEY=...` to the **repo-root** `.env` (see `backend/.env.example` for
+the full list of variables — it's just a reference, the actual file is read from the
+project root). Optional — the NLP Agent falls back to rule-based classification without
+it.
 
 API docs: `http://localhost:8000/docs`
 
