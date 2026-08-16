@@ -12,6 +12,8 @@ from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
 from agents.nlp_agent.agent import analyze_query
 from agents.nlp_agent.models import QueryAnalysisResult
+from security.db import init_db
+from security.router import router as auth_router
 
 app = FastAPI(title="Dataset AI Agent System")
 
@@ -24,6 +26,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(auth_router)
+
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 DEFAULT_RESULT_COUNT = 3
 
