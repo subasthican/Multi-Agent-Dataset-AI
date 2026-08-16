@@ -38,10 +38,7 @@ export default function Navbar() {
             <Link href="/login" className="text-white/60 transition-colors hover:text-white">
               Sign In
             </Link>
-            <Link
-              href="/register"
-              className="rounded-full bg-gradient-to-r from-nebula-cyan to-nebula-purple px-3 py-1.5 font-medium text-black transition-opacity hover:opacity-90"
-            >
+            <Link href="/register" className="btn-primary rounded-full px-4 py-1.5 text-sm">
               Sign Up
             </Link>
           </div>
