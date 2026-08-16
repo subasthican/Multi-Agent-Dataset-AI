@@ -54,14 +54,34 @@ main
 - `config.json` — domain/task/data-type trigger keywords for the fallback classifier.
 
 ### Discovery (IR) Agent — `backend/agents/discovery_agent/`
-- `datasets.json` — dataset catalog (10 sample entries across the 5 domains). Swap in a
-  real dataset source (Kaggle/OpenML/HuggingFace APIs) later without touching code.
+- `datasets.json` — curated catalog (10 sample entries across the 5 domains).
 - `embeddings.py` — `sentence-transformers` (`all-MiniLM-L6-v2`) text embeddings.
 - `vector_store.py` — FAISS `IndexFlatL2` semantic search over the catalog.
 - `agent.py` — `search_datasets(query, k)`.
 
+### Dataset Collection Agent — `backend/agents/dataset_collection_agent/`
+- `kaggle_source.py` — live Kaggle dataset search via the `kaggle` package, scored
+  against the query with the same sentence-transformer embeddings as the Discovery
+  Agent (cosine similarity). Domain/task are left `"unspecified"` since Kaggle's search
+  API doesn't expose that metadata (unlike the curated catalog).
+- `agent.py` — `collect_external_datasets(query, limit)`, returns `[]` (not an error)
+  when `KAGGLE_API_TOKEN` isn't set or the API call fails — same graceful-fallback
+  pattern as the LLM client.
+- Results are merged with the catalog's Discovery Agent results before evaluation
+  (`main.py::_candidate_datasets`), each tagged with `source: "catalog"` or
+  `"kaggle"` for transparency.
+
+**Kaggle auth note:** the guide for setting this up commonly describes the older
+`kaggle.json` / `KAGGLE_USERNAME`+`KAGGLE_KEY` scheme. The version installed here
+(`kaggle==2.2.4`) uses a different flow: go to
+[kaggle.com/settings/api](https://www.kaggle.com/settings/api) → "Generate New Token" →
+put the token string in `KAGGLE_API_TOKEN` in the repo-root `.env` (see
+`backend/.env.example`). Also note: `kaggle.KaggleApi.authenticate()` calls
+`sys.exit(1)` on total auth failure by default — `kaggle_source.py` guards against that
+so a bad/missing token can't crash the FastAPI process.
+
 ### Evaluation Agent — `backend/agents/evaluation_agent/`
-- `scorer.py` — weighted score: FAISS similarity + domain match + task match + keyword
+- `scorer.py` — weighted score: similarity + domain match + task match + keyword
   overlap (weights are named constants, not magic numbers).
 - `agent.py` — `evaluate_datasets(datasets, requirement)`, sorted by score, each with a
   generated explanation string (Responsible AI explainability).
@@ -76,8 +96,9 @@ main
 | Endpoint | Purpose |
 |---|---|
 | `POST /nlp-agent?query=...` | NLP Agent only |
-| `POST /discovery-agent?query=...&k=` | Discovery Agent only |
-| `POST /evaluation-agent?query=...&k=` | NLP → Discovery → Evaluation, scores only |
+| `POST /discovery-agent?query=...&k=` | Discovery Agent only (catalog) |
+| `POST /dataset-collection-agent?query=...&k=` | Live Kaggle search only |
+| `POST /evaluation-agent?query=...&k=` | NLP → Discovery+Kaggle → Evaluation, scores only |
 | `POST /discover?query=...&k=` | Full pipeline: understanding + ranked, explained recommendations |
 
 Run it:
@@ -87,9 +108,10 @@ pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 uvicorn main:app --reload
 ```
-`GEMINI_API_KEY` (optional — get one free at aistudio.google.com) goes in the
-**repo-root** `.env`, loaded explicitly by `llm/gemini_client.py` regardless of which
-directory you run uvicorn from. Without it, the NLP agent uses the rule-based fallback.
+`GEMINI_API_KEY` and `KAGGLE_API_TOKEN` (both optional) go in the **repo-root** `.env`,
+loaded explicitly regardless of which directory you run uvicorn from. Without them, the
+NLP agent uses the rule-based fallback and Discovery only searches the local catalog —
+the system is fully functional either way.
 
 **Model note:** newly-created Gemini API keys currently can't access `gemini-2.5-flash`,
 `gemini-2.5-pro`, or `gemini-2.5-flash-lite` (Google returns a 404 "no longer available

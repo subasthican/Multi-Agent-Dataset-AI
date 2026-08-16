@@ -1,15 +1,16 @@
-from typing import List
+from typing import List, Union
 
 from pydantic import BaseModel
 
 
 class DatasetMatch(BaseModel):
-    id: int
+    id: Union[int, str]
     name: str
     domain: str
     task: str
     description: str
     similarity: float
+    source: str = "catalog"
 
 
 class DiscoveryResult(BaseModel):
