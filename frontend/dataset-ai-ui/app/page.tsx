@@ -20,6 +20,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const stageTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  const hasActivity = loading || result !== null || error !== null;
+
   async function handleSearch(query: string) {
     setLoading(true);
     setError(null);
@@ -50,7 +52,14 @@ export default function Home() {
       <GalaxyBackground />
       <Navbar />
 
-      <main className="flex flex-1 flex-col items-center gap-10 px-6 pb-20 pt-8 sm:px-10">
+      {/* Before the first search the hero sits centred in the viewport rather
+          than stranded at the top above a large void; once results exist it
+          reflows to the top so the list gets the space. */}
+      <main
+        className={`flex flex-1 flex-col items-center gap-10 px-6 pb-20 sm:px-10 ${
+          hasActivity ? "pt-8" : "justify-center pb-32"
+        }`}
+      >
         <div className="flex flex-col items-center gap-3 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
             DATA <span className="text-gradient">NEBULA</span> AI
