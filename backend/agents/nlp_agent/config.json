@@ -1,0 +1,22 @@
+{
+  "domains": {
+    "healthcare": ["health", "medical", "disease", "patient", "diagnosis", "clinical", "cancer", "diabetes", "hospital", "drug"],
+    "finance": ["finance", "financial", "stock", "trading", "fraud", "bank", "credit", "loan", "investment", "economic"],
+    "education": ["education", "student", "school", "university", "learning", "academic", "course", "exam"],
+    "business": ["business", "sales", "marketing", "customer", "retail", "commerce", "revenue"],
+    "environment": ["environment", "climate", "weather", "pollution", "energy", "sustainability", "carbon"]
+  },
+  "tasks": {
+    "classification": ["classify", "classification", "predict", "prediction", "detect", "detection", "diagnose"],
+    "regression": ["regression", "forecast", "forecasting", "estimate", "price prediction"],
+    "clustering": ["cluster", "clustering", "segment", "segmentation", "grouping"],
+    "nlp": ["sentiment", "text", "language", "translation", "summarization", "chatbot"],
+    "computer_vision": ["image", "vision", "object detection", "face recognition", "video"]
+  },
+  "data_types": {
+    "tabular": ["dataset", "table", "csv", "structured", "spreadsheet"],
+    "image": ["image", "photo", "picture", "vision"],
+    "text": ["text", "document", "corpus", "review", "article"],
+    "time_series": ["time series", "temporal", "sequential", "trend"]
+  }
+}
