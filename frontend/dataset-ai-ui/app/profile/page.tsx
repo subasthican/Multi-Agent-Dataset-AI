@@ -154,7 +154,7 @@ export default function ProfilePage() {
             logout();
             router.push("/");
           }}
-          className="self-start rounded-xl border border-white/10 px-4 py-2 text-sm text-white/60 transition-colors hover:border-white/30 hover:text-white"
+          className="btn-secondary self-start rounded-xl px-4 py-2 text-sm"
         >
           Sign out
         </button>
