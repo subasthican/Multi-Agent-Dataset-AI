@@ -1,6 +1,6 @@
 # Admin Panel Roadmap
 
-**Status: Phases 1-3 done, Phases 4-5 planned but not built.** Written so a
+**Status: Phases 1-4 done, Phase 5 planned but not built.** Written so a
 new chat with zero memory of this conversation can pick up exactly where it
 left off — read this whole file before touching any admin code.
 
@@ -121,32 +121,51 @@ via the UI, not just curl), a plan created/edited through the new admin UI
 round-trips correctly to the pricing page, and the admin dashboard's plan
 dropdown lists and applies all real plans including the custom one.
 
-## Phase 4 — User Detail Page + Search/Filter ⬜ NEXT
+## Phase 4 — User Detail Page + Search/Filter ✅ DONE
 
-The `/admin` user table is a flat list — fine at a handful of users, useless
-beyond that.
+**What:** the flat `/admin` user table now has a real detail view per user,
+plus search/filter/sort so it stays usable beyond a handful of accounts.
+Also includes reversible suspend/reactivate — the open design question this
+phase flagged before building — confirmed in scope with the user rather
+than assumed.
 
-**Backend:**
-- `GET /admin/users/{id}` — single user detail: full profile +
-  their actual search history (reuse the `SearchHistory` query pattern
-  already in `recommendation_agent/agent.py`'s `_build_profile`, but return
-  the raw list, not just the aggregated mode).
-- Consider adding basic filtering/sorting to `GET /admin/users` (by plan,
-  by signup date) via query params, rather than only ever returning everyone.
+**Files:** `backend/security/db_models.py` (`User.is_active`, default
+True — the existing `database/app.db` was altered in place with a manual
+`ALTER TABLE` rather than deleted, preserving all prior test data),
+`security/authentication.py` (`authenticate_user()` 403s a correct
+password on a suspended account with a distinct message from a wrong
+password; `get_current_user()`/`get_current_user_optional()` both
+re-check `is_active` from the DB on every request, the same way
+`is_admin` already was — a suspended user's existing token stops working
+immediately, not just at their next login), `security/schemas.py`
+(`is_active` on `UserResponse`/`AdminUpdateUserRequest`, new
+`AdminUserDetailResponse` + `AdminSearchHistoryItem`), `admin_router.py`
+(`GET /admin/users/{id}` for the detail+history view, `q`/`plan`/
+`is_admin`/`is_active` filters and a `sort` param on `GET /admin/users`,
+`is_active` handling on `PATCH /admin/users/{id}` with the same
+can't-act-on-yourself guard `is_admin` already had).
 
-**Frontend:**
-- `/admin/users/[id]/page.tsx` — profile info, plan/admin controls (move
-  them here from the flat table, or keep both), a list/timeline of their
-  searches.
-- Search/filter/sort controls on the `/admin` user table itself.
-- Link each table row's name to their detail page.
+Frontend: `app/admin/users/[id]/page.tsx` (new — profile, plan/admin/
+suspend/delete controls, full search history with domain/task/source/
+timestamp), `app/admin/page.tsx` (debounced name/email search box, plan
+filter, sort dropdown, each row's name links to its detail page, a
+Suspend/Reactivate button next to the existing controls, a dimmed row +
+badge for a suspended account), `services/api.ts` (`is_active` on `User`,
+`AdminUserFilters`/`AdminUserSort`/`AdminUserDetail`/`SearchHistoryItem`
+types, `getAdminUser()`, filters support on `getAdminUsers()`).
 
-**Also consider (raised when the admin panel was first planned, not yet
-decided):** suspend/disable instead of only hard-delete — a reversible
-disable is safer for support situations than permanent deletion. Ask the
-user whether this is in scope for this phase or later.
+**Verified live:** registered a throwaway account and suspended it —
+confirmed its already-issued token 401s immediately (not just at next
+login) and a fresh login attempt with the correct password 403s with the
+distinct "This account has been suspended." message; confirmed an admin
+cannot suspend their own account; reactivating restored login
+immediately; loaded a real user's detail page and confirmed all 12 of
+their actual recorded searches render correctly; typed into the admin
+table's search box and confirmed the debounced request narrowed the list
+to an exact name/email match; switched sort to "Most searches" and
+confirmed correct ordering.
 
-## Phase 5 — System Health + Audit Log ⬜ TODO
+## Phase 5 — System Health + Audit Log ⬜ NEXT
 
 Two related but distinct gaps, both already flagged in
 `docs/agent-improvements.md`:
