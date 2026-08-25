@@ -28,6 +28,9 @@ class User(Base):
     reset_tokens: Mapped[list["PasswordResetToken"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
+    search_history: Mapped[list["SearchHistory"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan"
+    )
 
 
 class PasswordResetToken(Base):
@@ -40,3 +43,22 @@ class PasswordResetToken(Base):
     used: Mapped[bool] = mapped_column(Boolean, default=False)
 
     user: Mapped["User"] = relationship(back_populates="reset_tokens")
+
+
+class SearchHistory(Base):
+    """One row per search a *signed-in* user makes. Anonymous searches are
+    never recorded anywhere — this table only exists to power personalized
+    recommendations for logged-in users, and only for them (see
+    security/router.py's transparency note and the DELETE /recommendations
+    endpoint that lets a user clear it)."""
+
+    __tablename__ = "search_history"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
+    user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id"), index=True, nullable=False)
+    query: Mapped[str] = mapped_column(String, nullable=False)
+    domain: Mapped[str] = mapped_column(String, nullable=False)
+    task: Mapped[str] = mapped_column(String, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+    user: Mapped["User"] = relationship(back_populates="search_history")
