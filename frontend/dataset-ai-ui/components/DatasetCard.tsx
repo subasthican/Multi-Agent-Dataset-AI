@@ -15,7 +15,9 @@ export default function DatasetCard({ item, index }: { item: EvaluatedDataset; i
       className="glass flex flex-col gap-4 p-5"
     >
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-base font-semibold text-white">{dataset.name}</h3>
+        {/* Live Kaggle titles are arbitrary user text and can be long or
+            unbroken, so this has to be allowed to wrap rather than overflow. */}
+        <h3 className="min-w-0 flex-1 text-base font-semibold break-words text-white">{dataset.name}</h3>
         <span
           className={`flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] uppercase tracking-wide ${
             dataset.source === "kaggle"
@@ -33,7 +35,7 @@ export default function DatasetCard({ item, index }: { item: EvaluatedDataset; i
         <span className="rounded-full border border-white/10 px-2 py-0.5">{dataset.task}</span>
       </div>
 
-      <p className="text-sm text-white/50">{dataset.description}</p>
+      <p className="flex-1 text-sm leading-5 break-words text-white/50">{dataset.description}</p>
 
       <div>
         <div className="mb-1 flex items-center justify-between text-xs text-white/50">

@@ -18,27 +18,38 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Flat base colour only. The nebula gradient lives on the fixed
+   GalaxyBackground layer instead, so it stays anchored to the viewport rather
+   than stretching over the full document height — and, critically, so it can't
+   paint over the starfield canvas on long scrolling pages. */
 body {
-  background: radial-gradient(circle at 20% 10%, #1b1645 0%, #050510 45%, #030308 100%);
+  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
 
+/* Frosted panels are painted with a layered translucent gradient rather than
+   backdrop-filter: over the always-animating WebGL starfield, a blur forces
+   Chrome to recompute the full-screen backdrop every frame, which both costs
+   real performance and produces horizontal compositing seams across the page.
+   The inset highlight supplies the glass edge the blur used to imply. */
 .glass {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(160deg, rgba(31, 29, 62, 0.72), rgba(12, 12, 28, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.25rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 12px 32px -16px rgba(0, 0, 0, 0.7);
 }
 
 .glass-strong {
-  background: rgba(255, 255, 255, 0.09);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: linear-gradient(160deg, rgba(44, 38, 88, 0.8), rgba(16, 15, 36, 0.88));
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 1.5rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 16px 40px -20px rgba(0, 0, 0, 0.8);
 }
 
 .text-gradient {
@@ -69,6 +80,100 @@ body {
   animation: pulse-ring 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Keyboard users need a visible focus target; the default ring is invisible
+   against the dark theme. box-shadow (not outline) so the ring follows each
+   element's own border-radius instead of drawing a hard rectangle over
+   rounded/pill shapes. */
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px rgba(34, 211, 238, 0.7);
+}
+
+/* Text inputs define their own focus treatment (border colour / the parent
+   search bar's glow) so they opt out of the generic ring above — otherwise
+   a plain rectangular ring shows through around the rounded pill/field. */
+input:focus-visible,
+textarea:focus-visible {
+  box-shadow: none;
+}
+
+/* Browsers don't give <button> a pointer cursor the way they do <a> — without
+   this every button in the app reads as inert/unclickable on hover, which is
+   the single biggest "does this feel professional" tell in a UI. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* Premium button system — a soft top highlight plus a coloured glow gives
+   real depth instead of a flat gradient fill, with a gentle lift on hover. */
+.btn-primary {
+  background: linear-gradient(135deg, var(--nebula-cyan), var(--nebula-purple));
+  color: #06060f;
+  font-weight: 600;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 8px 24px -8px rgba(124, 58, 237, 0.6);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 10px 30px -6px rgba(124, 58, 237, 0.8);
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: white;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -80,4 +185,8 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
