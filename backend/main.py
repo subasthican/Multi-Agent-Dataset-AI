@@ -15,6 +15,7 @@ from agents.nlp_agent.agent import analyze_query
 from agents.nlp_agent.models import QueryAnalysisResult
 from agents.recommendation_agent.agent import clear_history, get_recommendations, record_search
 from agents.recommendation_agent.models import RecommendationResponse
+from security.admin_router import router as admin_router
 from security.authentication import get_current_user, get_current_user_optional
 from security.db import get_db, init_db
 from security.db_models import User
@@ -33,6 +34,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 
 @app.on_event("startup")
