@@ -2,9 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from agents.discovery_agent import vector_store
+from agents.discovery_agent.models import CatalogDatasetCreate, CatalogDatasetResponse, CatalogDatasetUpdate
+
 from .authentication import get_current_admin_user
 from .db import get_db
-from .db_models import SearchHistory, User
+from .db_models import CatalogDataset, SearchHistory, User
 from .schemas import AdminStatsResponse, AdminUpdateUserRequest, AdminUserResponse
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -102,4 +105,57 @@ def get_stats(current_admin: User = Depends(get_current_admin_user), db: Session
         searches_via_rule_based=count(
             db.query(func.count(SearchHistory.id)).filter(SearchHistory.understanding_source == "rule_based")
         ),
+        catalog_size=count(db.query(func.count(CatalogDataset.id))),
     )
+
+
+@router.get("/catalog", response_model=list[CatalogDatasetResponse])
+def list_catalog(current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    return db.query(CatalogDataset).order_by(CatalogDataset.created_at).all()
+
+
+@router.post("/catalog", response_model=CatalogDatasetResponse, status_code=status.HTTP_201_CREATED)
+def create_catalog_entry(
+    payload: CatalogDatasetCreate,
+    current_admin: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    entry = CatalogDataset(**payload.model_dump())
+    db.add(entry)
+    db.commit()
+    db.refresh(entry)
+    vector_store.invalidate_cache()
+    return entry
+
+
+@router.patch("/catalog/{dataset_id}", response_model=CatalogDatasetResponse)
+def update_catalog_entry(
+    dataset_id: str,
+    payload: CatalogDatasetUpdate,
+    current_admin: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    entry = db.get(CatalogDataset, dataset_id)
+    if entry is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(entry, field, value)
+
+    db.commit()
+    db.refresh(entry)
+    vector_store.invalidate_cache()
+    return entry
+
+
+@router.delete("/catalog/{dataset_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_catalog_entry(
+    dataset_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)
+):
+    entry = db.get(CatalogDataset, dataset_id)
+    if entry is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+
+    db.delete(entry)
+    db.commit()
+    vector_store.invalidate_cache()

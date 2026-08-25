@@ -59,6 +59,24 @@ export interface AdminStats {
   total_searches: number;
   searches_via_llm: number;
   searches_via_rule_based: number;
+  catalog_size: number;
+}
+
+export interface CatalogDataset {
+  id: string;
+  name: string;
+  description: string;
+  domain: string;
+  task: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CatalogDatasetInput {
+  name: string;
+  description: string;
+  domain: string;
+  task: string;
 }
 
 export interface TokenResponse {
@@ -177,4 +195,23 @@ export async function updateAdminUser(
 
 export async function deleteAdminUser(userId: string): Promise<void> {
   return request<void>(`/admin/users/${userId}`, { method: "DELETE", auth: true });
+}
+
+export async function getAdminCatalog(): Promise<CatalogDataset[]> {
+  return request<CatalogDataset[]>("/admin/catalog", { auth: true });
+}
+
+export async function createCatalogDataset(payload: CatalogDatasetInput): Promise<CatalogDataset> {
+  return request<CatalogDataset>("/admin/catalog", { method: "POST", body: payload, auth: true });
+}
+
+export async function updateCatalogDataset(
+  id: string,
+  payload: Partial<CatalogDatasetInput>
+): Promise<CatalogDataset> {
+  return request<CatalogDataset>(`/admin/catalog/${id}`, { method: "PATCH", body: payload, auth: true });
+}
+
+export async function deleteCatalogDataset(id: string): Promise<void> {
+  return request<void>(`/admin/catalog/${id}`, { method: "DELETE", auth: true });
 }
