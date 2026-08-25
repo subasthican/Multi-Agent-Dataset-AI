@@ -187,9 +187,13 @@ status and the full `/auth/*` API reference. Summary:
 ### Admin panel
 
 `backend/security/admin_router.py` + `frontend/dataset-ai-ui/app/admin/`.
-Manage users, change a plan (this is currently the *only* way to become
-"pro" — no billing exists), grant/revoke admin, delete accounts. Nobody is
-admin by default — grant yourself access once with:
+Manage users (change plan, grant/revoke admin, delete accounts), manage the
+dataset catalog, and manage plans themselves at `/admin/plans` — plans are a
+DB table now, not hardcoded, and each one's `daily_search_limit` is actually
+enforced server-side on `/discover` (free-tier default: 10/day, tracked by
+IP for anonymous users too). Changing a user's plan here is still the *only*
+way to become "pro" — no billing exists. Nobody is admin by default — grant
+yourself access once with:
 ```bash
 cd backend
 python scripts/promote_admin.py your-email@example.com
@@ -200,11 +204,10 @@ deliberately *not* built yet (no audit log of admin actions, no re-auth
 before deleting a user).
 
 **Building this out further?** See [`docs/admin-panel-roadmap.md`](admin-panel-roadmap.md)
-first — catalog management (done) was phase 2 of a 5-phase plan; plan
-management/limit enforcement, user detail pages, and system health/audit
-logging are phases 3-5, planned but not built. That file has the detailed
-plan for each and is written to be picked up in a fresh chat with no other
-context.
+first — catalog management (phase 2) and plan management/limit enforcement
+(phase 3) are done; user detail pages and system health/audit logging are
+phases 4-5, planned but not built. That file has the detailed plan for each
+and is written to be picked up in a fresh chat with no other context.
 
 ## Member 3 — Frontend + UX (`member3-frontend-ui`)
 
