@@ -8,6 +8,7 @@ import AgentFlow, { type AgentStage } from "@/components/AgentFlow";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import ExplanationCard from "@/components/ExplanationCard";
 import DatasetCard from "@/components/DatasetCard";
+import RecommendedForYou from "@/components/RecommendedForYou";
 import { discover, ApiError, type DiscoverResponse } from "@/services/api";
 
 const STAGE_SEQUENCE: AgentStage[] = ["nlp", "discovery", "evaluation"];
@@ -19,6 +20,8 @@ export default function Home() {
   const [result, setResult] = useState<DiscoverResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const stageTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const hasActivity = loading || result !== null || error !== null;
 
   async function handleSearch(query: string) {
     setLoading(true);
@@ -50,7 +53,14 @@ export default function Home() {
       <GalaxyBackground />
       <Navbar />
 
-      <main className="flex flex-1 flex-col items-center gap-10 px-6 pb-20 pt-8 sm:px-10">
+      {/* Before the first search the hero sits centred in the viewport rather
+          than stranded at the top above a large void; once results exist it
+          reflows to the top so the list gets the space. */}
+      <main
+        className={`flex flex-1 flex-col items-center gap-10 px-6 pb-20 sm:px-10 ${
+          hasActivity ? "pt-8" : "justify-center pb-32"
+        }`}
+      >
         <div className="flex flex-col items-center gap-3 text-center">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
             DATA <span className="text-gradient">NEBULA</span> AI
@@ -62,6 +72,11 @@ export default function Home() {
         </div>
 
         <SearchBox onSearch={handleSearch} loading={loading} />
+
+        {/* Only shown before this session's first search — once real results
+            are on screen they take priority over a speculative, page-load-time
+            recommendation list. */}
+        {!hasActivity && <RecommendedForYou />}
 
         {(loading || stage === "done") && (
           <div className="flex flex-col items-center gap-3">

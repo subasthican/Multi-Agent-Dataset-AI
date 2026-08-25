@@ -28,7 +28,7 @@ export default function SearchBox({ onSearch, loading }: SearchBoxProps) {
     <div className="w-full max-w-2xl">
       <form
         onSubmit={handleSubmit}
-        className="glass-strong glow-purple flex items-center gap-3 rounded-2xl p-2 pl-5 transition-shadow focus-within:glow-cyan"
+        className="glass-strong glow-purple flex items-center gap-3 rounded-2xl p-2 pl-5 transition-shadow duration-300 focus-within:glow-cyan"
       >
         <Search className="h-5 w-5 shrink-0 text-white/50" />
         <input
@@ -40,7 +40,7 @@ export default function SearchBox({ onSearch, loading }: SearchBoxProps) {
         <button
           type="submit"
           disabled={loading || !query.trim()}
-          className="flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-nebula-cyan to-nebula-purple px-4 py-3 text-sm font-medium text-black transition-opacity disabled:opacity-40 sm:px-6"
+          className="btn-primary flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm sm:px-6"
         >
           {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
           {loading ? "Searching" : "Explore"}
