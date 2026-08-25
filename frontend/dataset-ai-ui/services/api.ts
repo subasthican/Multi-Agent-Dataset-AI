@@ -47,11 +47,37 @@ export interface User {
   // "free" | "pro" union — an admin can create/rename/delete tiers.
   plan: string;
   is_admin: boolean;
+  // Reversible alternative to deletion — a suspended (false) user can't log
+  // in and their existing token stops working immediately.
+  is_active: boolean;
   created_at: string;
 }
 
 export interface AdminUser extends User {
   search_count: number;
+}
+
+export interface SearchHistoryItem {
+  id: string;
+  query: string;
+  domain: string;
+  task: string;
+  understanding_source: "llm" | "rule_based";
+  created_at: string;
+}
+
+export interface AdminUserDetail extends AdminUser {
+  search_history: SearchHistoryItem[];
+}
+
+export type AdminUserSort = "newest" | "oldest" | "most_searches" | "name";
+
+export interface AdminUserFilters {
+  q?: string;
+  plan?: string;
+  is_admin?: boolean;
+  is_active?: boolean;
+  sort?: AdminUserSort;
 }
 
 export interface AdminStats {
@@ -223,8 +249,18 @@ export async function resetPassword(token: string, newPassword: string): Promise
   });
 }
 
-export async function getAdminUsers(): Promise<AdminUser[]> {
-  return request<AdminUser[]>("/admin/users", { auth: true });
+export async function getAdminUsers(filters: AdminUserFilters = {}): Promise<AdminUser[]> {
+  const query: Record<string, string> = {};
+  if (filters.q) query.q = filters.q;
+  if (filters.plan) query.plan = filters.plan;
+  if (filters.is_admin !== undefined) query.is_admin = String(filters.is_admin);
+  if (filters.is_active !== undefined) query.is_active = String(filters.is_active);
+  if (filters.sort) query.sort = filters.sort;
+  return request<AdminUser[]>("/admin/users", { auth: true, query });
+}
+
+export async function getAdminUser(userId: string): Promise<AdminUserDetail> {
+  return request<AdminUserDetail>(`/admin/users/${userId}`, { auth: true });
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
@@ -233,7 +269,7 @@ export async function getAdminStats(): Promise<AdminStats> {
 
 export async function updateAdminUser(
   userId: string,
-  changes: { plan?: string; is_admin?: boolean }
+  changes: { plan?: string; is_admin?: boolean; is_active?: boolean }
 ): Promise<AdminUser> {
   return request<AdminUser>(`/admin/users/${userId}`, { method: "PATCH", body: changes, auth: true });
 }
