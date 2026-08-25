@@ -24,9 +24,28 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     plan: str
+    is_admin: bool
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class AdminUpdateUserRequest(BaseModel):
+    plan: str | None = None
+    is_admin: bool | None = None
+
+
+class AdminUserResponse(UserResponse):
+    search_count: int
+
+
+class AdminStatsResponse(BaseModel):
+    total_users: int
+    pro_users: int
+    admin_users: int
+    total_searches: int
+    searches_via_llm: int
+    searches_via_rule_based: int
 
 
 class ChangePasswordRequest(BaseModel):
