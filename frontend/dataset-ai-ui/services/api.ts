@@ -18,7 +18,7 @@ export interface DatasetMatch {
   task: string;
   description: string;
   similarity: number;
-  source: "catalog" | "kaggle";
+  source: "catalog" | "kaggle" | "openml" | "huggingface";
 }
 
 export interface EvaluatedDataset {
