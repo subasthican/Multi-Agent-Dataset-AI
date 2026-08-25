@@ -23,6 +23,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     plan: Mapped[str] = mapped_column(String, default="free", nullable=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     reset_tokens: Mapped[list["PasswordResetToken"]] = relationship(
@@ -59,6 +60,7 @@ class SearchHistory(Base):
     query: Mapped[str] = mapped_column(String, nullable=False)
     domain: Mapped[str] = mapped_column(String, nullable=False)
     task: Mapped[str] = mapped_column(String, nullable=False)
+    understanding_source: Mapped[str] = mapped_column(String, default="rule_based", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     user: Mapped["User"] = relationship(back_populates="search_history")
