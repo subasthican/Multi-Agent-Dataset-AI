@@ -25,6 +25,11 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
     plan: Mapped[str] = mapped_column(String, default="free", nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    # Reversible alternative to deleting an account outright — a suspended
+    # user can't log in, and an already-issued token stops working
+    # immediately (re-checked on every request, same as is_admin; see
+    # authentication.py). Re-activating just flips this back.
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     reset_tokens: Mapped[list["PasswordResetToken"]] = relationship(
