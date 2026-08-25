@@ -56,7 +56,7 @@ export default function ExplanationCard({ understanding }: { understanding: Quer
             . You can clear your search history anytime from your profile.
           </>
         ) : (
-          "Transparency note: this query was analyzed but not stored — nothing here is retained after your session."
+          "Transparency note: this query text isn't stored anywhere. Since you're not signed in, only your IP address and a timestamp are logged, to enforce the daily search limit — never the query itself."
         )}
       </p>
     </motion.div>

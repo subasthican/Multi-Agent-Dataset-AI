@@ -7,12 +7,23 @@ from agents.discovery_agent.models import CatalogDatasetCreate, CatalogDatasetRe
 
 from .authentication import get_current_admin_user
 from .db import get_db
-from .db_models import CatalogDataset, SearchHistory, User
-from .schemas import AdminStatsResponse, AdminUpdateUserRequest, AdminUserResponse
+from .db_models import CatalogDataset, Plan, SearchHistory, User
+from .schemas import (
+    AdminStatsResponse,
+    AdminUpdateUserRequest,
+    AdminUserResponse,
+    PlanCreateRequest,
+    PlanResponse,
+    PlanUpdateRequest,
+)
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-VALID_PLANS = {"free", "pro"}
+
+def _valid_plan_names(db: Session) -> set[str]:
+    """Plans are admin-managed now (see /admin/plans below), not a fixed
+    set — this replaces what used to be a hardcoded {"free", "pro"}."""
+    return {name for (name,) in db.query(Plan.name).all()}
 
 
 def _to_admin_user_response(db: Session, user: User) -> AdminUserResponse:
@@ -62,9 +73,10 @@ def update_user(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     if payload.plan is not None:
-        if payload.plan not in VALID_PLANS:
+        valid_plans = _valid_plan_names(db)
+        if payload.plan not in valid_plans:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST, detail=f"plan must be one of {sorted(VALID_PLANS)}"
+                status_code=status.HTTP_400_BAD_REQUEST, detail=f"plan must be one of {sorted(valid_plans)}"
             )
         user.plan = payload.plan
 
@@ -159,3 +171,65 @@ def delete_catalog_entry(
     db.delete(entry)
     db.commit()
     vector_store.invalidate_cache()
+
+
+@router.get("/plans", response_model=list[PlanResponse])
+def list_plans(current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    return db.query(Plan).order_by(Plan.created_at).all()
+
+
+@router.post("/plans", response_model=PlanResponse, status_code=status.HTTP_201_CREATED)
+def create_plan(
+    payload: PlanCreateRequest, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)
+):
+    if db.query(Plan).filter(Plan.name == payload.name).first() is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'A plan named "{payload.name}" already exists')
+
+    plan = Plan(**payload.model_dump())
+    db.add(plan)
+    db.commit()
+    db.refresh(plan)
+    return plan
+
+
+@router.patch("/plans/{plan_id}", response_model=PlanResponse)
+def update_plan(
+    plan_id: str,
+    payload: PlanUpdateRequest,
+    current_admin: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    """name is intentionally not editable here — it's the stable key
+    User.plan stores, and this project doesn't do a User-row rewrite on
+    rename (see the Plan model's own docstring)."""
+    plan = db.get(Plan, plan_id)
+    if plan is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Plan not found")
+
+    updates = payload.model_dump(exclude={"clear_search_limit"}, exclude_unset=True)
+    for field, value in updates.items():
+        setattr(plan, field, value)
+
+    if payload.clear_search_limit:
+        plan.daily_search_limit = None
+
+    db.commit()
+    db.refresh(plan)
+    return plan
+
+
+@router.delete("/plans/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_plan(plan_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    plan = db.get(Plan, plan_id)
+    if plan is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Plan not found")
+
+    users_on_plan = db.query(func.count(User.id)).filter(User.plan == plan.name).scalar() or 0
+    if users_on_plan > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"{users_on_plan} user(s) are still on this plan — move them to another plan first",
+        )
+
+    db.delete(plan)
+    db.commit()

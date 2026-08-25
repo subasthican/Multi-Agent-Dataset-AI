@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Activity, ChartBar, Crown, Database, Shield, Trash2, Users } from "lucide-react";
+import { Activity, ChartBar, Crown, Database, Shield, Sliders, Trash2, Users } from "lucide-react";
 import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import { AuthError } from "@/components/AuthCard";
@@ -14,9 +14,11 @@ import {
   deleteAdminUser,
   getAdminStats,
   getAdminUsers,
+  getPlans,
   updateAdminUser,
   type AdminStats,
   type AdminUser,
+  type Plan,
 } from "@/services/api";
 
 function StatCard({ icon: Icon, label, value }: { icon: typeof Users; label: string; value: number | string }) {
@@ -39,15 +41,20 @@ export default function AdminPage() {
 
   const [users, setUsers] = useState<AdminUser[] | null>(null);
   const [stats, setStats] = useState<AdminStats | null>(null);
+  const [plans, setPlans] = useState<Plan[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busyUserId, setBusyUserId] = useState<string | null>(null);
 
   const loadData = useCallback(async () => {
     setError(null);
     try {
-      const [usersData, statsData] = await Promise.all([getAdminUsers(), getAdminStats()]);
+      // getPlans() is public and only used here to populate the plan
+      // dropdown below — GET /admin/plans (admin-only, with full CRUD) is
+      // what the dedicated /admin/plans page uses.
+      const [usersData, statsData, plansData] = await Promise.all([getAdminUsers(), getAdminStats(), getPlans()]);
       setUsers(usersData);
       setStats(statsData);
+      setPlans(plansData);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not load admin data.");
     }
@@ -66,7 +73,7 @@ export default function AdminPage() {
     void Promise.resolve().then(() => loadData());
   }, [authLoading, user, router, loadData]);
 
-  async function handlePlanChange(target: AdminUser, plan: "free" | "pro") {
+  async function handlePlanChange(target: AdminUser, plan: string) {
     setBusyUserId(target.id);
     setError(null);
     try {
@@ -127,10 +134,16 @@ export default function AdminPage() {
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-10">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Admin</h1>
-          <Link href="/admin/catalog" className="btn-secondary flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm">
-            <Database className="h-4 w-4" />
-            Manage catalog
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/admin/catalog" className="btn-secondary flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm">
+              <Database className="h-4 w-4" />
+              Manage catalog
+            </Link>
+            <Link href="/admin/plans" className="btn-secondary flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm">
+              <Sliders className="h-4 w-4" />
+              Manage plans
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
@@ -177,14 +190,23 @@ export default function AdminPage() {
                     <td className="py-3 pr-4">{u.is_admin ? <Shield className="h-4 w-4 text-nebula-cyan" /> : null}</td>
                     <td className="py-3 pr-4">{u.search_count}</td>
                     <td className="py-3">
-                      <div className="flex flex-wrap gap-2">
-                        <button
+                      <div className="flex flex-wrap items-center gap-2">
+                        <select
                           disabled={busy}
-                          onClick={() => handlePlanChange(u, u.plan === "pro" ? "free" : "pro")}
-                          className="btn-secondary rounded-lg px-2.5 py-1 text-xs disabled:opacity-40"
+                          value={u.plan}
+                          onChange={(e) => handlePlanChange(u, e.target.value)}
+                          className="rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-xs text-white disabled:opacity-40"
                         >
-                          {u.plan === "pro" ? "Downgrade" : "Upgrade to Pro"}
-                        </button>
+                          {/* Falls back to the user's current plan name even if it's
+                              since been deleted, so the select never silently shows
+                              the wrong value. */}
+                          {!plans.some((p) => p.name === u.plan) && <option value={u.plan}>{u.plan}</option>}
+                          {plans.map((p) => (
+                            <option key={p.id} value={p.name}>
+                              {p.display_name}
+                            </option>
+                          ))}
+                        </select>
                         <button
                           disabled={busy || isSelf}
                           title={isSelf ? "Can't change your own admin access" : undefined}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import SearchBox from "@/components/SearchBox";
@@ -9,7 +9,7 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 import ExplanationCard from "@/components/ExplanationCard";
 import DatasetCard from "@/components/DatasetCard";
 import RecommendedForYou from "@/components/RecommendedForYou";
-import { discover, ApiError, type DiscoverResponse } from "@/services/api";
+import { discover, getUsage, ApiError, type DiscoverResponse, type Usage } from "@/services/api";
 
 const STAGE_SEQUENCE: AgentStage[] = ["nlp", "discovery", "evaluation"];
 const STAGE_STEP_MS = 700;
@@ -19,9 +19,22 @@ export default function Home() {
   const [stage, setStage] = useState<AgentStage>("idle");
   const [result, setResult] = useState<DiscoverResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [usage, setUsage] = useState<Usage | null>(null);
   const stageTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasActivity = loading || result !== null || error !== null;
+
+  // Best-effort — a failed usage fetch should never block search itself, so
+  // no error state here, just silently leave the badge unset.
+  const loadUsage = useCallback(() => {
+    getUsage()
+      .then(setUsage)
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    loadUsage();
+  }, [loadUsage]);
 
   async function handleSearch(query: string) {
     setLoading(true);
@@ -45,6 +58,9 @@ export default function Home() {
     } finally {
       if (stageTimer.current) clearInterval(stageTimer.current);
       setLoading(false);
+      // Refresh regardless of outcome — a successful search consumes one,
+      // and a 429 means the count just hit its ceiling.
+      loadUsage();
     }
   }
 
@@ -72,6 +88,17 @@ export default function Home() {
         </div>
 
         <SearchBox onSearch={handleSearch} loading={loading} />
+
+        {/* Visible before a 429 ever happens, not just after — a silent
+            rejection is worse than a heads-up. Works for anonymous callers
+            too since /usage tracks them by IP just like /discover does. */}
+        {usage && (
+          <p className="text-xs text-white/40">
+            {usage.limit === null
+              ? `${usage.plan} plan · unlimited searches`
+              : `${usage.remaining} of ${usage.limit} searches left today · ${usage.plan} plan`}
+          </p>
+        )}
 
         {/* Only shown before this session's first search — once real results
             are on screen they take priority over a speculative, page-load-time
