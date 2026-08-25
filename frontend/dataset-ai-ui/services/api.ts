@@ -43,7 +43,9 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  plan: "free" | "pro";
+  // Plans are admin-managed and dynamic now (see Plan below), not a fixed
+  // "free" | "pro" union — an admin can create/rename/delete tiers.
+  plan: string;
   is_admin: boolean;
   created_at: string;
 }
@@ -82,6 +84,49 @@ export interface CatalogDatasetInput {
 export interface TokenResponse {
   access_token: string;
   token_type: string;
+}
+
+export interface Plan {
+  id: string;
+  name: string; // stable key stored on User.plan — not editable after creation
+  display_name: string;
+  price_label: string;
+  period: string | null;
+  description: string;
+  features: string[];
+  daily_search_limit: number | null; // null = unlimited
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlanInput {
+  name: string;
+  display_name: string;
+  price_label: string;
+  period?: string | null;
+  description: string;
+  features: string[];
+  daily_search_limit?: number | null;
+}
+
+export interface PlanUpdateInput {
+  display_name?: string;
+  price_label?: string;
+  period?: string | null;
+  description?: string;
+  features?: string[];
+  daily_search_limit?: number | null;
+  // PATCH can't tell "left alone" apart from "set to unlimited" for an
+  // optional int, so clearing the limit is a dedicated flag (mirrors the
+  // backend's PlanUpdateRequest).
+  clear_search_limit?: boolean;
+}
+
+export interface Usage {
+  plan: string;
+  limit: number | null; // null = unlimited
+  used: number;
+  remaining: number | null;
 }
 
 export class ApiError extends Error {}
@@ -188,7 +233,7 @@ export async function getAdminStats(): Promise<AdminStats> {
 
 export async function updateAdminUser(
   userId: string,
-  changes: { plan?: "free" | "pro"; is_admin?: boolean }
+  changes: { plan?: string; is_admin?: boolean }
 ): Promise<AdminUser> {
   return request<AdminUser>(`/admin/users/${userId}`, { method: "PATCH", body: changes, auth: true });
 }
@@ -214,4 +259,31 @@ export async function updateCatalogDataset(
 
 export async function deleteCatalogDataset(id: string): Promise<void> {
   return request<void>(`/admin/catalog/${id}`, { method: "DELETE", auth: true });
+}
+
+export async function getPlans(): Promise<Plan[]> {
+  // Public — the pricing page needs this without requiring login.
+  return request<Plan[]>("/plans");
+}
+
+export async function getUsage(): Promise<Usage> {
+  // auth: true attaches a token when signed in, but the endpoint works
+  // signed-out too (usage tracked by IP for anonymous callers).
+  return request<Usage>("/usage", { auth: true });
+}
+
+export async function getAdminPlans(): Promise<Plan[]> {
+  return request<Plan[]>("/admin/plans", { auth: true });
+}
+
+export async function createPlan(payload: PlanInput): Promise<Plan> {
+  return request<Plan>("/admin/plans", { method: "POST", body: payload, auth: true });
+}
+
+export async function updatePlan(id: string, payload: PlanUpdateInput): Promise<Plan> {
+  return request<Plan>(`/admin/plans/${id}`, { method: "PATCH", body: payload, auth: true });
+}
+
+export async function deletePlan(id: string): Promise<void> {
+  return request<void>(`/admin/plans/${id}`, { method: "DELETE", auth: true });
 }
