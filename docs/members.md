@@ -19,6 +19,13 @@ and `IRWA CHATGPT FULL REPORT.docx`.
 > their own — the brief requires everyone to understand the whole system.
 > These also propose rebalancing agent ownership 1:1 per member (below).
 
+> **Also see [`docs/agent-improvements.md`](agent-improvements.md)** — a
+> running log of real issues found per agent (several via live testing, e.g.
+> an actual prompt injection attempt against the NLP Agent) and what was
+> fixed vs. left open. Good source material for the report's evaluation
+> section and for the individual security assignment above — some open
+> items there are exactly what that assignment asks someone to test.
+
 ## Project
 
 Multi-agent AI system for natural-language dataset discovery. User describes a need in
