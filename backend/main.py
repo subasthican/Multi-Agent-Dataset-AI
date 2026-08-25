@@ -41,10 +41,11 @@ def on_startup():
 
 DEFAULT_RESULT_COUNT = 3
 
-# Terms too generic to help either search, and that flood Kaggle's search with
-# noise now that it's not just feeding an embedding.
+# Terms too generic to help any external source's own search (Kaggle,
+# OpenML, HuggingFace all confirmed to return nothing for long, noisy
+# multi-keyword strings — they need a short, specific query).
 GENERIC_KEYWORDS = {"dataset", "datasets", "data", "machine", "learning", "predicting", "prediction"}
-MAX_KAGGLE_KEYWORDS = 2
+MAX_EXTERNAL_KEYWORDS = 2
 
 
 class DiscoverResponse(BaseModel):
@@ -58,12 +59,13 @@ def _discovery_query(understanding: QueryAnalysisResult) -> str:
     return " ".join([understanding.domain, understanding.task, *understanding.keywords])
 
 
-def _kaggle_query(understanding: QueryAnalysisResult) -> str:
-    """Query for Kaggle's own search endpoint, which — unlike FAISS similarity
-    — returns zero results for long multi-keyword strings, so this stays to a
-    short domain + a couple of meaningful keywords."""
+def _external_query(understanding: QueryAnalysisResult) -> str:
+    """Query for Kaggle/OpenML/HuggingFace's own search endpoints, which —
+    unlike FAISS similarity — return zero results for long multi-keyword
+    strings, so this stays to a short domain + a couple of meaningful
+    keywords. (OpenML narrows this further itself, to just the first word.)"""
     meaningful_keywords = [k for k in understanding.keywords if k.lower() not in GENERIC_KEYWORDS]
-    terms = [understanding.domain, *meaningful_keywords[:MAX_KAGGLE_KEYWORDS]]
+    terms = [understanding.domain, *meaningful_keywords[:MAX_EXTERNAL_KEYWORDS]]
 
     deduped = []
     for term in terms:
@@ -73,11 +75,12 @@ def _kaggle_query(understanding: QueryAnalysisResult) -> str:
 
 
 def _candidate_datasets(understanding: QueryAnalysisResult, k: int) -> List[DatasetMatch]:
-    """Curated catalog matches plus any live Kaggle matches (best-effort;
-    empty when KAGGLE_API_TOKEN isn't configured)."""
+    """Curated catalog matches plus any live external matches from Kaggle,
+    OpenML, and HuggingFace (each best-effort — an unconfigured or
+    unreachable source just contributes nothing, never an error)."""
     catalog_matches = search_datasets(_discovery_query(understanding), k=k).matches
     external_matches = [
-        DatasetMatch(**item) for item in collect_external_datasets(_kaggle_query(understanding), limit=k)
+        DatasetMatch(**item) for item in collect_external_datasets(_external_query(understanding), limit=k)
     ]
     return catalog_matches + external_matches
 
