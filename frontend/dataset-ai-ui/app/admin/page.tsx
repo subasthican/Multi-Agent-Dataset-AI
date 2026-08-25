@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { Activity, ChartBar, Crown, Shield, Trash2, Users } from "lucide-react";
+import { Activity, ChartBar, Crown, Database, Shield, Trash2, Users } from "lucide-react";
 import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import { AuthError } from "@/components/AuthCard";
@@ -124,12 +125,19 @@ export default function AdminPage() {
       <GalaxyBackground />
       <Navbar />
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-10">
-        <h1 className="text-xl font-semibold">Admin</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-semibold">Admin</h1>
+          <Link href="/admin/catalog" className="btn-secondary flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm">
+            <Database className="h-4 w-4" />
+            Manage catalog
+          </Link>
+        </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
           <StatCard icon={Users} label="Total users" value={stats.total_users} />
           <StatCard icon={Crown} label="Pro users" value={stats.pro_users} />
           <StatCard icon={Shield} label="Admins" value={stats.admin_users} />
+          <StatCard icon={Database} label="Catalog size" value={stats.catalog_size} />
           <StatCard icon={Activity} label="Total searches" value={stats.total_searches} />
           <StatCard icon={ChartBar} label="Via Gemini" value={stats.searches_via_llm} />
           <StatCard icon={ChartBar} label="Via fallback" value={stats.searches_via_rule_based} />
