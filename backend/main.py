@@ -1,9 +1,10 @@
 import os
 from typing import List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ValidationError
+from sqlalchemy.orm import Session
 
 from agents.dataset_collection_agent.agent import collect_external_datasets
 from agents.discovery_agent.agent import search_datasets
@@ -12,7 +13,11 @@ from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
 from agents.nlp_agent.agent import analyze_query
 from agents.nlp_agent.models import QueryAnalysisResult
-from security.db import init_db
+from agents.recommendation_agent.agent import clear_history, get_recommendations, record_search
+from agents.recommendation_agent.models import RecommendationResponse
+from security.authentication import get_current_user, get_current_user_optional
+from security.db import get_db, init_db
+from security.db_models import User
 from security.router import router as auth_router
 
 app = FastAPI(title="Dataset AI Agent System")
@@ -112,9 +117,17 @@ def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
 
 
 @app.post("/discover", response_model=DiscoverResponse)
-def discover(query: str, k: int = DEFAULT_RESULT_COUNT):
+def discover(
+    query: str,
+    k: int = DEFAULT_RESULT_COUNT,
+    current_user: User | None = Depends(get_current_user_optional),
+    db: Session = Depends(get_db),
+):
     """Full pipeline: NLP Agent -> Discovery Agent (+ live Kaggle results when
-    configured) -> Evaluation Agent."""
+    configured) -> Evaluation Agent. Stays usable without an account; if a
+    valid token IS attached, the search is additionally recorded against
+    that user to power GET /recommendations. Anonymous searches are never
+    recorded anywhere."""
     try:
         understanding = analyze_query(query)
     except ValidationError as exc:
@@ -123,4 +136,26 @@ def discover(query: str, k: int = DEFAULT_RESULT_COUNT):
     candidates = _candidate_datasets(understanding, k)
     recommendations = evaluate_datasets(candidates, understanding)
 
+    if current_user is not None:
+        record_search(db, current_user, understanding)
+
     return DiscoverResponse(understanding=understanding, recommendations=recommendations)
+
+
+@app.get("/recommendations", response_model=RecommendationResponse)
+def recommendations(
+    k: int = DEFAULT_RESULT_COUNT,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Personalized recommendations based on the signed-in user's own search
+    pattern (most frequent domain/task across their history) — not a fresh
+    query. Empty history returns an empty list, not an error."""
+    return get_recommendations(db, current_user, k=k)
+
+
+@app.delete("/recommendations", status_code=204)
+def delete_search_history(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """Lets a user clear their own search history — Responsible AI: personalization
+    should be optional and reversible, not a silent permanent record."""
+    clear_history(db, current_user)

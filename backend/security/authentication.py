@@ -58,3 +58,19 @@ def get_current_user(
     if user is None:
         raise unauthorized
     return user
+
+
+def get_current_user_optional(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    db: Session = Depends(get_db),
+) -> User | None:
+    """Same as get_current_user, but returns None instead of raising when
+    there's no/invalid token — for endpoints (like /discover) that must stay
+    usable without an account, but behave differently when one is present."""
+    if credentials is None:
+        return None
+    try:
+        payload = decode_access_token(credentials.credentials)
+    except jwt.PyJWTError:
+        return None
+    return db.get(User, payload.get("sub"))
