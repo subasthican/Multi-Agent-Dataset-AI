@@ -1,11 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Database, Globe } from "lucide-react";
+import { Boxes, Database, FlaskConical, Globe } from "lucide-react";
 import type { EvaluatedDataset } from "@/services/api";
+
+const SOURCE_BADGES = {
+  catalog: { icon: Database, className: "bg-nebula-cyan/15 text-nebula-cyan" },
+  kaggle: { icon: Globe, className: "bg-nebula-pink/15 text-nebula-pink" },
+  openml: { icon: FlaskConical, className: "bg-nebula-purple/15 text-nebula-purple" },
+  huggingface: { icon: Boxes, className: "bg-nebula-amber/15 text-nebula-amber" },
+} as const;
 
 export default function DatasetCard({ item, index }: { item: EvaluatedDataset; index: number }) {
   const { dataset, score, explanation } = item;
+  const badge = SOURCE_BADGES[dataset.source];
 
   return (
     <motion.div
@@ -15,17 +23,13 @@ export default function DatasetCard({ item, index }: { item: EvaluatedDataset; i
       className="glass flex flex-col gap-4 p-5"
     >
       <div className="flex items-start justify-between gap-3">
-        {/* Live Kaggle titles are arbitrary user text and can be long or
+        {/* Live source titles are arbitrary external text and can be long or
             unbroken, so this has to be allowed to wrap rather than overflow. */}
         <h3 className="min-w-0 flex-1 text-base font-semibold break-words text-white">{dataset.name}</h3>
         <span
-          className={`flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] uppercase tracking-wide ${
-            dataset.source === "kaggle"
-              ? "bg-nebula-pink/15 text-nebula-pink"
-              : "bg-nebula-cyan/15 text-nebula-cyan"
-          }`}
+          className={`flex shrink-0 items-center gap-1 rounded-full px-2 py-1 text-[10px] uppercase tracking-wide ${badge.className}`}
         >
-          {dataset.source === "kaggle" ? <Globe className="h-3 w-3" /> : <Database className="h-3 w-3" />}
+          <badge.icon className="h-3 w-3" />
           {dataset.source}
         </span>
       </div>
