@@ -184,6 +184,21 @@ status and the full `/auth/*` API reference. Summary:
   these would add a dedicated bias/fairness angle on top).
 - `docs/security.md` for the report is still to be written.
 
+### Admin panel
+
+`backend/security/admin_router.py` + `frontend/dataset-ai-ui/app/admin/`.
+Manage users, change a plan (this is currently the *only* way to become
+"pro" — no billing exists), grant/revoke admin, delete accounts. Nobody is
+admin by default — grant yourself access once with:
+```bash
+cd backend
+python scripts/promote_admin.py your-email@example.com
+```
+(You must have already registered that account through the normal
+`/register` page first.) See `docs/agent-improvements.md` for what's
+deliberately *not* built yet (no audit log of admin actions, no re-auth
+before deleting a user).
+
 ## Member 3 — Frontend + UX (`member3-frontend-ui`)
 
 **Status: implemented.** Real components, not stubs — see
