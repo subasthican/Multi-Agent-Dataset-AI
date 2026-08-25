@@ -12,6 +12,10 @@ out/
 .env
 .env.local
 
+# Database (local dev data, not source)
+database/*.db
+database/*.sqlite3
+
 # IDE
 .vscode/
 .idea/

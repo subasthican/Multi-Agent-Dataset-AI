@@ -97,6 +97,13 @@ textarea:focus-visible {
   box-shadow: none;
 }
 
+/* Browsers don't give <button> a pointer cursor the way they do <a> — without
+   this every button in the app reads as inert/unclickable on hover, which is
+   the single biggest "does this feel professional" tell in a UI. */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
 /* Premium button system — a soft top highlight plus a coloured glow gives
    real depth instead of a flat gradient fill, with a gentle lift on hover. */
 .btn-primary {

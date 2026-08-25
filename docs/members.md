@@ -3,6 +3,22 @@
 Source: `Group Assignment Brief.pdf` (IT3041 – Information Retrieval and Web Analytics)
 and `IRWA CHATGPT FULL REPORT.docx`.
 
+> **Also see [`docs/individual-assignment.md`](individual-assignment.md)** — a
+> *separate, individually graded* 100-mark assignment (80 report + 20 viva)
+> where each member independently red-teams this same system from an assigned
+> angle (prompt injection, privacy/data leakage, Responsible AI/bias, or IR
+> security) and submits their own vulnerability assessment report. Everyone on
+> the team needs to read that file — it's graded per-person, not per-group.
+
+> **Also see `docs/mid-evaluation/`** — three self-contained prep files
+> ([`member1-nlp-agent.md`](mid-evaluation/member1-nlp-agent.md),
+> [`member2-security-agent.md`](mid-evaluation/member2-security-agent.md),
+> [`member3-frontend-ui.md`](mid-evaluation/member3-frontend-ui.md)), one per
+> member, each answering all 6 Mid Evaluation discussion points in full plus a
+> "your files" section. **Every member should read all three**, not just
+> their own — the brief requires everyone to understand the whole system.
+> These also propose rebalancing agent ownership 1:1 per member (below).
+
 ## Project
 
 Multi-agent AI system for natural-language dataset discovery. User describes a need in
@@ -21,35 +37,92 @@ so each member's branch/commits should reflect work that member actually did.
 ```
 main
  └── dev
-      ├── member1-nlp-agent        (created)
-      ├── member2-security-agent   (scaffolded — see note below)
-      └── member3-frontend-ui      (scaffolded — see note below)
+      ├── member1-nlp-agent        (NLP/Discovery/Evaluation agents, CORS, architecture)
+      ├── member2-security-agent   (auth backend implemented)
+      └── member3-frontend-ui      (full UI implemented)
 ```
 
-> **Open question to confirm with your group:** the source report contains two
-> slightly different role splits from different planning sessions:
-> - *Split A (original architecture diagram):* Member 2 = IR/Discovery Agent (vector
->   search, FAISS), Member 3 = Evaluation Agent (ranking/explanation).
-> - *Split B (later, more detailed section):* Member 2 = Security + Responsible AI,
->   Member 3 = Frontend/UX.
+> **Resolved — agent ownership rebalanced 1:1 per member.** All 3 core agents
+> were originally built on `member1-nlp-agent` as a working foundation (Split B
+> from the source report — Member 2 = Security, Member 3 = Frontend — left
+> Member 1 with all 3 AI agents, which isn't an equal split of *agent* work
+> specifically). Going forward, ownership for explaining, defending, and
+> extending each agent is:
+> - **Member 1** — NLP Agent + overall architecture/orchestration
+> - **Member 2** — Discovery (IR) Agent + Security (still the widest scope,
+>   since Discovery and Security are both real, substantial pieces)
+> - **Member 3** — Evaluation Agent + Frontend (a natural pairing — the
+>   Evaluation Agent's explanations are what the frontend's `ExplanationCard`
+>   displays)
 >
-> The scaffolding below follows **Split B** since it's the more fully worked-out plan
-> in the report, which leaves the IR/Discovery and Evaluation agents as part of Member
-> 1's backend/agents work. Confirm this with Gowsika and Kageepan before they start —
-> if you actually want Split A, the folder names just need swapping and the IR module
-> requirement moves to Member 2's branch instead.
+> This doesn't rewrite what's already built or its git history — it's who
+> takes point on each agent from here on (report sections, viva answers,
+> future commits). Full detail and reasoning in `docs/mid-evaluation/`.
 
-## Member 1 — NLP Agent + Architecture Lead (this repo, `member1-nlp-agent`)
+## Member 1 — NLP + Discovery + Evaluation Agents, Architecture Lead (`member1-nlp-agent`)
 
-**Status: implemented.**
+**Status: implemented — all 3 core AI agents + orchestrator.** All 3 agents were
+built here as the initial working foundation; per the rebalance above, Member 1
+now owns the **NLP Agent** specifically going forward, with Discovery going to
+Member 2 and Evaluation to Member 3 (they're identical code either way — this
+is about who explains/extends/defends which agent from here on).
 
-- `backend/agents/nlp_agent/`
-  - `agent.py` — orchestrates a query: validate → clean → spaCy pipeline → classify.
-  - `preprocessing.py` — spaCy model loading, keyword/entity extraction.
-  - `models.py` — Pydantic request/response schemas (`QueryInput`, `QueryAnalysisResult`).
-  - `config.json` — domain/task/data-type trigger keywords. Editable without touching code.
-- `backend/main.py` — FastAPI gateway, exposes `POST /nlp-agent`.
-- `backend/requirements.txt` — fastapi, uvicorn, spacy, pydantic.
+### NLP Agent — `backend/agents/nlp_agent/`
+- `agent.py` — validate → spaCy pipeline (keywords/entities) → Gemini LLM understanding,
+  falling back to the rule-based classifier (`config.json`) when no `GEMINI_API_KEY` is
+  set or the LLM call fails. `understanding_source` on the response says which path ran
+  (`llm` or `rule_based`) — transparency for the Responsible AI section.
+- `preprocessing.py` — spaCy model loading, keyword/entity extraction.
+- `models.py` — `QueryInput`, `QueryAnalysisResult`.
+- `config.json` — domain/task/data-type trigger keywords for the fallback classifier.
+
+### Discovery (IR) Agent — `backend/agents/discovery_agent/`
+- `datasets.json` — curated catalog (10 sample entries across the 5 domains).
+- `embeddings.py` — `sentence-transformers` (`all-MiniLM-L6-v2`) text embeddings.
+- `vector_store.py` — FAISS `IndexFlatL2` semantic search over the catalog.
+- `agent.py` — `search_datasets(query, k)`.
+
+### Dataset Collection Agent — `backend/agents/dataset_collection_agent/`
+- `kaggle_source.py` — live Kaggle dataset search via the `kaggle` package, scored
+  against the query with the same sentence-transformer embeddings as the Discovery
+  Agent (cosine similarity). Domain/task are left `"unspecified"` since Kaggle's search
+  API doesn't expose that metadata (unlike the curated catalog).
+- `agent.py` — `collect_external_datasets(query, limit)`, returns `[]` (not an error)
+  when `KAGGLE_API_TOKEN` isn't set or the API call fails — same graceful-fallback
+  pattern as the LLM client.
+- Results are merged with the catalog's Discovery Agent results before evaluation
+  (`main.py::_candidate_datasets`), each tagged with `source: "catalog"` or
+  `"kaggle"` for transparency.
+
+**Kaggle auth note:** the guide for setting this up commonly describes the older
+`kaggle.json` / `KAGGLE_USERNAME`+`KAGGLE_KEY` scheme. The version installed here
+(`kaggle==2.2.4`) uses a different flow: go to
+[kaggle.com/settings/api](https://www.kaggle.com/settings/api) → "Generate New Token" →
+put the token string in `KAGGLE_API_TOKEN` in the repo-root `.env` (see
+`backend/.env.example`). Also note: `kaggle.KaggleApi.authenticate()` calls
+`sys.exit(1)` on total auth failure by default — `kaggle_source.py` guards against that
+so a bad/missing token can't crash the FastAPI process.
+
+### Evaluation Agent — `backend/agents/evaluation_agent/`
+- `scorer.py` — weighted score: similarity + domain match + task match + keyword
+  overlap (weights are named constants, not magic numbers).
+- `agent.py` — `evaluate_datasets(datasets, requirement)`, sorted by score, each with a
+  generated explanation string (Responsible AI explainability).
+
+### LLM client — `backend/llm/`
+- `gemini_client.py` — wraps the `google-genai` SDK. Reads `GEMINI_API_KEY` from the
+  environment (never hardcode it). Raises `LLMUnavailableError` on a missing key or any
+  API error, which `nlp_agent/agent.py` catches to fall back to the rule-based path.
+- `prompts.py` — the structured-JSON prompt template.
+
+### Gateway — `backend/main.py`
+| Endpoint | Purpose |
+|---|---|
+| `POST /nlp-agent?query=...` | NLP Agent only |
+| `POST /discovery-agent?query=...&k=` | Discovery Agent only (catalog) |
+| `POST /dataset-collection-agent?query=...&k=` | Live Kaggle search only |
+| `POST /evaluation-agent?query=...&k=` | NLP → Discovery+Kaggle → Evaluation, scores only |
+| `POST /discover?query=...&k=` | Full pipeline: understanding + ranked, explained recommendations |
 
 Run it:
 ```bash
@@ -58,52 +131,61 @@ pip install -r requirements.txt
 python -m spacy download en_core_web_sm
 uvicorn main:app --reload
 ```
-Test at `http://localhost:8000/docs`, `POST /nlp-agent?query=Find healthcare datasets for cancer prediction`.
+`GEMINI_API_KEY` and `KAGGLE_API_TOKEN` (both optional) go in the **repo-root** `.env`,
+loaded explicitly regardless of which directory you run uvicorn from. Without them, the
+NLP agent uses the rule-based fallback and Discovery only searches the local catalog —
+the system is fully functional either way.
 
-Still open for Member 1: Discovery/IR Agent (semantic search over a dataset index,
-e.g. FAISS + embeddings) and Evaluation Agent (ranking + explanation), per Split B above.
+**Model note:** newly-created Gemini API keys currently can't access `gemini-2.5-flash`,
+`gemini-2.5-pro`, or `gemini-2.5-flash-lite` (Google returns a 404 "no longer available
+to new users" even though those models are listed). `gemini-3.5-flash` works and is set
+as the default (`llm/gemini_client.py`, override with the `GEMINI_MODEL` env var). If
+Google changes this again, run `client.models.list()` to see what your key can access.
 
-## Member 2 — Security Agent + Responsible AI (`member2-security-agent`, scaffolded)
-
-Folder structure to fill in:
+Test at `http://localhost:8000/docs`, or:
+```bash
+curl -X POST "http://localhost:8000/discover?query=I%20need%20datasets%20for%20predicting%20diabetes"
 ```
-backend/security/
-  authentication.py   # JWT issuing/verification
-  jwt_manager.py
-  input_filter.py      # prompt-injection / malicious input filtering
-  encryption.py         # Fernet-based field encryption
-backend/responsible_ai/
-  fairness.py            # bias/fairness check on ranked results
-  explainability.py    # human-readable reasoning for a recommendation
-  privacy.py               # strip sensitive fields before storage/logging
-```
-Tasks:
-1. JWT authentication protecting the FastAPI endpoints.
-2. Input sanitization layer (block prompt-injection patterns) applied before queries reach the LLM/agents.
-3. Encryption helpers for any stored user data.
-4. Responsible AI layer: explanation generator, fairness check, privacy scrubber.
-5. Wire sanitization + auth into the shared API (coordinate with Member 1 on `main.py`).
-6. `docs/security.md` write-up for the report.
+Verified live against the real Gemini API on 2026-08-16 — `understanding_source: "llm"`
+in the response confirms the LLM path (not the fallback) is running.
 
-## Member 3 — Frontend + UX (`member3-frontend-ui`, scaffolded)
+**Note on the "agent communication protocol" requirement:** the three agents currently
+communicate via direct Python function calls inside one FastAPI process (structured
+Pydantic messages between them). This is a legitimate multi-agent design, but if you
+want a literal separate-process HTTP protocol for extra marks/viva depth, the Discovery
+Agent can be split out and run as its own service (the source report's Step 6 shows this:
+`uvicorn agents.discovery_agent.api:app --port 8001`) with the gateway calling it over
+HTTP instead of importing it directly. Optional — not done here to keep initial scope
+manageable.
 
-Folder structure to fill in (inside `frontend/dataset-ai-ui`):
-```
-app/dashboard/page.tsx
-components/Navbar.tsx
-components/SearchBox.tsx
-components/DatasetCard.tsx
-components/AgentFlow.tsx
-components/LoadingAnimation.tsx
-components/ExplanationCard.tsx
-services/api.ts
-```
-Tasks:
-1. Space-themed UI (dark gradient background, glassmorphism cards, framer-motion animations).
-2. Search box that calls `POST /nlp-agent` (and later the IR/Evaluation endpoints) via `services/api.ts`.
-3. Dataset result cards + an "agent activity" visualization (NLP → IR → Evaluation flow).
-4. Responsive layout, loading states, error states.
-5. Connect to Member 2's auth flow once available.
+## Member 2 — Security Agent + Responsible AI (`member2-security-agent`)
+
+**Status: auth is implemented and live; Responsible AI + input sanitization
+are still open.** See `backend/security/README.md` for the exact file-by-file
+status and the full `/auth/*` API reference. Summary:
+
+- **Done** — `db.py`/`db_models.py` (SQLite via SQLAlchemy), `jwt_manager.py`
+  (PyJWT), `authentication.py` (bcrypt + `get_current_user` dependency),
+  `password_reset.py`, `schemas.py`, `router.py`. Register/login/profile
+  update/change-password/forgot-password/reset-password all work and are
+  verified end-to-end (see commit history on `member2-security-agent`).
+- **Open** — `input_filter.py` (prompt-injection filtering in front of the
+  NLP agent's LLM calls — nothing sanitizes user queries before they reach
+  Gemini right now), `encryption.py` (not yet needed — nothing sensitive
+  beyond password hashes is stored), `responsible_ai/{fairness,explainability,privacy}.py`
+  (the Evaluation Agent already generates its own explanation strings;
+  these would add a dedicated bias/fairness angle on top).
+- `docs/security.md` for the report is still to be written.
+
+## Member 3 — Frontend + UX (`member3-frontend-ui`)
+
+**Status: implemented.** Real components, not stubs — see
+`frontend/dataset-ai-ui/components/README.md` for the file-by-file status.
+Space-themed UI (3D starfield via `@react-three/fiber`, glassmorphism,
+framer-motion), search wired to `POST /discover`, agent-pipeline
+visualization, dataset result cards, and the full auth UI (login, register,
+forgot/reset password, profile) plus a pricing page for the
+commercialization section. Nothing left stubbed on the frontend.
 
 ## Deliverables checklist (from the brief)
 
