@@ -22,6 +22,7 @@ def record_search(db: Session, user: User, understanding: QueryAnalysisResult) -
         query=understanding.original_query,
         domain=understanding.domain,
         task=understanding.task,
+        understanding_source=understanding.understanding_source,
     )
     db.add(entry)
     db.commit()
