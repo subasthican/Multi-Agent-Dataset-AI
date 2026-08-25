@@ -64,3 +64,22 @@ class SearchHistory(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
 
     user: Mapped["User"] = relationship(back_populates="search_history")
+
+
+class CatalogDataset(Base):
+    """The Discovery Agent's curated local catalog — used to live as a
+    static datasets.json file (still there, now used only to seed this
+    table on first startup so the original 10 entries aren't lost). Lives
+    here alongside the other DB models rather than in discovery_agent/
+    because that's where Base/the shared session already live, not because
+    it's a security concern."""
+
+    __tablename__ = "catalog_datasets"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    description: Mapped[str] = mapped_column(String, nullable=False)
+    domain: Mapped[str] = mapped_column(String, nullable=False)
+    task: Mapped[str] = mapped_column(String, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)

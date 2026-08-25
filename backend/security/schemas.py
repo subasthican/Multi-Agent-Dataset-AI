@@ -46,6 +46,7 @@ class AdminStatsResponse(BaseModel):
     total_searches: int
     searches_via_llm: int
     searches_via_rule_based: int
+    catalog_size: int
 
 
 class ChangePasswordRequest(BaseModel):

@@ -1,35 +1,72 @@
-import json
-from functools import lru_cache
-from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import faiss
 import numpy as np
 
+from security.db import SessionLocal
+from security.db_models import CatalogDataset
+
 from .embeddings import create_embeddings
 
-DATASETS_PATH = Path(__file__).parent / "datasets.json"
+# Both caches are invalidated together — the FAISS index is built from the
+# dataset list, so a stale dataset list means a stale index regardless of
+# which one actually changed.
+_datasets_cache: Optional[List[Dict]] = None
+_index_cache: Optional[faiss.IndexFlatL2] = None
 
 
-@lru_cache(maxsize=1)
+def invalidate_cache() -> None:
+    """Call after any write to the catalog (admin add/edit/delete via
+    /admin/catalog) so the next search rebuilds against current data
+    instead of serving a FAISS index built from what the catalog used to
+    contain. Without this, an admin's edit would silently never show up in
+    search results until the server happened to restart."""
+    global _datasets_cache, _index_cache
+    _datasets_cache = None
+    _index_cache = None
+
+
 def load_datasets() -> List[Dict]:
-    with open(DATASETS_PATH, "r", encoding="utf-8") as datasets_file:
-        return json.load(datasets_file)
+    global _datasets_cache
+    if _datasets_cache is None:
+        db = SessionLocal()
+        try:
+            rows = db.query(CatalogDataset).order_by(CatalogDataset.created_at).all()
+            _datasets_cache = [
+                {
+                    "id": row.id,
+                    "name": row.name,
+                    "description": row.description,
+                    "domain": row.domain,
+                    "task": row.task,
+                }
+                for row in rows
+            ]
+        finally:
+            db.close()
+    return _datasets_cache
 
 
-@lru_cache(maxsize=1)
-def build_index() -> faiss.IndexFlatL2:
-    descriptions = [dataset["description"] for dataset in load_datasets()]
-    vectors = np.array(create_embeddings(descriptions)).astype("float32")
-    index = faiss.IndexFlatL2(vectors.shape[1])
-    index.add(vectors)
-    return index
+def build_index() -> Optional[faiss.IndexFlatL2]:
+    global _index_cache
+    if _index_cache is None:
+        datasets = load_datasets()
+        if not datasets:
+            return None
+        descriptions = [dataset["description"] for dataset in datasets]
+        vectors = np.array(create_embeddings(descriptions)).astype("float32")
+        index = faiss.IndexFlatL2(vectors.shape[1])
+        index.add(vectors)
+        _index_cache = index
+    return _index_cache
 
 
 def search_vectors(query: str, k: int = 3) -> List[Dict]:
     datasets = load_datasets()
     index = build_index()
     k = min(k, len(datasets))
+    if k == 0 or index is None:
+        return []
 
     query_vector = np.array(create_embeddings([query])).astype("float32")
     distances, indices = index.search(query_vector, k)
