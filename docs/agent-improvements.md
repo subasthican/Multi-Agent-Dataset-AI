@@ -35,7 +35,8 @@ Status key: ✅ Fixed · 🟡 Partial/mitigated · ⬜ Open
 
 | # | Issue | Status | Detail |
 |---|---|---|---|
-| 1 | Scoring weights are fixed constants | 🟡 By design | Similarity + domain match (+25) + task match (+15) + keyword overlap, applied identically to every query. Simple and explainable (a real strength for viva), but not tuned/validated against any ground truth — no evaluation dataset exists to check if these weights actually produce good rankings. |
+| 1 | Keyword scoring matched substrings, not whole words | ✅ Fixed | `calculate_score` used a plain `keyword in description` check. Demonstrated live with a controlled test: keyword `"age"` scored a false match (7.0) against "Customer Churn Dataset" — completely unrelated to age — purely because its description contains the word **"usage"** (`"age"` is a substring of `"usage"`). Same class of bug would fire for any short keyword coincidentally appearing inside an unrelated word (e.g. `"art"` inside `"start"`). Fixed with `\b` word-boundary regex matching, which still correctly handles multi-word keyword phrases. Verified: the false-positive case now scores 5.0 (bonus gone), a genuine match (keyword actually present as a real word) still scores correctly, full `/discover` pipeline re-run live with no regressions. |
+| 2 | Scoring weights are fixed constants | 🟡 By design | Similarity + domain match (+25) + task match (+15) + keyword overlap, applied identically to every query. Simple and explainable (a real strength for viva), but not tuned/validated against any ground truth — no evaluation dataset exists to check if these weights actually produce good rankings. |
 
 ## Security / Auth (`backend/security/`)
 
@@ -52,6 +53,8 @@ Status key: ✅ Fixed · 🟡 Partial/mitigated · ⬜ Open
 |---|---|---|---|
 | 1 | Pattern analysis is a simple mode, not a model | 🟡 By design | Most frequent domain/task across up to 50 recent searches — deliberately simple so it's easy to explain and defend in viva, not dressed up as more sophisticated than it is. |
 | 2 | No server-side enforcement of plan limits | ⬜ Open | The `plan` field exists (free/pro) but nothing actually enforces different behavior per plan — every account currently has identical capabilities regardless of `plan` value, and no billing is wired up to ever change it from "free." |
+| 3 | Not affected by the Evaluation Agent's keyword-scoring bug (#1 above) | ✅ Confirmed safe | Checked directly: `get_recommendations()` always builds its synthetic query with `keywords=[]`, so the keyword-match component of `calculate_score` never contributes here — the substring bug only ever affected live, user-typed searches. |
+| 4 | Tied domain/task frequency has undocumented tie-breaking | ⬜ Open, minor | `Counter.most_common(1)` breaks ties by insertion order into the counter, which isn't an intentional design choice — just whatever Python does. Only matters when a user's history is evenly split between two domains/tasks; low impact, not yet tested for whether the resulting behavior is reasonable. |
 
 ---
 
