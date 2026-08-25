@@ -38,6 +38,11 @@ def authenticate_user(db: Session, email: str, password: str) -> User:
     user = get_user_by_email(db, email)
     if not user or not verify_password(password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
+    if not user.is_active:
+        # Distinct from a bad password on purpose — the credentials are
+        # correct, access is what's denied, and the frontend shows this
+        # detail directly rather than a generic "invalid login" message.
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="This account has been suspended.")
     return user
 
 
@@ -55,7 +60,10 @@ def get_current_user(
         raise unauthorized
 
     user = db.get(User, payload.get("sub"))
-    if user is None:
+    if user is None or not user.is_active:
+        # A suspended user's existing token stops working immediately, the
+        # same way is_admin is re-checked from the DB every request rather
+        # than trusted from the token — not just blocked at the next login.
         raise unauthorized
     return user
 
@@ -82,4 +90,12 @@ def get_current_user_optional(
         payload = decode_access_token(credentials.credentials)
     except jwt.PyJWTError:
         return None
-    return db.get(User, payload.get("sub"))
+    user = db.get(User, payload.get("sub"))
+    if user is not None and not user.is_active:
+        # Treated the same as "no token" rather than raising — callers of
+        # this dependency (e.g. /discover) must stay usable without an
+        # account, and a suspended user degrading to anonymous behavior
+        # (subject to the same IP-tracked Free limit) is more consistent
+        # than a hard failure here.
+        return None
+    return user
