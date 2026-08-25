@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ValidationError
 from sqlalchemy.orm import Session
@@ -40,6 +40,11 @@ def on_startup():
     init_db()
 
 DEFAULT_RESULT_COUNT = 3
+# Unbounded k previously passed straight through to Kaggle/OpenML/HuggingFace's
+# own `limit` params with no validation — found while auditing the Discovery
+# Agent. Those APIs likely cap it themselves, but nothing on our side did.
+MAX_RESULT_COUNT = 20
+ResultCount = Query(default=DEFAULT_RESULT_COUNT, ge=1, le=MAX_RESULT_COUNT)
 
 # Terms too generic to help any external source's own search (Kaggle,
 # OpenML, HuggingFace all confirmed to return nothing for long, noisy
@@ -99,17 +104,17 @@ def nlp_agent(query: str):
 
 
 @app.post("/discovery-agent", response_model=DiscoveryResult)
-def discovery_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
+def discovery_agent(query: str, k: int = ResultCount):
     return search_datasets(query, k=k)
 
 
 @app.post("/dataset-collection-agent", response_model=List[DatasetMatch])
-def dataset_collection_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
+def dataset_collection_agent(query: str, k: int = ResultCount):
     return [DatasetMatch(**item) for item in collect_external_datasets(query, limit=k)]
 
 
 @app.post("/evaluation-agent", response_model=List[EvaluatedDataset])
-def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
+def evaluation_agent(query: str, k: int = ResultCount):
     try:
         understanding = analyze_query(query)
     except ValidationError as exc:
@@ -122,7 +127,7 @@ def evaluation_agent(query: str, k: int = DEFAULT_RESULT_COUNT):
 @app.post("/discover", response_model=DiscoverResponse)
 def discover(
     query: str,
-    k: int = DEFAULT_RESULT_COUNT,
+    k: int = ResultCount,
     current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db),
 ):
@@ -147,7 +152,7 @@ def discover(
 
 @app.get("/recommendations", response_model=RecommendationResponse)
 def recommendations(
-    k: int = DEFAULT_RESULT_COUNT,
+    k: int = ResultCount,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
