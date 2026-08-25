@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -9,8 +9,10 @@ from .authentication import get_current_admin_user
 from .db import get_db
 from .db_models import CatalogDataset, Plan, SearchHistory, User
 from .schemas import (
+    AdminSearchHistoryItem,
     AdminStatsResponse,
     AdminUpdateUserRequest,
+    AdminUserDetailResponse,
     AdminUserResponse,
     PlanCreateRequest,
     PlanResponse,
@@ -18,6 +20,9 @@ from .schemas import (
 )
 
 router = APIRouter(prefix="/admin", tags=["admin"])
+
+SORT_OPTIONS = {"newest", "oldest", "most_searches", "name"}
+MAX_DETAIL_HISTORY = 100
 
 
 def _valid_plan_names(db: Session) -> set[str]:
@@ -34,15 +39,51 @@ def _to_admin_user_response(db: Session, user: User) -> AdminUserResponse:
         email=user.email,
         plan=user.plan,
         is_admin=user.is_admin,
+        is_active=user.is_active,
         created_at=user.created_at,
         search_count=search_count or 0,
     )
 
 
 @router.get("/users", response_model=list[AdminUserResponse])
-def list_users(current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+def list_users(
+    q: str | None = Query(default=None, description="Case-insensitive substring match on name or email"),
+    plan: str | None = Query(default=None, description="Exact plan name"),
+    is_admin: bool | None = None,
+    is_active: bool | None = None,
+    sort: str = Query(default="newest", description=f"One of {sorted(SORT_OPTIONS)}"),
+    current_admin: User = Depends(get_current_admin_user),
+    db: Session = Depends(get_db),
+):
+    if sort not in SORT_OPTIONS:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"sort must be one of {sorted(SORT_OPTIONS)}")
+
     counts = dict(db.query(SearchHistory.user_id, func.count(SearchHistory.id)).group_by(SearchHistory.user_id).all())
-    users = db.query(User).order_by(User.created_at.desc()).all()
+
+    query = db.query(User)
+    if q:
+        like = f"%{q.lower()}%"
+        query = query.filter(func.lower(User.name).like(like) | func.lower(User.email).like(like))
+    if plan is not None:
+        query = query.filter(User.plan == plan)
+    if is_admin is not None:
+        query = query.filter(User.is_admin.is_(is_admin))
+    if is_active is not None:
+        query = query.filter(User.is_active.is_(is_active))
+
+    if sort == "oldest":
+        query = query.order_by(User.created_at.asc())
+    elif sort == "name":
+        query = query.order_by(func.lower(User.name).asc())
+    else:
+        # "most_searches" still needs the in-memory counts dict below (a
+        # per-user aggregate, not a plain column) — sorted after fetching.
+        query = query.order_by(User.created_at.desc())
+
+    users = query.all()
+    if sort == "most_searches":
+        users = sorted(users, key=lambda u: counts.get(u.id, 0), reverse=True)
+
     return [
         AdminUserResponse(
             id=u.id,
@@ -50,11 +91,36 @@ def list_users(current_admin: User = Depends(get_current_admin_user), db: Sessio
             email=u.email,
             plan=u.plan,
             is_admin=u.is_admin,
+            is_active=u.is_active,
             created_at=u.created_at,
             search_count=counts.get(u.id, 0),
         )
         for u in users
     ]
+
+
+@router.get("/users/{user_id}", response_model=AdminUserDetailResponse)
+def get_user_detail(user_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    """Single-user profile plus their raw search history (not just the
+    aggregated domain/task mode recommendation_agent/agent.py's
+    _build_profile computes) — for a support/admin view into what a
+    specific account has actually been searching."""
+    user = db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    history = (
+        db.query(SearchHistory)
+        .filter(SearchHistory.user_id == user.id)
+        .order_by(SearchHistory.created_at.desc())
+        .limit(MAX_DETAIL_HISTORY)
+        .all()
+    )
+    base = _to_admin_user_response(db, user)
+    return AdminUserDetailResponse(
+        **base.model_dump(),
+        search_history=[AdminSearchHistoryItem.model_validate(h) for h in history],
+    )
 
 
 @router.patch("/users/{user_id}", response_model=AdminUserResponse)
@@ -66,8 +132,9 @@ def update_user(
 ):
     """The only way to change a user's plan right now — no billing is wired
     up, so this is how "upgrading to Pro" actually happens today. Guards
-    against an admin accidentally revoking their own admin access, since
-    there's no other bootstrapping path back in (see scripts/promote_admin.py)."""
+    against an admin accidentally revoking their own admin access or
+    suspending themselves, since there's no other bootstrapping path back in
+    (see scripts/promote_admin.py)."""
     user = db.get(User, user_id)
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
@@ -84,6 +151,11 @@ def update_user(
         if user.id == current_admin.id and not payload.is_admin:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot remove your own admin access")
         user.is_admin = payload.is_admin
+
+    if payload.is_active is not None:
+        if user.id == current_admin.id and not payload.is_active:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot suspend your own account")
+        user.is_active = payload.is_active
 
     db.commit()
     db.refresh(user)
