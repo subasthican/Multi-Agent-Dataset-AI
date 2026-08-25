@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime, timezone
+from typing import List, Optional
 
-from sqlalchemy import DateTime, ForeignKey, String, Boolean
+from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -83,3 +84,44 @@ class CatalogDataset(Base):
     task: Mapped[str] = mapped_column(String, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class Plan(Base):
+    """A pricing tier. `name` is the stable key User.plan stores (e.g.
+    "free", "pro") — deliberately not a foreign key, so a plan can be
+    edited/deleted-checked without touching User rows directly; see
+    admin_router.py for how a delete is blocked while any user still holds
+    that name. `daily_search_limit` of None means unlimited."""
+
+    __tablename__ = "plans"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
+    name: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
+    display_name: Mapped[str] = mapped_column(String, nullable=False)
+    price_label: Mapped[str] = mapped_column(String, nullable=False)
+    period: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    description: Mapped[str] = mapped_column(String, nullable=False)
+    features: Mapped[List[str]] = mapped_column(JSON, default=list, nullable=False)
+    daily_search_limit: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
+
+
+class AnonymousSearchLog(Base):
+    """One row per search made *without* being signed in, tracked by IP so
+    the Free plan's daily limit applies to anonymous use too (otherwise
+    logging out would trivially bypass it). Deliberately separate from
+    SearchHistory, which is keyed to a user_id and powers recommendations -
+    this table exists purely for rate limiting, nothing reads it back for
+    any personalization purpose.
+
+    Known limitation: request.client.host is the direct TCP peer, not the
+    real client IP behind a reverse proxy (no X-Forwarded-For handling) -
+    fine for local/direct deployment, would need revisiting behind a proxy.
+    """
+
+    __tablename__ = "anonymous_search_log"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
+    ip_address: Mapped[str] = mapped_column(String, index=True, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
