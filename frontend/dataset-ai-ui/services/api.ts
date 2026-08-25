@@ -32,6 +32,13 @@ export interface DiscoverResponse {
   recommendations: EvaluatedDataset[];
 }
 
+export interface RecommendationResponse {
+  based_on_domain: string | null;
+  based_on_task: string | null;
+  search_count: number;
+  recommendations: EvaluatedDataset[];
+}
+
 export interface User {
   id: string;
   name: string;
@@ -90,7 +97,18 @@ async function request<T>(
 }
 
 export async function discover(query: string, k = 5): Promise<DiscoverResponse> {
-  return request<DiscoverResponse>("/discover", { method: "POST", query: { query, k: String(k) } });
+  // auth: true attaches a token when one exists, but never requires it —
+  // search stays usable signed-out. When signed in, it's what lets the
+  // backend attribute the search to the user for /recommendations.
+  return request<DiscoverResponse>("/discover", { method: "POST", query: { query, k: String(k) }, auth: true });
+}
+
+export async function getRecommendations(k = 3): Promise<RecommendationResponse> {
+  return request<RecommendationResponse>("/recommendations", { query: { k: String(k) }, auth: true });
+}
+
+export async function clearSearchHistory(): Promise<void> {
+  return request<void>("/recommendations", { method: "DELETE", auth: true });
 }
 
 export async function register(name: string, email: string, password: string): Promise<TokenResponse> {
