@@ -1,6 +1,6 @@
 # Admin Panel Roadmap
 
-**Status: Phase 1 & 2 done, Phases 3-5 planned but not built.** Written so a
+**Status: Phases 1-3 done, Phases 4-5 planned but not built.** Written so a
 new chat with zero memory of this conversation can pick up exactly where it
 left off — read this whole file before touching any admin code.
 
@@ -74,53 +74,54 @@ confirmed it was immediately the top live search result with zero restart.
 
 ---
 
-## Phase 3 — Plan Management + Real Limit Enforcement ⬜ NEXT
+## Phase 3 — Plan Management + Real Limit Enforcement ✅ DONE
 
-Two separate problems currently exist, both open:
-1. Pricing tiers are **hardcoded** in `frontend/dataset-ai-ui/app/pricing/page.tsx`
-   (a `TIERS` array) — not editable without a code deploy.
-2. `plan` (free/pro) exists on `User` and can be changed (Phase 1), but
-   **nothing anywhere checks it** — a free and pro account currently have
-   identical capabilities. This is tracked as an open item in
-   `docs/agent-improvements.md` under Recommendation Agent #2.
+**What:** plans moved from a hardcoded `TIERS` array into a DB table
+(`Plan`), full CRUD via `/admin/plans`, and — the part that actually makes
+"free" vs "pro" mean something — a real daily search-limit check that runs
+*before* `/discover`'s pipeline executes. Anonymous callers get the Free
+plan's limit too, tracked by IP (a decision explicitly confirmed with the
+user rather than assumed): 10 searches/day for Free, unlimited for
+Pro/Enterprise, and admins can create arbitrary custom plans (a "Student"
+plan at $5/month, 50/day was created live during testing to prove this
+isn't hardcoded to just two tiers).
 
-### Suggested plan
+**Files:** `backend/security/db_models.py` (`Plan`, `AnonymousSearchLog`),
+`security/plan_seed.py` (seeds the 3 original tiers once, same
+seed-if-empty pattern as the catalog), `security/usage_limits.py`
+(`enforce_search_limit`, `get_usage`, `record_anonymous_search`),
+`security/schemas.py` (`Plan{Create,Update,Response}`, `UsageResponse` —
+note `PlanUpdateRequest.clear_search_limit`, a dedicated flag added because
+a plain `Optional[int] = None` on a PATCH body can't distinguish "field not
+sent" from "field explicitly cleared"), `admin_router.py` (`/admin/plans`
+CRUD — rename is blocked, delete is blocked while any user is still on that
+plan), `main.py` (`enforce_search_limit()` call at the top of `/discover`,
+new public `GET /plans` and `GET /usage` endpoints).
 
-**Backend:**
-- New `Plan` DB table (name, price, feature list as JSON or a related
-  table, `daily_search_limit` or similar — decide the actual limit shape
-  before building; simplest: an integer search cap per day for "free",
-  `null`/unlimited for "pro"). Seed it from the current 3 hardcoded tiers
-  the same way `seed.py` seeded the catalog — same pattern, don't reinvent it.
-  Deletion/edit safety: don't let the last plan be deleted, and think about
-  what happens to users currently on a plan that gets deleted (reassign to
-  a default, most likely "free").
-- `/admin/plans` CRUD (mirror `/admin/catalog`'s shape closely — same
-  pattern, same admin-only guard).
-- **Actual enforcement**: add a check in `/discover` (main.py) — if the
-  current user's plan has a daily search limit, count today's
-  `SearchHistory` rows for them (there's already a `created_at` column,
-  easy to filter by day) and 403/429 once they hit it. Anonymous users:
-  decide whether they get the "free" limit too or stay unlimited (currently
-  anonymous search has zero restriction — changing that is a real product
-  decision, ask the user rather than assuming).
-- Update `/pricing` and `/profile`'s upgrade copy to reflect real enforced
-  numbers once they exist, so the UI never overclaims (this project has
-  consistently avoided overclaiming — keep that up).
+Frontend: `app/admin/plans/page.tsx` (new, mirrors `admin/catalog/page.tsx`'s
+inline add/edit/delete pattern exactly as planned below), `pricing/page.tsx`
+(rewritten to fetch `GET /plans` instead of the old hardcoded array, with
+honest CTAs — no fake self-upgrade button since billing still isn't wired
+to a payment provider), `app/page.tsx` (a "X of N searches left today"
+badge next to the search box via `GET /usage`, and the existing error
+banner now also carries the 429 message so a hit limit is never silent),
+`app/admin/page.tsx` (the old free/pro toggle is now a `<select>` populated
+from real plans), `services/api.ts` (`Plan`/`Usage` types + plan API
+functions; `User.plan` widened from a `"free" | "pro"` union to `string`
+since plans are dynamic now).
 
-**Frontend:**
-- `/admin/plans` page (list/add/edit/delete tiers) — same shape as
-  `/admin/catalog/page.tsx`, reuse the same inline-form pattern.
-- `pricing/page.tsx` fetches tiers from the API instead of the hardcoded
-  `TIERS` array.
-- Somewhere visible to a free user approaching/hitting their limit — a
-  message on the search page, not a silent 403.
+**Verified live:** curl-tested the full backend surface (10-then-429
+enforcement, Pro bypassing the limit, a custom plan with a real 50/day cap
+enforced, delete blocked while in use, duplicate-name 409, the
+clear-limit PATCH flag flipping a set limit back to unlimited) *and*
+separately verified the frontend against a running backend in the browser
+— the pricing page renders the real seeded tiers, a 429 renders as a
+visible error banner (reproduced by exhausting the anonymous IP's quota
+via the UI, not just curl), a plan created/edited through the new admin UI
+round-trips correctly to the pricing page, and the admin dashboard's plan
+dropdown lists and applies all real plans including the custom one.
 
-**Open design question to ask the user before building:** what should the
-actual free-tier limit be (e.g. 10 searches/day)? Don't guess a number
-without asking — it's a product decision, not a technical one.
-
-## Phase 4 — User Detail Page + Search/Filter ⬜ TODO
+## Phase 4 — User Detail Page + Search/Filter ⬜ NEXT
 
 The `/admin` user table is a flat list — fine at a handful of users, useless
 beyond that.
