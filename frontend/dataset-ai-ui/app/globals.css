@@ -6,6 +6,7 @@
   --nebula-purple: #7c3aed;
   --nebula-cyan: #22d3ee;
   --nebula-pink: #ec4899;
+  --nebula-amber: #f59e0b;
 }
 
 @theme inline {
@@ -14,6 +15,7 @@
   --color-nebula-purple: var(--nebula-purple);
   --color-nebula-cyan: var(--nebula-cyan);
   --color-nebula-pink: var(--nebula-pink);
+  --color-nebula-amber: var(--nebula-amber);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
