@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from agents.dataset_collection_agent.agent import collect_external_datasets
 from agents.discovery_agent.agent import search_datasets
 from agents.discovery_agent.models import DatasetMatch, DiscoveryResult
+from agents.discovery_agent.seed import seed_catalog_if_empty
 from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
 from agents.nlp_agent.agent import analyze_query
@@ -40,6 +41,7 @@ app.include_router(admin_router)
 @app.on_event("startup")
 def on_startup():
     init_db()
+    seed_catalog_if_empty()
 
 DEFAULT_RESULT_COUNT = 3
 # Unbounded k previously passed straight through to Kaggle/OpenML/HuggingFace's
