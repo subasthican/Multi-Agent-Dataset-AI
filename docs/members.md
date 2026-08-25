@@ -199,6 +199,13 @@ python scripts/promote_admin.py your-email@example.com
 deliberately *not* built yet (no audit log of admin actions, no re-auth
 before deleting a user).
 
+**Building this out further?** See [`docs/admin-panel-roadmap.md`](admin-panel-roadmap.md)
+first — catalog management (done) was phase 2 of a 5-phase plan; plan
+management/limit enforcement, user detail pages, and system health/audit
+logging are phases 3-5, planned but not built. That file has the detailed
+plan for each and is written to be picked up in a fresh chat with no other
+context.
+
 ## Member 3 — Frontend + UX (`member3-frontend-ui`)
 
 **Status: implemented.** Real components, not stubs — see
