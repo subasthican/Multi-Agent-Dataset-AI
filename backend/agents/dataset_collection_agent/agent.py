@@ -2,11 +2,14 @@ import math
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
+from agents.nlp_agent.agent import classify_domain, classify_task
+
 from .huggingface_source import search_huggingface_datasets
 from .kaggle_source import KaggleUnavailableError, search_kaggle_datasets
 from .openml_source import search_openml_datasets
 
 SOURCE_COUNT = 3
+UNSPECIFIED = "unspecified"
 
 
 def _safe_kaggle_search(query: str, limit: int) -> List[Dict]:
@@ -17,6 +20,23 @@ def _safe_kaggle_search(query: str, limit: int) -> List[Dict]:
         return search_kaggle_datasets(query, limit=limit)
     except KaggleUnavailableError:
         return []
+
+
+def _infer_metadata(item: Dict) -> Dict:
+    """None of the three external APIs expose domain/task, so every result
+    used to be stuck at "unspecified" and could never earn the Evaluation
+    Agent's domain/task match bonus - even a perfect result would lose to a
+    mediocre catalog one purely on that structural gap. This reuses the NLP
+    Agent's own rule-based classifier (same config.json keyword rules) on
+    the result's own description text as a best-effort guess, rather than
+    leaving it permanently blank. An unmatched guess falls back to the
+    classifier's own default ("general"/"machine_learning") - still no
+    bonus, same as before, just no longer worse than trying."""
+    if item.get("domain") == UNSPECIFIED:
+        item["domain"] = classify_domain(item["description"], [])
+    if item.get("task") == UNSPECIFIED:
+        item["task"] = classify_task(item["description"], [])
+    return item
 
 
 def collect_external_datasets(query: str, limit: int = 5) -> List[Dict]:
@@ -37,4 +57,6 @@ def collect_external_datasets(query: str, limit: int = 5) -> List[Dict]:
         openml_future = executor.submit(search_openml_datasets, query, per_source_limit)
         huggingface_future = executor.submit(search_huggingface_datasets, query, per_source_limit)
 
-        return kaggle_future.result() + openml_future.result() + huggingface_future.result()
+        results = kaggle_future.result() + openml_future.result() + huggingface_future.result()
+
+    return [_infer_metadata(item) for item in results]
