@@ -73,3 +73,48 @@ class ForgotPasswordResponse(BaseModel):
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str = Field(..., min_length=8, max_length=128)
+
+
+class PlanCreateRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=50, pattern=r"^[a-z0-9_-]+$")
+    display_name: str = Field(..., min_length=1, max_length=100)
+    price_label: str = Field(..., min_length=1, max_length=50)
+    period: str | None = Field(default=None, max_length=50)
+    description: str = Field(..., min_length=1, max_length=500)
+    features: list[str] = Field(default_factory=list)
+    daily_search_limit: int | None = Field(default=None, ge=1)
+
+
+class PlanUpdateRequest(BaseModel):
+    display_name: str | None = Field(default=None, min_length=1, max_length=100)
+    price_label: str | None = Field(default=None, min_length=1, max_length=50)
+    period: str | None = None
+    description: str | None = Field(default=None, min_length=1, max_length=500)
+    features: list[str] | None = None
+    daily_search_limit: int | None = Field(default=None, ge=1)
+    # No plain daily_search_limit=None here on purpose — PATCH can't tell
+    # "leave it alone" apart from "set it to unlimited". Use the dedicated
+    # flag instead.
+    clear_search_limit: bool = False
+
+
+class PlanResponse(BaseModel):
+    id: str
+    name: str
+    display_name: str
+    price_label: str
+    period: str | None
+    description: str
+    features: list[str]
+    daily_search_limit: int | None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class UsageResponse(BaseModel):
+    plan: str
+    limit: int | None
+    used: int
+    remaining: int | None
