@@ -25,6 +25,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     plan: str
     is_admin: bool
+    is_active: bool
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -33,10 +34,26 @@ class UserResponse(BaseModel):
 class AdminUpdateUserRequest(BaseModel):
     plan: str | None = None
     is_admin: bool | None = None
+    is_active: bool | None = None
 
 
 class AdminUserResponse(UserResponse):
     search_count: int
+
+
+class AdminSearchHistoryItem(BaseModel):
+    id: str
+    query: str
+    domain: str
+    task: str
+    understanding_source: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class AdminUserDetailResponse(AdminUserResponse):
+    search_history: list[AdminSearchHistoryItem]
 
 
 class AdminStatsResponse(BaseModel):
