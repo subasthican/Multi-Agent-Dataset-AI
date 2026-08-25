@@ -8,6 +8,7 @@ import AgentFlow, { type AgentStage } from "@/components/AgentFlow";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import ExplanationCard from "@/components/ExplanationCard";
 import DatasetCard from "@/components/DatasetCard";
+import RecommendedForYou from "@/components/RecommendedForYou";
 import { discover, ApiError, type DiscoverResponse } from "@/services/api";
 
 const STAGE_SEQUENCE: AgentStage[] = ["nlp", "discovery", "evaluation"];
@@ -71,6 +72,11 @@ export default function Home() {
         </div>
 
         <SearchBox onSearch={handleSearch} loading={loading} />
+
+        {/* Only shown before this session's first search — once real results
+            are on screen they take priority over a speculative, page-load-time
+            recommendation list. */}
+        {!hasActivity && <RecommendedForYou />}
 
         {(loading || stage === "done") && (
           <div className="flex flex-col items-center gap-3">

@@ -1,9 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import type { QueryAnalysisResult } from "@/services/api";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ExplanationCard({ understanding }: { understanding: QueryAnalysisResult }) {
+  const { user } = useAuth();
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -44,7 +47,17 @@ export default function ExplanationCard({ understanding }: { understanding: Quer
         ))}
       </div>
       <p className="text-[11px] text-white/30">
-        Transparency note: this query was analyzed but not stored — nothing here is retained after your session.
+        {user ? (
+          <>
+            Transparency note: since you&apos;re signed in, this query is saved to power your{" "}
+            <Link href="/profile" className="text-nebula-cyan hover:underline">
+              personalized recommendations
+            </Link>
+            . You can clear your search history anytime from your profile.
+          </>
+        ) : (
+          "Transparency note: this query was analyzed but not stored — nothing here is retained after your session."
+        )}
       </p>
     </motion.div>
   );

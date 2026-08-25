@@ -8,7 +8,7 @@ import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import { AuthButton, AuthError, AuthInput } from "@/components/AuthCard";
 import { useAuth } from "@/contexts/AuthContext";
-import { ApiError, changePassword, updateProfile } from "@/services/api";
+import { ApiError, changePassword, clearSearchHistory, updateProfile } from "@/services/api";
 
 export default function ProfilePage() {
   const { user, loading, refreshUser, logout } = useAuth();
@@ -70,6 +70,24 @@ export default function ProfilePage() {
     }
   }
 
+  const [historyClearing, setHistoryClearing] = useState(false);
+  const [historyMessage, setHistoryMessage] = useState<string | null>(null);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+
+  async function handleClearHistory() {
+    setHistoryError(null);
+    setHistoryMessage(null);
+    setHistoryClearing(true);
+    try {
+      await clearSearchHistory();
+      setHistoryMessage("Search history cleared.");
+    } catch (err) {
+      setHistoryError(err instanceof ApiError ? err.message : "Could not clear search history.");
+    } finally {
+      setHistoryClearing(false);
+    }
+  }
+
   if (loading || !user) {
     return (
       <div className="relative flex min-h-screen flex-col">
@@ -101,7 +119,7 @@ export default function ProfilePage() {
               <Link href="/pricing" className="text-nebula-cyan hover:underline">
                 Upgrade to Pro
               </Link>{" "}
-              for unlimited searches and saved history.
+              for unlimited searches and multi-source discovery.
             </p>
           )}
 
@@ -147,6 +165,28 @@ export default function ProfilePage() {
               Update Password
             </AuthButton>
           </form>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass p-6"
+        >
+          <h2 className="text-lg font-semibold">Search History &amp; Recommendations</h2>
+          <p className="mt-2 text-xs text-white/40">
+            Your searches while signed in power the &quot;Recommended for you&quot; section on the homepage.
+            Clearing your history removes it permanently and resets your recommendations.
+          </p>
+          {historyMessage && <p className="mt-3 text-xs text-nebula-cyan">{historyMessage}</p>}
+          <AuthError message={historyError} />
+          <button
+            onClick={handleClearHistory}
+            disabled={historyClearing}
+            className="btn-secondary mt-4 self-start rounded-xl px-4 py-2 text-sm disabled:opacity-40"
+          >
+            {historyClearing ? "Clearing..." : "Clear search history"}
+          </button>
         </motion.div>
 
         <button
