@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, ValidationError
 from sqlalchemy.orm import Session
@@ -19,8 +19,11 @@ from agents.recommendation_agent.models import RecommendationResponse
 from security.admin_router import router as admin_router
 from security.authentication import get_current_user, get_current_user_optional
 from security.db import get_db, init_db
-from security.db_models import User
+from security.db_models import Plan, User
+from security.plan_seed import seed_plans_if_empty
 from security.router import router as auth_router
+from security.schemas import PlanResponse, UsageResponse
+from security.usage_limits import enforce_search_limit, get_usage, record_anonymous_search
 
 app = FastAPI(title="Dataset AI Agent System")
 
@@ -42,6 +45,11 @@ app.include_router(admin_router)
 def on_startup():
     init_db()
     seed_catalog_if_empty()
+    seed_plans_if_empty()
+
+
+def _client_ip(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
 
 DEFAULT_RESULT_COUNT = 3
 # Unbounded k previously passed straight through to Kaggle/OpenML/HuggingFace's
@@ -131,15 +139,30 @@ def evaluation_agent(query: str, k: int = ResultCount):
 @app.post("/discover", response_model=DiscoverResponse)
 def discover(
     query: str,
+    request: Request,
     k: int = ResultCount,
     current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db),
 ):
     """Full pipeline: NLP Agent -> Discovery Agent (+ live Kaggle results when
-    configured) -> Evaluation Agent. Stays usable without an account; if a
-    valid token IS attached, the search is additionally recorded against
-    that user to power GET /recommendations. Anonymous searches are never
-    recorded anywhere."""
+    configured) -> Evaluation Agent. Stays usable without an account.
+
+    Every plan has a daily search limit (None = unlimited) — enforced
+    BEFORE the pipeline runs, so a request that's about to be rejected
+    doesn't still burn a real Gemini/Kaggle/OpenML/HuggingFace call. Signed-
+    in users are checked against their own plan; anonymous callers are
+    checked against the Free plan's limit, tracked by IP address (not the
+    query text — see security/db_models.py's AnonymousSearchLog docstring)
+    so logging out can't be used to bypass it.
+
+    If a valid token IS attached, the search is additionally recorded
+    against that user (query text + domain/task) to power
+    GET /recommendations. Anonymous searches never have their query text
+    stored anywhere — only an IP+timestamp counter for the limit above.
+    """
+    ip_address = _client_ip(request)
+    enforce_search_limit(db, current_user, ip_address)
+
     try:
         understanding = analyze_query(query)
     except ValidationError as exc:
@@ -150,8 +173,30 @@ def discover(
 
     if current_user is not None:
         record_search(db, current_user, understanding)
+    else:
+        record_anonymous_search(db, ip_address)
 
     return DiscoverResponse(understanding=understanding, recommendations=recommendations)
+
+
+@app.get("/plans", response_model=List[PlanResponse])
+def list_plans(db: Session = Depends(get_db)):
+    """Public — the pricing page needs this without requiring login."""
+    return db.query(Plan).order_by(Plan.created_at).all()
+
+
+@app.get("/usage", response_model=UsageResponse)
+def usage(
+    request: Request,
+    current_user: User | None = Depends(get_current_user_optional),
+    db: Session = Depends(get_db),
+):
+    """Lets the frontend show "X of N searches used today" instead of only
+    finding out via a 429 on the next search. Public — anonymous callers
+    get their own IP-tracked usage."""
+    plan_name, limit, used = get_usage(db, current_user, _client_ip(request))
+    remaining = None if limit is None else max(0, limit - used)
+    return UsageResponse(plan=plan_name, limit=limit, used=used, remaining=remaining)
 
 
 @app.get("/recommendations", response_model=RecommendationResponse)
