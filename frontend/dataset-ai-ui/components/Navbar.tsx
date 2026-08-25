@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, User } from "lucide-react";
+import { Shield, Sparkles, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Navbar() {
@@ -26,13 +26,21 @@ export default function Navbar() {
         {loading ? (
           <div className="h-8 w-20" aria-hidden />
         ) : user ? (
-          <Link
-            href="/profile"
-            className="flex max-w-[9rem] items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-white/70 transition-colors hover:border-white/30 hover:text-white"
-          >
-            <User className="h-4 w-4 shrink-0" />
-            <span className="truncate">{user.name}</span>
-          </Link>
+          <>
+            {user.is_admin && (
+              <Link href="/admin" className="hidden items-center gap-1 text-white/50 transition-colors hover:text-white sm:flex">
+                <Shield className="h-4 w-4" />
+                Admin
+              </Link>
+            )}
+            <Link
+              href="/profile"
+              className="flex max-w-[9rem] items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-white/70 transition-colors hover:border-white/30 hover:text-white"
+            >
+              <User className="h-4 w-4 shrink-0" />
+              <span className="truncate">{user.name}</span>
+            </Link>
+          </>
         ) : (
           <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/login" className="text-white/60 transition-colors hover:text-white">

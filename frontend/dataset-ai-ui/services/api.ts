@@ -44,7 +44,21 @@ export interface User {
   name: string;
   email: string;
   plan: "free" | "pro";
+  is_admin: boolean;
   created_at: string;
+}
+
+export interface AdminUser extends User {
+  search_count: number;
+}
+
+export interface AdminStats {
+  total_users: number;
+  pro_users: number;
+  admin_users: number;
+  total_searches: number;
+  searches_via_llm: number;
+  searches_via_rule_based: number;
 }
 
 export interface TokenResponse {
@@ -144,4 +158,23 @@ export async function resetPassword(token: string, newPassword: string): Promise
     method: "POST",
     body: { token, new_password: newPassword },
   });
+}
+
+export async function getAdminUsers(): Promise<AdminUser[]> {
+  return request<AdminUser[]>("/admin/users", { auth: true });
+}
+
+export async function getAdminStats(): Promise<AdminStats> {
+  return request<AdminStats>("/admin/stats", { auth: true });
+}
+
+export async function updateAdminUser(
+  userId: string,
+  changes: { plan?: "free" | "pro"; is_admin?: boolean }
+): Promise<AdminUser> {
+  return request<AdminUser>(`/admin/users/${userId}`, { method: "PATCH", body: changes, auth: true });
+}
+
+export async function deleteAdminUser(userId: string): Promise<void> {
+  return request<void>(`/admin/users/${userId}`, { method: "DELETE", auth: true });
 }
