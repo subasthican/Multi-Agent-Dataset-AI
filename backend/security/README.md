@@ -21,6 +21,8 @@ start and existing tokens stop working on every restart.
 | `jwt_manager.py` | **Done** — PyJWT access tokens |
 | `authentication.py` | **Done** — bcrypt hashing, `get_current_user` dependency |
 | `password_reset.py`, `schemas.py`, `router.py` | **Done** — register/login/me/change-password/forgot-password/reset-password |
+| `admin_router.py` | **Done** — `/admin/users` (list w/ search+filter+sort, detail, patch, delete), `/admin/catalog` CRUD, `/admin/plans` CRUD |
+| `db_models.py` (`Plan`, `AnonymousSearchLog`) + `plan_seed.py` + `usage_limits.py` | **Done** — plans are a DB table (admin-editable, not hardcoded), and `daily_search_limit` is actually enforced server-side on `/discover` for both signed-in and anonymous (IP-tracked) callers |
 | `input_filter.py` | TODO — sanitize/block malicious or prompt-injection input into the NLP agent's queries |
 | `encryption.py` | TODO — encrypt/decrypt sensitive stored data (not yet needed — nothing sensitive beyond password hashes is stored) |
 | `../responsible_ai/explainability.py` | TODO — separate from the Evaluation Agent's built-in explanation strings; could add a dedicated fairness/bias angle |
@@ -46,8 +48,25 @@ etc.) and drop the `dev_reset_token` field.
 
 Search/discovery stays open without login — accounts are additive (profile,
 `plan` field for the commercialization tiers in `docs/members.md` /
-`frontend/dataset-ai-ui/app/pricing`). Nothing currently enforces free-tier
-usage limits server-side; that'd be the natural next step if you want the
-Pro tier to mean something beyond a label.
+`frontend/dataset-ai-ui/app/pricing`). Plans are DB-backed and admin-editable
+(`/admin/plans`), and each plan's `daily_search_limit` is enforced
+server-side in `usage_limits.py`, checked before `/discover`'s pipeline runs
+— including for anonymous callers, tracked by IP. See
+`docs/admin-panel-roadmap.md` Phase 3 for the full writeup.
 
-Write up `docs/security.md` for the final report.
+## Admin API
+
+| Endpoint | Auth | Purpose |
+|---|---|---|
+| `GET/PATCH/DELETE /admin/users`, `/admin/users/{id}` | Admin | List (search/filter/sort via query params)/detail (+ search history)/update plan, admin, active status/delete |
+| `GET/POST/PATCH/DELETE /admin/catalog`, `/admin/catalog/{id}` | Admin | Curated dataset catalog CRUD |
+| `GET/POST/PATCH/DELETE /admin/plans`, `/admin/plans/{id}` | Admin | Pricing tier CRUD |
+| `GET /admin/stats` | Admin | Dashboard counters |
+| `GET /plans`, `GET /usage` | — (usage: optional token) | Public — pricing page and "searches left today" badge |
+
+**TODO — still open:** no audit log of admin actions and no re-auth
+(password re-entry) before destructive actions like delete. See
+`docs/agent-improvements.md` Security/Auth section and
+`docs/admin-panel-roadmap.md` Phase 5.
+
+Write up `docs/security.md` for the final report — **not yet started.**

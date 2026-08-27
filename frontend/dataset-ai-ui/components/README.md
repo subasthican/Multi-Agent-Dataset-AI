@@ -26,11 +26,12 @@ npm run dev
 | `../services/api.ts` | **Done** — typed client, `NEXT_PUBLIC_API_BASE_URL`-configurable |
 | `../app/page.tsx` | **Done** — search + results assembled here (there's no separate `/dashboard`) |
 | `../app/{login,register,forgot-password,reset-password,profile,pricing}/page.tsx` | **Done** |
+| `../app/admin/{page,catalog/page,plans/page}.tsx`, `../app/admin/users/[id]/page.tsx` | **Done** — user management (search/filter/sort, detail + history, suspend/reactivate), catalog CRUD, plan CRUD |
 
 Nothing left stubbed on the frontend. Open items are backend-side (Member 2's
-`input_filter.py`/`encryption.py`/`responsible_ai/*` and search quota
-enforcement for the Pro tier) — see `docs/members.md` and
-`backend/security/README.md`.
+`input_filter.py`/`encryption.py`/`responsible_ai/*`, an admin action audit
+log, and re-auth before destructive admin actions) — see `docs/members.md`,
+`backend/security/README.md`, and `docs/admin-panel-roadmap.md` Phase 5.
 
 Theme tokens live in `app/globals.css` (`.glass`, `.text-gradient`, the
 `nebula-*` colors) — reuse those rather than hardcoding colors inline.
