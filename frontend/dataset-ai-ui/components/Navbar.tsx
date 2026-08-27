@@ -16,8 +16,8 @@ export default function Navbar() {
         </span>
       </Link>
 
-      <div className="flex items-center gap-3 text-sm sm:gap-4">
-        <Link href="/pricing" className="text-white/50 transition-colors hover:text-white">
+      <div className="flex min-w-0 items-center gap-2 text-sm sm:gap-4">
+        <Link href="/pricing" className="shrink-0 text-white/50 transition-colors hover:text-white">
           Pricing
         </Link>
 
@@ -35,7 +35,11 @@ export default function Navbar() {
             )}
             <Link
               href="/profile"
-              className="flex max-w-[9rem] items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-white/70 transition-colors hover:border-white/30 hover:text-white"
+              // Capped tighter on mobile than sm:+ — at 375px wide, the
+              // logo + Pricing link + a 9rem pill overflowed the viewport
+              // and forced horizontal page scroll. min-w-0 lets the pill
+              // actually shrink below its content size so truncate can bite.
+              className="flex min-w-0 max-w-[6rem] items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-white/70 transition-colors hover:border-white/30 hover:text-white sm:max-w-[9rem]"
             >
               <User className="h-4 w-4 shrink-0" />
               <span className="truncate">{user.name}</span>
