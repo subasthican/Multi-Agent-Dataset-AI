@@ -33,10 +33,13 @@ Multi-Agent-Dataset-AI/
 │   ├── agents/
 │   │   ├── nlp_agent/               # Query understanding (LLM + rule-based fallback)
 │   │   ├── discovery_agent/         # Semantic dataset search (FAISS)
-│   │   ├── dataset_collection_agent/ # Live Kaggle search (optional)
-│   │   └── evaluation_agent/        # Ranking + explanation
+│   │   ├── dataset_collection_agent/ # Live Kaggle/OpenML/HuggingFace search (Kaggle needs an
+│   │   │                             #   API token; OpenML/HuggingFace need none — each source
+│   │   │                             #   is independently best-effort, never blocks the others)
+│   │   ├── evaluation_agent/        # Ranking + explanation
+│   │   └── recommendation_agent/    # Personalized recommendations from a signed-in user's search history
 │   ├── llm/                   # Gemini API client + prompt templates
-│   ├── security/              # Auth, input sanitization, encryption (Member 2)
+│   ├── security/              # Auth, admin panel (users/catalog/plans), input sanitization, encryption (Member 2)
 │   ├── responsible_ai/        # Explainability, fairness, privacy (Member 2)
 │   ├── main.py                # FastAPI gateway
 │   └── requirements.txt
