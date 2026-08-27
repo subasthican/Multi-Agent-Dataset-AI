@@ -187,13 +187,17 @@ status and the full `/auth/*` API reference. Summary:
 ### Admin panel
 
 `backend/security/admin_router.py` + `frontend/dataset-ai-ui/app/admin/`.
-Manage users (change plan, grant/revoke admin, delete accounts), manage the
-dataset catalog, and manage plans themselves at `/admin/plans` — plans are a
-DB table now, not hardcoded, and each one's `daily_search_limit` is actually
-enforced server-side on `/discover` (free-tier default: 10/day, tracked by
-IP for anonymous users too). Changing a user's plan here is still the *only*
-way to become "pro" — no billing exists. Nobody is admin by default — grant
-yourself access once with:
+Manage users (change plan, grant/revoke admin, suspend/reactivate, delete
+accounts), manage the dataset catalog, and manage plans themselves at
+`/admin/plans` — plans are a DB table now, not hardcoded, and each one's
+`daily_search_limit` is actually enforced server-side on `/discover`
+(free-tier default: 10/day, tracked by IP for anonymous users too).
+Changing a user's plan here is still the *only* way to become "pro" — no
+billing exists. Each user has a detail page (`/admin/users/[id]`) with their
+full search history, and the user table has search/filter/sort. Suspending
+an account (reversible, unlike delete) blocks login immediately and
+invalidates their already-issued token on their very next request. Nobody
+is admin by default — grant yourself access once with:
 ```bash
 cd backend
 python scripts/promote_admin.py your-email@example.com
@@ -204,10 +208,11 @@ deliberately *not* built yet (no audit log of admin actions, no re-auth
 before deleting a user).
 
 **Building this out further?** See [`docs/admin-panel-roadmap.md`](admin-panel-roadmap.md)
-first — catalog management (phase 2) and plan management/limit enforcement
-(phase 3) are done; user detail pages and system health/audit logging are
-phases 4-5, planned but not built. That file has the detailed plan for each
-and is written to be picked up in a fresh chat with no other context.
+first — catalog management (phase 2), plan management/limit enforcement
+(phase 3), and user detail/search/filter/suspend (phase 4) are done;
+system health/audit logging is phase 5, planned but not built. That file
+has the detailed plan and is written to be picked up in a fresh chat with
+no other context.
 
 ## Member 3 — Frontend + UX (`member3-frontend-ui`)
 
