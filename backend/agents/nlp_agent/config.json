@@ -4,7 +4,8 @@
     "finance": ["finance", "financial", "stock", "trading", "fraud", "bank", "credit", "loan", "investment", "economic"],
     "education": ["education", "student", "school", "university", "learning", "academic", "course", "exam"],
     "business": ["business", "sales", "marketing", "customer", "retail", "commerce", "revenue"],
-    "environment": ["environment", "climate", "weather", "pollution", "energy", "sustainability", "carbon"]
+    "environment": ["environment", "climate", "weather", "pollution", "energy", "sustainability", "carbon"],
+    "automotive": ["car", "cars", "vehicle", "automotive", "automobile", "motorcycle", "truck", "driving"]
   },
   "tasks": {
     "classification": ["classify", "classification", "predict", "prediction", "detect", "detection", "diagnose"],
