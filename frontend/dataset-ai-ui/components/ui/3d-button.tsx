@@ -82,6 +82,13 @@ export const Component = ({
           />
         </svg>
         <div className="outline" />
+        {/* Pure-CSS replacement for the ".path" svg's hover glow above — that
+            svg's fixed 221x42 viewBox never matches this button's actual
+            rendered box (it doesn't scale with real content width), so the
+            traced curve always drifted outside the real pill edge instead of
+            hugging it. A conic-gradient ring has no such coordinate system to
+            get out of sync — it's just this element's own actual border. */}
+        <div className="glow-ring" />
         <div className="content">
           {loading ? (
             <span className="loading-state">
