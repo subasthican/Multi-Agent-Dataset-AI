@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import SearchBox from "@/components/SearchBox";
@@ -12,7 +12,28 @@ import RecommendedForYou from "@/components/RecommendedForYou";
 import { discover, getUsage, ApiError, type DiscoverResponse, type Usage } from "@/services/api";
 
 const STAGE_SEQUENCE: AgentStage[] = ["nlp", "discovery", "evaluation"];
-const STAGE_STEP_MS = 700;
+// How long each simulated stage holds before advancing to the next one —
+// the pipeline itself doesn't report real per-stage progress, so this is a
+// paced visual walkthrough rather than a true progress bar. Only nlp and
+// discovery get a fixed hold; evaluation (the last stage) has none and
+// simply stays on screen until the actual request resolves, however long
+// that takes.
+//
+// This is raced *alongside* the real request (see runStageSequence below),
+// not just capped by it — the actual backend often answers in a couple of
+// seconds (the external-source calls run concurrently, see
+// dataset_collection_agent's ThreadPoolExecutor), which was cutting the
+// animation short before nlp's own timer ever fired. Holding results back
+// until both the fetch AND this sequence are done makes the 5s-per-stage
+// pacing real regardless of how fast the backend actually answers.
+const STAGE_DURATIONS_MS: Partial<Record<AgentStage, number>> = {
+  nlp: 5000,
+  discovery: 5000,
+};
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -20,7 +41,6 @@ export default function Home() {
   const [result, setResult] = useState<DiscoverResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [usage, setUsage] = useState<Usage | null>(null);
-  const stageTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const hasActivity = loading || result !== null || error !== null;
 
@@ -41,22 +61,35 @@ export default function Home() {
     setError(null);
     setResult(null);
 
-    let stepIndex = 0;
+    // `cancelled` stops this specific call's own stage-advance chain from
+    // still setting state after the request has settled (e.g. the fetch
+    // rejects at t=1s while nlp's 5s hold is still pending in the
+    // background) — a local flag per call rather than a shared ref, so an
+    // interrupted call can never step on a later one's state.
+    let cancelled = false;
     setStage(STAGE_SEQUENCE[0]);
-    stageTimer.current = setInterval(() => {
-      stepIndex = Math.min(stepIndex + 1, STAGE_SEQUENCE.length - 1);
-      setStage(STAGE_SEQUENCE[stepIndex]);
-    }, STAGE_STEP_MS);
+
+    async function runStageSequence() {
+      for (let i = 1; i < STAGE_SEQUENCE.length; i++) {
+        const holdMs = STAGE_DURATIONS_MS[STAGE_SEQUENCE[i - 1]];
+        if (holdMs) await wait(holdMs);
+        if (cancelled) return;
+        setStage(STAGE_SEQUENCE[i]);
+      }
+    }
 
     try {
-      const response = await discover(query, 6);
+      // Race the real request against the minimum stage-hold sequence —
+      // whichever is slower decides when this resolves, so the animation
+      // can't be cut short by a fast backend answer.
+      const [response] = await Promise.all([discover(query, 6), runStageSequence()]);
       setResult(response);
       setStage("done");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Could not reach the backend. Is it running on :8000?");
       setStage("idle");
     } finally {
-      if (stageTimer.current) clearInterval(stageTimer.current);
+      cancelled = true;
       setLoading(false);
       // Refresh regardless of outcome — a successful search consumes one,
       // and a 429 means the count just hit its ceiling.
