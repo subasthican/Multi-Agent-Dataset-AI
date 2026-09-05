@@ -39,6 +39,7 @@ def load_datasets() -> List[Dict]:
                     "description": row.description,
                     "domain": row.domain,
                     "task": row.task,
+                    "url": row.url,
                 }
                 for row in rows
             ]
