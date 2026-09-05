@@ -68,6 +68,12 @@ def search_kaggle_datasets(query: str, limit: int = 5) -> List[Dict]:
                 "task": DEFAULT_TASK,
                 "similarity": similarity,
                 "source": "kaggle",
+                # item.ref is Kaggle's own "owner/dataset-slug" reference,
+                # which is exactly the path segment its real dataset page
+                # uses — no separate lookup needed. Actual downloading
+                # happens on that page (or via the Kaggle CLI/API with the
+                # user's own account), not proxied through this app.
+                "url": f"https://www.kaggle.com/datasets/{item.ref}",
             }
         )
     return datasets
