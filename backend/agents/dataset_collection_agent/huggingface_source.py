@@ -50,6 +50,9 @@ def search_huggingface_datasets(query: str, limit: int = 5) -> List[Dict]:
                 "task": DEFAULT_TASK,
                 "similarity": similarity,
                 "source": "huggingface",
+                # The Hub's own dataset page — the "Files and versions" tab
+                # there is where an actual download happens, not proxied here.
+                "url": f"https://huggingface.co/datasets/{item['id']}",
             }
         )
     return results

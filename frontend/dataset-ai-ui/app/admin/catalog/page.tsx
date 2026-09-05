@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, Pencil, Plus, Trash2, X } from "lucide-react";
+import { ArrowLeft, ExternalLink, Pencil, Plus, Trash2, X } from "lucide-react";
 import GalaxyBackground from "@/components/GalaxyBackground";
 import Navbar from "@/components/Navbar";
 import { AuthButton, AuthError, AuthInput } from "@/components/AuthCard";
@@ -19,7 +19,18 @@ import {
   type CatalogDatasetInput,
 } from "@/services/api";
 
-const EMPTY_FORM: CatalogDatasetInput = { name: "", description: "", domain: "", task: "" };
+// A plain string for the URL field keeps the input controlled cleanly;
+// "" means "no link" and is converted to null on submit (CatalogDatasetInput
+// itself allows null, but a controlled <input> can't take null as a value).
+interface CatalogFormState {
+  name: string;
+  description: string;
+  domain: string;
+  task: string;
+  url: string;
+}
+
+const EMPTY_FORM: CatalogFormState = { name: "", description: "", domain: "", task: "", url: "" };
 
 export default function CatalogAdminPage() {
   const { user, loading: authLoading } = useAuth();
@@ -30,7 +41,7 @@ export default function CatalogAdminPage() {
 
   // "new" = the add form is open; a dataset id = editing that row; null = no form open.
   const [editingId, setEditingId] = useState<string | "new" | null>(null);
-  const [form, setForm] = useState<CatalogDatasetInput>(EMPTY_FORM);
+  const [form, setForm] = useState<CatalogFormState>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -63,6 +74,7 @@ export default function CatalogAdminPage() {
       description: dataset.description,
       domain: dataset.domain,
       task: dataset.task,
+      url: dataset.url ?? "",
     });
     setEditingId(dataset.id);
   }
@@ -76,11 +88,12 @@ export default function CatalogAdminPage() {
     event.preventDefault();
     setSaving(true);
     setError(null);
+    const payload: CatalogDatasetInput = { ...form, url: form.url.trim() || null };
     try {
       if (editingId === "new") {
-        await createCatalogDataset(form);
+        await createCatalogDataset(payload);
       } else if (editingId) {
-        await updateCatalogDataset(editingId, form);
+        await updateCatalogDataset(editingId, payload);
       }
       cancelForm();
       await loadCatalog();
@@ -190,6 +203,20 @@ export default function CatalogAdminPage() {
                 placeholder="e.g. classification"
               />
             </div>
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="text-white/60">Source URL (optional)</span>
+              <input
+                type="url"
+                value={form.url}
+                onChange={(e) => setForm({ ...form, url: e.target.value })}
+                placeholder="https://..."
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-white/30 focus:border-nebula-cyan/50 focus:outline-none"
+              />
+              <span className="text-[11px] text-white/30">
+                A curated entry has no inherent real-world page, unlike a live Kaggle/OpenML/HuggingFace
+                result — add a link only if this represents a specific real dataset you have one for.
+              </span>
+            </label>
             <AuthButton type="submit" loading={saving} className="self-start">
               {editingId === "new" ? "Add to catalog" : "Save changes"}
             </AuthButton>
@@ -207,13 +234,24 @@ export default function CatalogAdminPage() {
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-medium text-white">{dataset.name}</h3>
                 <p className="mt-1 line-clamp-2 text-xs text-white/40">{dataset.description}</p>
-                <div className="mt-2 flex gap-2">
+                <div className="mt-2 flex flex-wrap items-center gap-2">
                   <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] text-white/50">
                     {dataset.domain}
                   </span>
                   <span className="rounded-full border border-white/10 px-2 py-0.5 text-[10px] text-white/50">
                     {dataset.task}
                   </span>
+                  {dataset.url && (
+                    <a
+                      href={dataset.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-[10px] text-nebula-cyan hover:underline"
+                    >
+                      View source
+                      <ExternalLink className="h-2.5 w-2.5" />
+                    </a>
+                  )}
                 </div>
               </div>
               <div className="flex shrink-0 gap-2">

@@ -54,6 +54,9 @@ def search_openml_datasets(query: str, limit: int = 5) -> List[Dict]:
                 "task": DEFAULT_TASK,
                 "similarity": similarity,
                 "source": "openml",
+                # OpenML's own dataset page for this "did" — its own
+                # download/ARFF/CSV links live there, not proxied here.
+                "url": f"https://www.openml.org/d/{entry['did']}",
             }
         )
     return results
