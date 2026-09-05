@@ -87,6 +87,10 @@ class CatalogDataset(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
     domain: Mapped[str] = mapped_column(String, nullable=False)
     task: Mapped[str] = mapped_column(String, nullable=False)
+    # Optional — unlike a live Kaggle/OpenML/HuggingFace result, a curated
+    # catalog entry has no inherent real-world page. Null unless an admin
+    # attaches one for a specific real dataset this entry represents.
+    url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, onupdate=_now)
 

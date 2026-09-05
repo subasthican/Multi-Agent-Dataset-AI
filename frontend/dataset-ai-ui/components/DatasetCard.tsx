@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Boxes, Database, FlaskConical, Globe } from "lucide-react";
+import { Boxes, Database, ExternalLink, FlaskConical, Globe } from "lucide-react";
 import type { EvaluatedDataset } from "@/services/api";
 
 const SOURCE_BADGES = {
@@ -10,6 +10,16 @@ const SOURCE_BADGES = {
   openml: { icon: FlaskConical, className: "bg-nebula-purple/15 text-nebula-purple" },
   huggingface: { icon: Boxes, className: "bg-nebula-amber/15 text-nebula-amber" },
 } as const;
+
+// Label for the "View on ..." link — a live source always names the actual
+// platform; a catalog entry's admin-provided reference could point
+// anywhere, so it gets a generic label instead.
+const SOURCE_LINK_LABEL: Record<keyof typeof SOURCE_BADGES, string> = {
+  catalog: "View source",
+  kaggle: "View on Kaggle",
+  openml: "View on OpenML",
+  huggingface: "View on Hugging Face",
+};
 
 export default function DatasetCard({ item, index }: { item: EvaluatedDataset; index: number }) {
   const { dataset, score, explanation } = item;
@@ -57,6 +67,22 @@ export default function DatasetCard({ item, index }: { item: EvaluatedDataset; i
       </div>
 
       <p className="text-xs text-white/40">{explanation}</p>
+
+      {/* Only rendered when a real link exists — never a fake/disabled link
+          for a curated catalog entry with no admin-provided reference.
+          Downloading itself happens on that source's own page (their own
+          auth/quota/ToS apply), not proxied through this app. */}
+      {dataset.url && (
+        <a
+          href={dataset.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-secondary flex items-center justify-center gap-1.5 self-start rounded-lg px-3 py-1.5 text-xs"
+        >
+          {SOURCE_LINK_LABEL[dataset.source]}
+          <ExternalLink className="h-3 w-3" />
+        </a>
+      )}
     </motion.div>
   );
 }
