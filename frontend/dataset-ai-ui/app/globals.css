@@ -324,7 +324,10 @@ button:not(:disabled) {
   --button-height: 3rem;
   position: relative;
   display: inline-flex;
-  width: 13.5rem;
+  /* Sized for this app's labels ("Explore"/"Go Now"/"Searching"), not the
+     original demo's longer "Join Today"/"Join Now" — 13.5rem left a large
+     dead-space gap around the shorter text. */
+  width: 9.75rem;
   height: var(--button-height);
   padding: 0;
   border: none;
@@ -402,13 +405,23 @@ button:not(:disabled) {
 }
 
 /* The pill-outline svg — a moving light-catch traveling around the border,
-   independent of the plain static border drawn by .outline below it. */
+   independent of the plain static border drawn by .outline below it. Its
+   own path is an intentionally *open* shape (it has a gap, not a closed
+   loop), so at rest with stroke-dasharray it read as a stray bright arc
+   sitting near the top-right corner rather than a border — hidden until
+   hover fixes that, matching .splash's fade-in pattern. */
 .button .wrap .path {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.button:hover:not(:disabled) .wrap .path {
+  opacity: 1;
 }
 
 .button .wrap .path path {
