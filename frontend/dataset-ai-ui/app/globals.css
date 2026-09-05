@@ -21,6 +21,23 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Defensive, not incidental: the 3D button's decorative .splash burst
+   (components/ui/3d-button.tsx) is absolutely positioned, centered on the
+   button, and wider than the button itself — invisible at rest but still
+   part of layout, so on a narrow viewport it can bleed past the screen edge
+   and inflate the *document's* scrollable width even though nothing is
+   visibly wrong (confirmed live: 385px scrollWidth vs a 375px clientWidth
+   on mobile). Needed on html, not just body: GalaxyBackground's starfield
+   canvas is `position: fixed`, which positions relative to the viewport —
+   body's own overflow-x:hidden alone didn't clip its contribution, only
+   html's does. Clipping here, rather than hunting down every current or
+   future decorative element that might bleed, is the general fix — it
+   never affects an intentional inner horizontal-scroll container, since
+   those scroll within their own overflow-x: auto box, not the root's. */
+html {
+  overflow-x: hidden;
+}
+
 /* Flat base colour only. The nebula gradient lives on the fixed
    GalaxyBackground layer instead, so it stays anchored to the viewport rather
    than stretching over the full document height — and, critically, so it can't
@@ -30,6 +47,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 /* Frosted panels are painted with a layered translucent gradient rather than
