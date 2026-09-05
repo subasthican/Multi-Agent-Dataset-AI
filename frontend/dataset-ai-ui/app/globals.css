@@ -404,35 +404,16 @@ button:not(:disabled) {
   overflow: hidden;
 }
 
-/* The pill-outline svg — a moving light-catch traveling around the border,
-   independent of the plain static border drawn by .outline below it. Its
-   own path is an intentionally *open* shape (it has a gap, not a closed
-   loop), so at rest with stroke-dasharray it read as a stray bright arc
-   sitting near the top-right corner rather than a border — hidden until
-   hover fixes that, matching .splash's fade-in pattern. */
+/* The pill-outline svg is retired (kept in the DOM, permanently hidden) —
+   its fixed 221x42 viewBox never matches this button's actual rendered box,
+   whatever size that ends up being, since SVG doesn't stretch to a
+   differently-proportioned container without either distorting the corner
+   radii or leaving the traced curve visibly offset from the real edge.
+   Tried opacity-on-hover as a first fix; the real problem was the
+   coordinate mismatch itself, not just when it was visible. See .glow-ring
+   below for the actual hover border effect now. */
 .button .wrap .path {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.button:hover:not(:disabled) .wrap .path {
-  opacity: 1;
-}
-
-.button .wrap .path path {
-  fill: none;
-  stroke: rgba(255, 255, 255, 0.55);
-  stroke-dasharray: 90 400;
-  stroke-dashoffset: 0;
-}
-
-.button:hover:not(:disabled) .wrap .path path {
-  animation: path 1.4s linear infinite;
+  display: none;
 }
 
 .button .wrap .outline {
@@ -441,6 +422,65 @@ button:not(:disabled) {
   border-radius: inherit;
   border: 1px solid rgba(255, 255, 255, 0.25);
   pointer-events: none;
+}
+
+/* Rotating border glow — a conic-gradient ring masked down to just its own
+   1.5px edge (mask-composite: exclude cuts out everything but the gap
+   between the outer and inner shape). Pure CSS, sized via `inset`/`padding`
+   relative to whatever box it's actually placed in, so unlike the svg above
+   it can never drift out of alignment with the real pill regardless of the
+   button's size.
+
+   The gradient's *angle* animates via an @property custom property, not a
+   `transform: rotate(...)` on the element itself — rotating the whole
+   rectangle (tried first, with the existing `spin` keyframe) also rotates
+   its own mask/shape out of alignment with the real button at most angles,
+   which is the exact same "line drifts outside the pill" bug as the svg
+   this replaced, just from a different cause. getBoundingClientRect() on
+   that first attempt returned a ~149x151 box for what a static inspection
+   of its computed style confirmed was actually 160x52 — the rotated
+   element's axis-aligned bounding box, not a real size/overflow bug, but
+   visually indistinguishable from one once the mask swept out of alignment
+   with the button underneath it. Animating the angle keeps the element's
+   own box (and therefore its mask) completely static. */
+@property --glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes glow-rotate {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+.button .glow-ring {
+  position: absolute;
+  inset: -2px;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 1.5px;
+  --glow-angle: 0deg;
+  background: conic-gradient(from var(--glow-angle), transparent 0%, rgba(255, 255, 255, 0.9) 8%, transparent 22%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0;
+  animation: glow-rotate 1.6s linear infinite;
+  animation-play-state: paused;
+  transition: opacity 0.3s ease;
+}
+
+.button:hover:not(:disabled) .glow-ring {
+  opacity: 1;
+  animation-play-state: running;
 }
 
 .button .wrap .content {
