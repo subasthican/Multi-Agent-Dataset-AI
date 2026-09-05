@@ -196,16 +196,24 @@ Changing a user's plan here is still the *only* way to become "pro" — no
 billing exists. Each user has a detail page (`/admin/users/[id]`) with their
 full search history, and the user table has search/filter/sort. Suspending
 an account (reversible, unlike delete) blocks login immediately and
-invalidates their already-issued token on their very next request. Nobody
-is admin by default — grant yourself access once with:
+invalidates their already-issued token on their very next request. Being an
+admin also bypasses the daily search limit entirely, regardless of which
+plan the account is actually on (`security/usage_limits.py` checks
+`is_admin` before it ever looks at the plan's limit) — admin access itself
+means unlimited, not "unlimited if someone also remembered to put them on a
+no-limit plan." Nobody is admin by default — two ways in:
 ```bash
 cd backend
+# Fastest: creates (or resets) a fixed known-credentials admin account —
+# email admin@datanebula.ai, password AdminSeed123!. Local dev/demo only;
+# never leave the default password in place on a real deployment.
+python scripts/seed_admin.py
+
+# Or promote an account you already registered through /register:
 python scripts/promote_admin.py your-email@example.com
 ```
-(You must have already registered that account through the normal
-`/register` page first.) See `docs/agent-improvements.md` for what's
-deliberately *not* built yet (no audit log of admin actions, no re-auth
-before deleting a user).
+See `docs/agent-improvements.md` for what's deliberately *not* built yet
+(no audit log of admin actions, no re-auth before deleting a user).
 
 **Building this out further?** See [`docs/admin-panel-roadmap.md`](admin-panel-roadmap.md)
 first — catalog management (phase 2), plan management/limit enforcement
