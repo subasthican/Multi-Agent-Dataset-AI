@@ -27,9 +27,16 @@ def load_config() -> Dict[str, Dict[str, List[str]]]:
 
 
 def _match_category(text: str, keywords: List[str], categories: Dict[str, List[str]], default: str) -> str:
+    """Whole-word/phrase match, not substring. A plain `trigger in haystack`
+    check let short triggers match inside unrelated words — e.g. adding an
+    "automotive" domain with the trigger "car" would otherwise also fire on
+    "scarcity", "healthcare", or "discard". Same bug class already fixed
+    once in evaluation_agent/scorer.py's keyword matching; \\b word
+    boundaries fix it here too while still matching multi-word triggers
+    like "price prediction" or "time series" correctly."""
     haystack = f"{text.lower()} {' '.join(keywords)}"
     for category, triggers in categories.items():
-        if any(trigger in haystack for trigger in triggers):
+        if any(re.search(rf"\b{re.escape(trigger)}\b", haystack) for trigger in triggers):
             return category
     return default
 
