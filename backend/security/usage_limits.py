@@ -37,9 +37,16 @@ def _count_since(db: Session, model, filter_column, filter_value) -> int:
 def get_usage(db: Session, user: Optional[User], ip_address: str) -> tuple[str, Optional[int], int]:
     """Returns (plan_name, limit, used_today). limit of None = unlimited."""
     if user is not None:
+        used = _count_since(db, SearchHistory, SearchHistory.user_id, user.id)
+        # Admins bypass the plan's limit entirely, regardless of which plan
+        # they're actually on — being an admin should mean unlimited access,
+        # not "unlimited if someone also remembered to put them on a
+        # no-limit plan." `used` is still the real count, just never
+        # compared against a limit (see enforce_search_limit below).
+        if user.is_admin:
+            return user.plan, None, used
         plan = get_plan_by_name(db, user.plan)
         limit = plan.daily_search_limit if plan else None
-        used = _count_since(db, SearchHistory, SearchHistory.user_id, user.id)
         return user.plan, limit, used
 
     plan = get_plan_by_name(db, FREE_PLAN_NAME)
