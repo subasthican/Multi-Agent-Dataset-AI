@@ -531,14 +531,29 @@ button:not(:disabled) {
 }
 
 /* A small chevron built from two rotated bars (::before/::after), not an
-   image or icon font, so it inherits currentColor and needs no asset. */
+   image or icon font, so it inherits currentColor and needs no asset.
+
+   Anchored to the right edge, not centered in the flex row — .content's
+   only other children are .char.state-1/state-2, both absolutely
+   positioned with inset:0 so they can crossfade over the *entire* content
+   box (needed for the hover text-swap). A flex-centered icon lands at
+   that exact same central point as that centered text, rendering the
+   chevron literally through the middle of "Explore"/"Go Now"/"Searching"
+   at all times, not just during the crossfade. Positioning by an edge
+   offset instead of flex centering keeps it clear of centered text for
+   any of this button's actual (short) labels. Uses `margin-top` rather
+   than `transform: translateY(-50%)` for the vertical centering, so the
+   hover animation below is free to use `transform` for the swing without
+   needing to compose two transforms into one. */
 .button .icon {
-  position: relative;
+  position: absolute;
   z-index: 1;
+  right: 0.85rem;
+  top: 50%;
+  margin-top: -0.45rem;
   display: flex;
   height: 0.9rem;
   width: 0.9rem;
-  flex-shrink: 0;
   align-items: center;
   justify-content: center;
 }
