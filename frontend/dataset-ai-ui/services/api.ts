@@ -19,6 +19,9 @@ export interface DatasetMatch {
   description: string;
   similarity: number;
   source: "catalog" | "kaggle" | "openml" | "huggingface";
+  // A real link to the dataset's page on its source platform — null for a
+  // catalog entry with no admin-provided reference. Never fabricated.
+  url: string | null;
 }
 
 export interface EvaluatedDataset {
@@ -96,6 +99,9 @@ export interface CatalogDataset {
   description: string;
   domain: string;
   task: string;
+  // Optional real-world reference an admin can attach — unlike a live
+  // Kaggle/OpenML/HuggingFace result, a curated entry has no inherent page.
+  url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -105,6 +111,7 @@ export interface CatalogDatasetInput {
   description: string;
   domain: string;
   task: string;
+  url?: string | null;
 }
 
 export interface TokenResponse {
