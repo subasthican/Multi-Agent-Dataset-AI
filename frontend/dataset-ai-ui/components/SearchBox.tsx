@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Search, LoaderCircle } from "lucide-react";
+import { Search } from "lucide-react";
+import { Component as ThreeDButton } from "@/components/ui/3d-button";
 
 interface SearchBoxProps {
   onSearch: (query: string) => void;
@@ -37,14 +38,15 @@ export default function SearchBox({ onSearch, loading }: SearchBoxProps) {
           placeholder="Describe your dataset requirement..."
           className="min-w-0 flex-1 bg-transparent py-3 text-sm text-white placeholder:text-white/40 focus:outline-none sm:text-base"
         />
-        <button
+        <ThreeDButton
           type="submit"
-          disabled={loading || !query.trim()}
-          className="btn-primary flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm sm:px-6"
-        >
-          {loading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-          {loading ? "Searching" : "Explore"}
-        </button>
+          disabled={!query.trim()}
+          loading={loading}
+          label="Explore"
+          hoverLabel="Go Now"
+          loadingLabel="Searching"
+          className="shrink-0"
+        />
       </form>
       <div className="mt-3 flex flex-wrap gap-2">
         {EXAMPLE_QUERIES.map((example) => (
