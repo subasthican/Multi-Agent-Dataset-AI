@@ -7,9 +7,10 @@ import jwt
 ALGORITHM = "HS256"
 DEFAULT_EXPIRY_HOURS = 2
 
-# Falls back to a random secret generated at process start when SECRET_KEY
-# isn't set, so local dev works out of the box — tokens just won't survive a
-# restart. Set SECRET_KEY in the repo-root .env for a persistent secret.
+# Falls back to a random secret generated at process start when
+# JWT_SECRET_KEY isn't set, so local dev works out of the box — tokens just
+# won't survive a restart. Set JWT_SECRET_KEY in the repo-root .env for a
+# persistent secret.
 SECRET_KEY = os.getenv("JWT_SECRET_KEY") or secrets.token_hex(32)
 
 
