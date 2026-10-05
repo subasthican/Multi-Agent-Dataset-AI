@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
 from agents.nlp_agent.agent import classify_domain, classify_task, classify_data_type, load_config
+from agents.discovery_agent.identity import deduplicate_records
 
 from .huggingface_source import search_huggingface_datasets
 from .kaggle_source import KaggleUnavailableError, search_kaggle_datasets
@@ -66,8 +67,4 @@ def collect_external_datasets(query: str, limit: int = 5) -> List[Dict]:
 
         results = kaggle_future.result() + openml_future.result() + huggingface_future.result()
 
-    unique = {}
-    for item in results:
-        metadata = _infer_metadata(item)
-        unique.setdefault((metadata.get("source"), str(metadata["id"])), metadata)
-    return list(unique.values())[:limit]
+    return deduplicate_records(_infer_metadata(item) for item in results)[:limit]

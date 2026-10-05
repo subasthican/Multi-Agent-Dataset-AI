@@ -1,0 +1,82 @@
+[
+  {
+    "query": "Find healthcare datasets for diabetes classification",
+    "expected_domain": "healthcare",
+    "expected_task": "classification",
+    "outcome": "BLOCKED",
+    "analysis": {
+      "original_query": "Find healthcare datasets for diabetes classification",
+      "domain": "healthcare",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "healthcare",
+        "dataset",
+        "diabete",
+        "classification"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "provider_trace": [
+      {
+        "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}",
+        "reason": "TEMPORARY_UNAVAILABLE"
+      }
+    ]
+  },
+  {
+    "query": "Find financial datasets for forecasting stock prices",
+    "expected_domain": "finance",
+    "expected_task": "regression",
+    "outcome": "BLOCKED",
+    "analysis": {
+      "original_query": "Find financial datasets for forecasting stock prices",
+      "domain": "finance",
+      "task": "regression",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "stock",
+        "price"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "provider_trace": [
+      {
+        "error": "Gemini temporary_unavailable cooldown; retry in 45 seconds. Using rule-based understanding.",
+        "reason": "TEMPORARY_UNAVAILABLE"
+      }
+    ]
+  },
+  {
+    "query": "Find education datasets for student dropout classification",
+    "expected_domain": "education",
+    "expected_task": "classification",
+    "outcome": "BLOCKED",
+    "analysis": {
+      "original_query": "Find education datasets for student dropout classification",
+      "domain": "education",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "education",
+        "dataset",
+        "student",
+        "classification"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "provider_trace": [
+      {
+        "error": "Gemini temporary_unavailable cooldown; retry in 28 seconds. Using rule-based understanding.",
+        "reason": "TEMPORARY_UNAVAILABLE"
+      }
+    ]
+  }
+]

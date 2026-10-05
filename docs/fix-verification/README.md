@@ -1,6 +1,6 @@
 # Application fixes and verification
 
-**Latest full attempt and fresh repeat:** [69 regression passes, 12 browser passes, 4 ranking smoke passes, one duplicate-identity failure and daily-quota-blocked Gemini evaluation](latest-full-test.md). These supplemental outcomes are separate from the original fix suite.
+**Current fixes:** [Duplicate reconciliation fixed; 69 application checks, 23 new unit tests, 38 ranking/abstention cases and 3 HTTP checks pass](remaining-fixes.md). Gemini daily quota and provider availability still block live evaluation. Earlier [full test attempts](latest-full-test.md) are preserved as historical evidence, including 12 manual browser passes.
 
 ## Current credential feedback
 

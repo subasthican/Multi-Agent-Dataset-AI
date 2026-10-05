@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-05T22:43:19.191467+05:30",
+  "scope": "Real HTTP coordinator, NLP fallback, MiniLM/FAISS and evaluator in a disposable database; external dataset results and unavailable Gemini explicitly controlled fixtures. This is API verification, not browser verification.",
+  "counts": {
+    "PASS": 3,
+    "FAIL": 0
+  },
+  "duplicate_and_distinct_identity": {
+    "status": "PASS",
+    "duplicate_cards": 1,
+    "selected_source": "catalog",
+    "distinct_card_retained": true,
+    "results": [
+      {
+        "name": "Independent diabetes source",
+        "source": "huggingface",
+        "url": "https://huggingface.co/datasets/example/independent"
+      },
+      {
+        "name": "Diabetes Prediction Dataset",
+        "source": "catalog",
+        "url": null
+      },
+      {
+        "name": "Diabetes duplicate verification",
+        "source": "catalog",
+        "url": "https://www.kaggle.com/datasets/example/diabetes-fixture"
+      },
+      {
+        "name": "Heart Disease Dataset",
+        "source": "catalog",
+        "url": null
+      }
+    ]
+  },
+  "non_tabular_catalog_abstention": "PASS",
+  "unsupported_language_abstention": "PASS",
+  "working_database_unchanged": true,
+  "additional_browser_check": "BLOCKED: native browser control repeatedly reported user activity; no new browser success claimed."
+}

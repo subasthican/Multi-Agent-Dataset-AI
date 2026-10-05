@@ -29,3 +29,4 @@ for query,expected in [('Find healthcare datasets for diabetes classification','
 r={'deduplication':duplicate,'ranking_smoke_cases':ranking,'ranking_scope':'Four project-author-labelled seed examples; not an independent benchmark, broad accuracy measure or calibrated ranking score.'}
 (ROOT/'docs/fix-verification/evidence/supplemental-validation.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))
 scratch.cleanup()
+sys.exit(0 if duplicate['outcome']=='PASS' and all(row['outcome']=='PASS' for row in ranking) else 1)

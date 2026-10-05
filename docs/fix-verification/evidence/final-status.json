@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T22:04:39.589782+05:30",
+  "checked_at": "2026-10-05T22:47:59.243470+05:30",
   "application_cases": {
     "PASS": 69,
     "FAIL": 0,
@@ -14,19 +14,22 @@
   "provider": {
     "model": "gemini-3.5-flash",
     "normal_query_counts": {
-      "PASS": 1,
+      "PASS": 0,
       "FAIL": 0,
-      "BLOCKED": 2
+      "BLOCKED": 3
     },
     "live_attack_counts": {
       "PASS": 0,
       "FAIL": 0,
       "BLOCKED": 15
     },
-    "scope": "Historical completed live attempt retained: 1 normal PASS, 2 normal BLOCKED and 15 attack BLOCKED. Fresh repeat executed one preflight, daily-quota BLOCKED; attack batch not rerun. See repeat-full-test.json."
+    "normal_remote_attempts": 1,
+    "attack_remote_attempts": 0,
+    "evidence_run": "docs/fix-verification/evidence/live-integrations/run-20261005-224430",
+    "scope": "Latest configured-model run attempted one normal request, got daily quota exhaustion, then skipped two normal and all fifteen attack requests. Blocked labels are not executed tests or safety passes. Historical earlier normal success preserved in prior evidence."
   },
   "smtp": "SKIPPED at user request",
-  "assessment_submission": "INCOMPLETE: deferred personal details/reflections, independent validation and viva",
+  "assessment_submission": "SKIPPED from the current application-fix scope at user request; actual formal completion remains unverified.",
   "whole_project_100_percent_complete": false,
   "admin_auditing": "PASS",
   "destructive_admin_password_confirmation": "PASS",
@@ -53,9 +56,9 @@
   },
   "full_recheck": "full-recheck.json",
   "remaining_implementation_limits": [
-    "Cross-platform dataset duplicates not reconciled",
+    "Exact/equivalent URL duplicates reconciled; different-URL mirrors cannot safely be inferred from names alone.",
     "Fallback taxonomy and first-matching category coverage limited",
-    "Heuristic ranking lacks independently labelled relevance benchmark",
+    "38 authored ranking/abstention cases pass; heuristic ranking still lacks an independent broad relevance benchmark",
     "Fixed 10-entry catalog; no local automotive entries",
     "Pipeline animation imposes a 10-second minimum and is not real backend progress",
     "Inter-agent messages are in-process Pydantic objects, not MCP/A2A or separate HTTP transports",
@@ -74,13 +77,13 @@
     "PASS": 12,
     "FAIL": 0
   },
-  "latest_full_test": "latest-full-test.json",
+  "latest_full_test": "remaining-fixes.json",
   "supplemental_validation": {
     "deduplication": {
       "check": "Cross-source same URL dataset identity",
-      "outcome": "FAIL",
+      "outcome": "PASS",
       "expected_cards": 1,
-      "actual_cards": 2,
+      "actual_cards": 1,
       "same_canonical_url": true,
       "scope": "Controlled retrieval results; real coordinator/evaluation. No live source or student-independent evidence claim."
     },
@@ -116,14 +119,39 @@
     "status": "DAILY_QUOTA_EXHAUSTED",
     "model": "gemini-3.5-flash",
     "daily_free_tier_limit": 20,
-    "provider_retry_delay_seconds_at_observation": 27375,
+    "provider_retry_delay_seconds_at_observation": 24328,
     "action": "Wait for provider quota reset, or use an account/model with available quota. Pacing alone does not restore daily allowance.",
-    "observed_at": "2026-10-05T21:53:43.386170+05:30"
+    "observed_at": "2026-10-05T22:44:44.018391+05:30"
   },
   "latest_repeat_full_test": "repeat-full-test.json",
   "latest_repeat_browser_checks": "repeat-browser-checks.json",
   "latest_repeat_gemini": "repeat-provider-check.json",
   "latest_repeat_kaggle": "repeat-kaggle-check.json",
   "latest_repeat_external_sources": "repeat-external-check.json",
-  "latest_repeat_database": "repeat-database-check.json"
+  "latest_repeat_database": "repeat-database-check.json",
+  "latest_implementation_fixes": "remaining-fixes.json",
+  "previous_full_test": "latest-full-test.json",
+  "ranking_validation": {
+    "counts": {
+      "PASS": 38,
+      "FAIL": 0
+    },
+    "metrics": {
+      "positive_queries": 30,
+      "abstention_queries": 8,
+      "top1_accuracy": 1.0,
+      "mrr_at_3": 1.0,
+      "recall_at_3": 1.0,
+      "ndcg_at_3_single_target": 1.0,
+      "abstention_accuracy": 1.0
+    },
+    "evidence": "ranking-validation.json",
+    "scope": "Project-authored, fixed validation labels for the ten seeded datasets and catalog abstention. No independent annotator or external-source relevance certification. Do not change labels to match results."
+  },
+  "excluded_scope": [
+    "SMTP",
+    "group submission",
+    "individual submission"
+  ],
+  "additional_browser_check": "BLOCKED by reported user activity; previous 12 PASS retained, no new PASS claimed."
 }

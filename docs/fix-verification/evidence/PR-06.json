@@ -6,46 +6,46 @@
     {
       "status": 200,
       "body": {
-        "id": "bacaf404-5717-472f-a0c1-af255b3234e2",
+        "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
         "name": "Synthetic a",
         "email": "fix-a@example.com",
         "plan": "free",
         "is_admin": false,
         "is_active": true,
-        "created_at": "2026-10-05T16:23:46.624673"
+        "created_at": "2026-10-05T17:14:34.523126"
       }
     },
     {
       "status": 200,
       "body": [
         {
-          "id": "aca48a6b-b2ad-4a82-b8d1-7975cd8b6dbe",
+          "id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
           "name": "Synthetic admin",
           "email": "fix-admin@example.com",
           "plan": "free",
           "is_admin": true,
           "is_active": true,
-          "created_at": "2026-10-05T16:23:47.200698",
+          "created_at": "2026-10-05T17:14:35.097655",
           "search_count": 0
         },
         {
-          "id": "db4f820c-c8c2-4d96-99f7-e586b401ad65",
+          "id": "698c1963-325f-43b4-8635-5ad56c6c4eab",
           "name": "Synthetic b",
           "email": "fix-b@example.com",
           "plan": "free",
           "is_admin": false,
           "is_active": true,
-          "created_at": "2026-10-05T16:23:46.914804",
+          "created_at": "2026-10-05T17:14:34.810824",
           "search_count": 1
         },
         {
-          "id": "bacaf404-5717-472f-a0c1-af255b3234e2",
+          "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
           "name": "Synthetic a",
           "email": "fix-a@example.com",
           "plan": "free",
           "is_admin": false,
           "is_active": true,
-          "created_at": "2026-10-05T16:23:46.624673",
+          "created_at": "2026-10-05T17:14:34.523126",
           "search_count": 1
         }
       ]

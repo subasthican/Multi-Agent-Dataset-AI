@@ -1,0 +1,824 @@
+{
+  "checked_at": "2026-10-05T22:37:47.947501+05:30",
+  "scope": "Project-authored, fixed validation labels for the ten seeded datasets and catalog abstention. No independent annotator or external-source relevance certification. Do not change labels to match results.",
+  "labels_sha256": "c46aee9a7d7fb285d358f7b2baf1a2ca7855041d12acac79e24ce471fd47c453",
+  "counts": {
+    "PASS": 35,
+    "FAIL": 3
+  },
+  "metrics": {
+    "positive_queries": 30,
+    "abstention_queries": 8,
+    "top1_accuracy": 0.9666666666666667,
+    "mrr_at_3": 0.9666666666666667,
+    "recall_at_3": 0.9666666666666667,
+    "ndcg_at_3_single_target": 0.9666666666666667,
+    "abstention_accuracy": 1.0
+  },
+  "cases": [
+    {
+      "id": "RK-01",
+      "query": "Classify diabetes from glucose and BMI patient records",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Diabetes Prediction Dataset",
+        "Heart Disease Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        86.92,
+        62.54
+      ]
+    },
+    {
+      "id": "RK-02",
+      "query": "Find medical records for diabetes classification",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Diabetes Prediction Dataset",
+        "Heart Disease Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        83.52,
+        63.64
+      ]
+    },
+    {
+      "id": "RK-03",
+      "query": "Health tables to predict diabetes using glucose and age",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Diabetes Prediction Dataset",
+        "Heart Disease Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        81.49,
+        59.55
+      ]
+    },
+    {
+      "id": "RK-04",
+      "query": "Clinical records to detect heart disease",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Heart Disease Dataset",
+        "Diabetes Prediction Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        84.66,
+        65.69
+      ]
+    },
+    {
+      "id": "RK-05",
+      "query": "Find patient tables for heart disease classification",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Heart Disease Dataset",
+        "Diabetes Prediction Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        76.26,
+        69.49
+      ]
+    },
+    {
+      "id": "RK-06",
+      "query": "Medical records for predicting the presence of heart disease",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "FAIL",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "machine_learning",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Heart Disease Dataset",
+        "Diabetes Prediction Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        70.7,
+        49.46
+      ]
+    },
+    {
+      "id": "RK-07",
+      "query": "Detect fraudulent credit card transactions",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Credit Card Fraud Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        75.28
+      ]
+    },
+    {
+      "id": "RK-08",
+      "query": "Find financial transaction data for fraud classification",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Credit Card Fraud Dataset",
+        "Stock Price History Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        78.01,
+        40.56
+      ]
+    },
+    {
+      "id": "RK-09",
+      "query": "Classify unusual credit card spending patterns",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Credit Card Fraud Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        73.03
+      ]
+    },
+    {
+      "id": "RK-10",
+      "query": "Forecast stock market prices and trading volumes",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Stock Price History Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        82.46
+      ]
+    },
+    {
+      "id": "RK-11",
+      "query": "Historical financial trading tables for regression",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Stock Price History Dataset",
+        "Credit Card Fraud Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        74.08,
+        41.1
+      ]
+    },
+    {
+      "id": "RK-12",
+      "query": "Estimate stock prices using financial market history",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Stock Price History Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        77.87
+      ]
+    },
+    {
+      "id": "RK-13",
+      "query": "Forecast renewable solar energy generation",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Solar Energy Forecast Dataset",
+        "Air Quality Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        83.27,
+        57.84
+      ]
+    },
+    {
+      "id": "RK-14",
+      "query": "Energy records to estimate solar power output",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Solar Energy Forecast Dataset",
+        "Air Quality Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        82.84,
+        53.98
+      ]
+    },
+    {
+      "id": "RK-15",
+      "query": "Find renewable energy tables for solar forecasting",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Solar Energy Forecast Dataset",
+        "Air Quality Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        79.71,
+        61.23
+      ]
+    },
+    {
+      "id": "RK-16",
+      "query": "Forecast pollution and weather sensor readings",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Air Quality Dataset",
+        "Solar Energy Forecast Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        88.82,
+        53.21
+      ]
+    },
+    {
+      "id": "RK-17",
+      "query": "Find environmental pollution records for regression",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Air Quality Dataset",
+        "Solar Energy Forecast Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        65.6,
+        53.01
+      ]
+    },
+    {
+      "id": "RK-18",
+      "query": "Estimate air quality from pollution measurements",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "FAIL",
+      "actual_intent": {
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-19",
+      "query": "Property records for house price prediction",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "House Price Prediction Dataset",
+        "Customer Churn Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        80.06,
+        41.93
+      ]
+    },
+    {
+      "id": "RK-20",
+      "query": "Forecast real estate housing prices",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "House Price Prediction Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        84.21
+      ]
+    },
+    {
+      "id": "RK-21",
+      "query": "Estimate house prices from property information",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "regression",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "House Price Prediction Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        80.61
+      ]
+    },
+    {
+      "id": "RK-22",
+      "query": "Classify customer subscription churn using usage records",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Customer Churn Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        91.09
+      ]
+    },
+    {
+      "id": "RK-23",
+      "query": "Find business customer data to predict churn",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Customer Churn Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        84.53
+      ]
+    },
+    {
+      "id": "RK-24",
+      "query": "Customer subscription records for churn classification",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Customer Churn Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        85.12
+      ]
+    },
+    {
+      "id": "RK-25",
+      "query": "Predict student dropout risk from grades",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Student Performance Dataset",
+        "Course Completion Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        86.15,
+        61.48
+      ]
+    },
+    {
+      "id": "RK-26",
+      "query": "Find academic student tables for performance classification",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Student Performance Dataset",
+        "Course Completion Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        66.85,
+        65.72
+      ]
+    },
+    {
+      "id": "RK-27",
+      "query": "Classify school student dropout risk using grades",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Student Performance Dataset",
+        "Course Completion Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        84.23,
+        58.99
+      ]
+    },
+    {
+      "id": "RK-28",
+      "query": "Predict online course completion from learning records",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Course Completion Dataset",
+        "Student Performance Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        84.47,
+        57.9
+      ]
+    },
+    {
+      "id": "RK-29",
+      "query": "Find university course completion data for classification",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Course Completion Dataset",
+        "Student Performance Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        77.71,
+        58.5
+      ]
+    },
+    {
+      "id": "RK-30",
+      "query": "Classify completion rates from online learning platform records",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [
+        "Course Completion Dataset",
+        "Student Performance Dataset"
+      ],
+      "expected_rank": 1,
+      "scores": [
+        86.92,
+        56.06
+      ]
+    },
+    {
+      "id": "RK-31",
+      "query": "Medical image datasets for detecting cancer",
+      "expected_top": null,
+      "expected_domain": "healthcare",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "computer_vision",
+        "data_type": "image"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-32",
+      "query": "Patient text documents for medical language translation",
+      "expected_top": null,
+      "expected_domain": "healthcare",
+      "expected_task": "nlp",
+      "expected_data_type": "text",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "healthcare",
+        "task": "nlp",
+        "data_type": "text"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-33",
+      "query": "Financial time series for forecasting stock trends",
+      "expected_top": null,
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "time_series",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "finance",
+        "task": "regression",
+        "data_type": "time_series"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-34",
+      "query": "Student image data for computer vision",
+      "expected_top": null,
+      "expected_domain": "education",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image",
+      "outcome": "FAIL",
+      "actual_intent": {
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-35",
+      "query": "Customer text reviews for sentiment classification",
+      "expected_top": null,
+      "expected_domain": "business",
+      "expected_task": "nlp",
+      "expected_data_type": "text",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "business",
+        "task": "nlp",
+        "data_type": "text"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-36",
+      "query": "Weather images for climate computer vision",
+      "expected_top": null,
+      "expected_domain": "environment",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "environment",
+        "task": "computer_vision",
+        "data_type": "image"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-37",
+      "query": "Automotive vehicle tables for classification",
+      "expected_top": null,
+      "expected_domain": "automotive",
+      "expected_task": "classification",
+      "expected_data_type": "tabular",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "automotive",
+        "task": "classification",
+        "data_type": "tabular"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    },
+    {
+      "id": "RK-38",
+      "query": "Vehicle image datasets for object detection",
+      "expected_top": null,
+      "expected_domain": "automotive",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image",
+      "outcome": "PASS",
+      "actual_intent": {
+        "domain": "automotive",
+        "task": "computer_vision",
+        "data_type": "image"
+      },
+      "ranked_names": [],
+      "expected_rank": null,
+      "scores": []
+    }
+  ],
+  "working_database_unchanged": true,
+  "limitations": "Metrics apply only to these authored catalog queries. Single-target labels do not measure every returned card's relevance, calibration, external source quality, or population fairness."
+}

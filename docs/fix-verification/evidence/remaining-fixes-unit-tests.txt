@@ -1,0 +1,28 @@
+test_standalone_collection_reconciles_source_copies (test_collection_identity.CollectionIdentityTests.test_standalone_collection_reconciles_source_copies) ... ok
+test_catalog_and_provider_copy_keep_catalog (test_dataset_identity.DatasetIdentityTests.test_catalog_and_provider_copy_keep_catalog) ... ok
+test_default_ports_tracking_and_fragments (test_dataset_identity.DatasetIdentityTests.test_default_ports_tracking_and_fragments) ... ok
+test_generic_site_scheme_path_and_query_order_preserved (test_dataset_identity.DatasetIdentityTests.test_generic_site_scheme_path_and_query_order_preserved) ... ok
+test_identity_bridge_reconciles_transitively (test_dataset_identity.DatasetIdentityTests.test_identity_bridge_reconciles_transitively) ... ok
+test_inputs_not_mutated (test_dataset_identity.DatasetIdentityTests.test_inputs_not_mutated) ... ok
+test_invalid_or_authenticated_urls_are_not_keys (test_dataset_identity.DatasetIdentityTests.test_invalid_or_authenticated_urls_are_not_keys) ... ok
+test_missing_identity_is_not_merged (test_dataset_identity.DatasetIdentityTests.test_missing_identity_is_not_merged) ... ok
+test_same_name_different_urls_remain_distinct (test_dataset_identity.DatasetIdentityTests.test_same_name_different_urls_remain_distinct) ... ok
+test_source_id_without_url (test_dataset_identity.DatasetIdentityTests.test_source_id_without_url) ... ok
+test_unknown_hash_routes_and_nondefault_provider_ports_remain_distinct (test_dataset_identity.DatasetIdentityTests.test_unknown_hash_routes_and_nondefault_provider_ports_remain_distinct) ... ok
+test_versions_and_functional_query_parameters_are_distinct (test_dataset_identity.DatasetIdentityTests.test_versions_and_functional_query_parameters_are_distinct) ... ok
+test_key_rotation_replaces_client_and_retries_are_bounded (test_gemini_cooldown.ClientConfigurationTests.test_key_rotation_replaces_client_and_retries_are_bounded) ... ok
+test_attempted_flag_distinguishes_provider_error_from_cached_denial (test_gemini_cooldown.GeminiCooldownTests.test_attempted_flag_distinguishes_provider_error_from_cached_denial) ... ok
+test_daily_failure_prevents_repeated_remote_calls (test_gemini_cooldown.GeminiCooldownTests.test_daily_failure_prevents_repeated_remote_calls) ... ok
+test_daily_missing_delay_uses_bounded_probe_backoff (test_gemini_cooldown.GeminiCooldownTests.test_daily_missing_delay_uses_bounded_probe_backoff) ... ok
+test_explicit_sixty_second_daily_delay_is_honored (test_gemini_cooldown.GeminiCooldownTests.test_explicit_sixty_second_daily_delay_is_honored) ... ok
+test_fractional_delay_rounds_up (test_gemini_cooldown.GeminiCooldownTests.test_fractional_delay_rounds_up) ... ok
+test_malformed_provider_details_do_not_break_fallback (test_gemini_cooldown.GeminiCooldownTests.test_malformed_provider_details_do_not_break_fallback) ... ok
+test_model_and_credential_cooldowns_are_separate (test_gemini_cooldown.GeminiCooldownTests.test_model_and_credential_cooldowns_are_separate) ... ok
+test_other_failure_and_empty_response_do_not_claim_success (test_gemini_cooldown.GeminiCooldownTests.test_other_failure_and_empty_response_do_not_claim_success) ... ok
+test_probe_resumes_after_retry_delay (test_gemini_cooldown.GeminiCooldownTests.test_probe_resumes_after_retry_delay) ... ok
+test_service_unavailable_uses_short_cooldown (test_gemini_cooldown.GeminiCooldownTests.test_service_unavailable_uses_short_cooldown) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 0.008s
+
+OK

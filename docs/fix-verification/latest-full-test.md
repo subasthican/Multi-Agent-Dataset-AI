@@ -1,4 +1,6 @@
-# Latest complete test attempt — 5 October 2026
+**Superseded implementation status:** duplicate reconciliation is now fixed and 38 catalog ranking/abstention cases pass. See [current remaining-fixes report](remaining-fixes.md). The observations below describe earlier runs; their duplicate failure is historical. Gemini live evaluation remains provider-blocked.
+
+# Earlier complete test attempts — 5 October 2026
 
 The application regression suite and selected browser flows passed. A separate duplicate-identity check failed, and live Gemini evaluation remained blocked by the daily quota. This is not a 100% completion claim.
 

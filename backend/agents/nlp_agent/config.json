@@ -41,7 +41,11 @@
       "customer",
       "retail",
       "commerce",
-      "revenue"
+      "revenue",
+      "real estate",
+      "housing",
+      "property",
+      "house price"
     ],
     "environment": [
       "environment",
@@ -84,6 +88,7 @@
       "forecast",
       "forecasting",
       "estimate",
+      "estimating",
       "price prediction"
     ],
     "clustering": [
@@ -95,10 +100,13 @@
     ],
     "classification": [
       "classify",
+      "classifying",
       "classification",
       "predict",
+      "predicting",
       "prediction",
       "detect",
+      "detecting",
       "detection",
       "diagnose"
     ]

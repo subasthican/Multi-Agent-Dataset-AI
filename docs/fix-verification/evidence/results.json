@@ -92,46 +92,46 @@
       {
         "status": 200,
         "body": {
-          "id": "bacaf404-5717-472f-a0c1-af255b3234e2",
+          "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
           "name": "Synthetic a",
           "email": "fix-a@example.com",
           "plan": "free",
           "is_admin": false,
           "is_active": true,
-          "created_at": "2026-10-05T16:23:46.624673"
+          "created_at": "2026-10-05T17:14:34.523126"
         }
       },
       {
         "status": 200,
         "body": [
           {
-            "id": "aca48a6b-b2ad-4a82-b8d1-7975cd8b6dbe",
+            "id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
             "name": "Synthetic admin",
             "email": "fix-admin@example.com",
             "plan": "free",
             "is_admin": true,
             "is_active": true,
-            "created_at": "2026-10-05T16:23:47.200698",
+            "created_at": "2026-10-05T17:14:35.097655",
             "search_count": 0
           },
           {
-            "id": "db4f820c-c8c2-4d96-99f7-e586b401ad65",
+            "id": "698c1963-325f-43b4-8635-5ad56c6c4eab",
             "name": "Synthetic b",
             "email": "fix-b@example.com",
             "plan": "free",
             "is_admin": false,
             "is_active": true,
-            "created_at": "2026-10-05T16:23:46.914804",
+            "created_at": "2026-10-05T17:14:34.810824",
             "search_count": 1
           },
           {
-            "id": "bacaf404-5717-472f-a0c1-af255b3234e2",
+            "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
             "name": "Synthetic a",
             "email": "fix-a@example.com",
             "plan": "free",
             "is_admin": false,
             "is_active": true,
-            "created_at": "2026-10-05T16:23:46.624673",
+            "created_at": "2026-10-05T17:14:34.523126",
             "search_count": 1
           }
         ]
@@ -756,7 +756,7 @@
       },
       "top": {
         "dataset": {
-          "id": "fc41f5fb-d8a2-4b6e-bbf1-b21f3186d2c9",
+          "id": "c70fa64b-f9a8-4fe9-afda-eba261b2b37d",
           "name": "Diabetes Prediction Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -797,7 +797,7 @@
       },
       "top": {
         "dataset": {
-          "id": "0afd815d-2de8-4259-9fb1-c75223836ce7",
+          "id": "b1b4b82c-d9c9-42a9-883c-ca946103dc3d",
           "name": "Credit Card Fraud Dataset",
           "domain": "finance",
           "task": "classification",
@@ -836,7 +836,7 @@
       },
       "top": {
         "dataset": {
-          "id": "51f7faae-35e2-4fd7-991f-b05e4fa158fc",
+          "id": "8d15a4d6-bbe0-4613-8e9b-965871d70705",
           "name": "Student Performance Dataset",
           "domain": "education",
           "task": "classification",
@@ -876,7 +876,7 @@
       },
       "top": {
         "dataset": {
-          "id": "3051b2f8-2a3f-43fb-ba65-1c34276f4667",
+          "id": "308f3c37-6741-4316-b350-08cb33ee1bfd",
           "name": "Customer Churn Dataset",
           "domain": "business",
           "task": "classification",
@@ -915,7 +915,7 @@
       },
       "top": {
         "dataset": {
-          "id": "ff593b50-c6b0-4a30-854b-c967b7dcb0bf",
+          "id": "9e1ee508-5450-4385-b9e2-900632f837de",
           "name": "Solar Energy Forecast Dataset",
           "domain": "environment",
           "task": "regression",
@@ -941,7 +941,7 @@
       "understanding": {
         "original_query": "Find datasets for classifying car types",
         "domain": "automotive",
-        "task": "machine_learning",
+        "task": "classification",
         "data_type": "tabular",
         "keywords": [
           "dataset",
@@ -966,7 +966,7 @@
       "understanding": {
         "original_query": "Find datasets for predicting professional tennis match outcomes",
         "domain": "general",
-        "task": "machine_learning",
+        "task": "classification",
         "data_type": "tabular",
         "keywords": [
           "dataset",
@@ -1141,7 +1141,7 @@
     "actual": [
       {
         "dataset": {
-          "id": "fc41f5fb-d8a2-4b6e-bbf1-b21f3186d2c9",
+          "id": "c70fa64b-f9a8-4fe9-afda-eba261b2b37d",
           "name": "Diabetes Prediction Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -1156,7 +1156,7 @@
       },
       {
         "dataset": {
-          "id": "50cbc5a7-911d-43ad-9b61-4177078e96c9",
+          "id": "91f5c038-5a2c-4240-9432-aab3af90a27e",
           "name": "Heart Disease Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -1221,11 +1221,11 @@
     "actual": {
       "statuses": [
         200,
+        200,
         429,
         429,
         429,
-        429,
-        200
+        429
       ],
       "used": 2,
       "limit": 2
@@ -1305,31 +1305,31 @@
       "delete": 204,
       "audit_events": [
         {
-          "id": "584f21b4-4c17-4b6b-a24b-b2713fd4ae93",
-          "actor_id": "aca48a6b-b2ad-4a82-b8d1-7975cd8b6dbe",
+          "id": "51151d97-db12-4a51-b284-20c4bcc7bcf3",
+          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
           "action": "delete",
           "target_type": "catalog",
-          "target_id": "49ed01c2-9764-4425-a7c4-f7c40d857057",
+          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
           "changed_fields": [],
-          "created_at": "2026-10-05T16:23:56.428814Z"
+          "created_at": "2026-10-05T17:14:46.399118Z"
         },
         {
-          "id": "1943f283-080d-4405-8c4f-f9b9cea138cc",
-          "actor_id": "aca48a6b-b2ad-4a82-b8d1-7975cd8b6dbe",
+          "id": "eb7e1c29-ba12-4b39-b3da-9791e29b8eb4",
+          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
           "action": "update",
           "target_type": "catalog",
-          "target_id": "49ed01c2-9764-4425-a7c4-f7c40d857057",
+          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
           "changed_fields": [
             "description"
           ],
-          "created_at": "2026-10-05T16:23:56.143705Z"
+          "created_at": "2026-10-05T17:14:46.113622Z"
         },
         {
-          "id": "71368d70-d66a-4dae-b535-0d1c907a5b36",
-          "actor_id": "aca48a6b-b2ad-4a82-b8d1-7975cd8b6dbe",
+          "id": "641ea4a9-b574-4065-9469-15fd8c7a7b3b",
+          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
           "action": "create",
           "target_type": "catalog",
-          "target_id": "49ed01c2-9764-4425-a7c4-f7c40d857057",
+          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
           "changed_fields": [
             "data_type",
             "description",
@@ -1338,7 +1338,7 @@
             "task",
             "url"
           ],
-          "created_at": "2026-10-05T16:23:55.846513Z"
+          "created_at": "2026-10-05T17:14:45.820389Z"
         }
       ],
       "non_admin": 403,

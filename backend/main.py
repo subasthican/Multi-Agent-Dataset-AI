@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from agents.dataset_collection_agent.agent import collect_external_datasets
 from agents.discovery_agent.agent import search_datasets
 from agents.discovery_agent.models import DatasetMatch, DiscoveryResult
+from agents.discovery_agent.identity import deduplicate_records
 from agents.discovery_agent.seed import seed_catalog_if_empty
 from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
@@ -116,7 +117,10 @@ def _candidate_datasets(understanding: QueryAnalysisResult, k: int) -> List[Data
     external_matches = [
         DatasetMatch(**item) for item in collect_external_datasets(_external_query(understanding), limit=k)
     ]
-    return catalog_matches + external_matches
+    # Catalog comes first to retain curated metadata and its original link.
+    return [DatasetMatch(**record) for record in deduplicate_records(
+        match.model_dump() for match in [*catalog_matches, *external_matches]
+    )]
 
 
 @app.get("/")

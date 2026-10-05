@@ -20,7 +20,7 @@
     },
     "top": {
       "dataset": {
-        "id": "51f7faae-35e2-4fd7-991f-b05e4fa158fc",
+        "id": "8d15a4d6-bbe0-4613-8e9b-965871d70705",
         "name": "Student Performance Dataset",
         "domain": "education",
         "task": "classification",

@@ -1,9 +1,9 @@
 {
   "deduplication": {
     "check": "Cross-source same URL dataset identity",
-    "outcome": "FAIL",
+    "outcome": "PASS",
     "expected_cards": 1,
-    "actual_cards": 2,
+    "actual_cards": 1,
     "same_canonical_url": true,
     "scope": "Controlled retrieval results; real coordinator/evaluation. No live source or student-independent evidence claim."
   },

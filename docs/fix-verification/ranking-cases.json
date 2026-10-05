@@ -1,0 +1,309 @@
+{
+  "scope": "Project-authored, fixed validation labels for the ten seeded datasets and catalog abstention. No independent annotator or external-source relevance certification. Do not change labels to match results.",
+  "cases": [
+    {
+      "id": "RK-01",
+      "query": "Classify diabetes from glucose and BMI patient records",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-02",
+      "query": "Find medical records for diabetes classification",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-03",
+      "query": "Health tables to predict diabetes using glucose and age",
+      "expected_top": "Diabetes Prediction Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-04",
+      "query": "Clinical records to detect heart disease",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-05",
+      "query": "Find patient tables for heart disease classification",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-06",
+      "query": "Medical records for predicting the presence of heart disease",
+      "expected_top": "Heart Disease Dataset",
+      "expected_domain": "healthcare",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-07",
+      "query": "Detect fraudulent credit card transactions",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-08",
+      "query": "Find financial transaction data for fraud classification",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-09",
+      "query": "Classify unusual credit card spending patterns",
+      "expected_top": "Credit Card Fraud Dataset",
+      "expected_domain": "finance",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-10",
+      "query": "Forecast stock market prices and trading volumes",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-11",
+      "query": "Historical financial trading tables for regression",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-12",
+      "query": "Estimate stock prices using financial market history",
+      "expected_top": "Stock Price History Dataset",
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-13",
+      "query": "Forecast renewable solar energy generation",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-14",
+      "query": "Energy records to estimate solar power output",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-15",
+      "query": "Find renewable energy tables for solar forecasting",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-16",
+      "query": "Forecast pollution and weather sensor readings",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-17",
+      "query": "Find environmental pollution records for regression",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-18",
+      "query": "Estimate air quality from pollution measurements",
+      "expected_top": "Air Quality Dataset",
+      "expected_domain": "environment",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-19",
+      "query": "Property records for house price prediction",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-20",
+      "query": "Forecast real estate housing prices",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-21",
+      "query": "Estimate house prices from property information",
+      "expected_top": "House Price Prediction Dataset",
+      "expected_domain": "business",
+      "expected_task": "regression",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-22",
+      "query": "Classify customer subscription churn using usage records",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-23",
+      "query": "Find business customer data to predict churn",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-24",
+      "query": "Customer subscription records for churn classification",
+      "expected_top": "Customer Churn Dataset",
+      "expected_domain": "business",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-25",
+      "query": "Predict student dropout risk from grades",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-26",
+      "query": "Find academic student tables for performance classification",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-27",
+      "query": "Classify school student dropout risk using grades",
+      "expected_top": "Student Performance Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-28",
+      "query": "Predict online course completion from learning records",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-29",
+      "query": "Find university course completion data for classification",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-30",
+      "query": "Classify completion rates from online learning platform records",
+      "expected_top": "Course Completion Dataset",
+      "expected_domain": "education",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-31",
+      "query": "Medical image datasets for detecting cancer",
+      "expected_top": null,
+      "expected_domain": "healthcare",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image"
+    },
+    {
+      "id": "RK-32",
+      "query": "Patient text documents for medical language translation",
+      "expected_top": null,
+      "expected_domain": "healthcare",
+      "expected_task": "nlp",
+      "expected_data_type": "text"
+    },
+    {
+      "id": "RK-33",
+      "query": "Financial time series for forecasting stock trends",
+      "expected_top": null,
+      "expected_domain": "finance",
+      "expected_task": "regression",
+      "expected_data_type": "time_series"
+    },
+    {
+      "id": "RK-34",
+      "query": "Student image data for computer vision",
+      "expected_top": null,
+      "expected_domain": "education",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image"
+    },
+    {
+      "id": "RK-35",
+      "query": "Customer text reviews for sentiment classification",
+      "expected_top": null,
+      "expected_domain": "business",
+      "expected_task": "nlp",
+      "expected_data_type": "text"
+    },
+    {
+      "id": "RK-36",
+      "query": "Weather images for climate computer vision",
+      "expected_top": null,
+      "expected_domain": "environment",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image"
+    },
+    {
+      "id": "RK-37",
+      "query": "Automotive vehicle tables for classification",
+      "expected_top": null,
+      "expected_domain": "automotive",
+      "expected_task": "classification",
+      "expected_data_type": "tabular"
+    },
+    {
+      "id": "RK-38",
+      "query": "Vehicle image datasets for object detection",
+      "expected_top": null,
+      "expected_domain": "automotive",
+      "expected_task": "computer_vision",
+      "expected_data_type": "image"
+    }
+  ]
+}

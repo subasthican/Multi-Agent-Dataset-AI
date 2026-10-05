@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-10-05T21:44:05.869512+05:30",
+  "checked_at": "2026-10-05T22:44:44.018391+05:30",
   "normal_query_counts": {
-    "PASS": 1,
+    "PASS": 0,
     "FAIL": 0,
-    "BLOCKED": 2
+    "BLOCKED": 3
   },
   "live_attack_counts": {
     "PASS": 0,
@@ -50,5 +50,7 @@
   },
   "model": "gemini-3.5-flash",
   "scope": "Live remote model tests sequentially paced at least 17 seconds between starts, using the application SDK client; provider failures stay blocked. Original baseline evidence preserved. Single observations do not estimate general attack success rates; no independent student authorship claim.",
-  "evidence_run": "docs/fix-verification/evidence/live-integrations/run-20261005-213834"
+  "normal_remote_attempts": 1,
+  "attack_remote_attempts": 0,
+  "evidence_run": "docs/fix-verification/evidence/live-integrations/run-20261005-224430"
 }

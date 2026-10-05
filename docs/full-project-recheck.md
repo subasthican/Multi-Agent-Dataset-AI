@@ -1,6 +1,6 @@
 # Full project recheck — 5 October 2026
 
-**Latest update:** see [complete test attempt](fix-verification/latest-full-test.md). Twelve native Chrome flows passed; four ranking smoke checks passed; cross-source duplicate identity failed. Live Gemini cases hit the configured model's daily quota of 20. A further repeated run passed the same 69 application cases, 12 manual browser flows and 4 ranking smoke checks; Kaggle returned 3 datasets and OpenML/Hugging Face 2 each. [Fresh repeated evidence](fix-verification/evidence/repeat-full-test.json). Earlier observations below are retained as historical scope.
+**Latest update:** [Remaining application fixes](fix-verification/remaining-fixes.md) reconcile equivalent dataset references; the duplicate case now returns one card. All 69 application checks, 23 new unit tests, 38 authored ranking/abstention cases and 3 HTTP pipeline checks pass. Gemini remains daily-quota blocked; a test-only alternative returned 503. Twelve earlier manual Chrome passes remain previous evidence, and the additional browser attempt was blocked by reported user activity. Earlier test attempts are preserved below and in their timestamped evidence.
 
 **The implemented fixes pass their checks, but the whole project and submissions are not 100% complete.** This review checked current application code, both full assignment briefs, individual evidence/reports, the original DOCX planning material and repository deliverables. Recorded outcomes are in [full-recheck.json](fix-verification/evidence/full-recheck.json).
 
@@ -41,9 +41,9 @@ All 69 passes apply to their finite criteria. Input-guard passes and controlled 
 
 These are distinct from the implemented security fixes and may need work or explicit report limitations:
 
-1. Cross-source copies of the same dataset can still appear separately. Collection removes repeated `(source, id)` pairs only; it does not reconcile identity across platforms or the local catalog.
+1. Equivalent URL references and explicit shared source IDs are now reconciled across the catalog and external results. Different-URL mirrors are retained unless trustworthy shared identity exists; no name-only fuzzy merging is performed.
 2. Fallback rules cover a small English taxonomy. Specific categories were reordered to fix tested cases, but matching still returns the first matching category, not a general most-specific intent algorithm.
-3. Ranking weights and the relevance threshold are heuristic. No independently labelled benchmark measures broad retrieval quality or calibration. Source-parity cases do not prove fairness across users/populations.
+3. Ranking weights and the relevance threshold remain heuristic. All 38 fixed, project-authored catalog queries pass, but an independently labelled benchmark is still needed for broad retrieval quality, full-card relevance and calibration. Source-parity cases do not prove fairness across users/populations.
 4. The seed catalog remains 10 entries without automotive coverage; unsupported modalities/domains may abstain or rely on external metadata. OpenML searches the first keyword's technical name; unknown external modality remains a limitation.
 5. Frontend stage animation imposes an artificial 10-second minimum. It represents a simulated walkthrough, not actual per-agent progress.
 6. Twelve manual Chrome flows and authenticated Kaggle smoke tests pass; full cross-browser/mobile coverage and deployed infrastructure remain unverified. SMTP is explicitly excluded. Optional roadmap items such as system-health monitoring and payment integration are not completed by these checks.

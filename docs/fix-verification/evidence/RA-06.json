@@ -7,7 +7,7 @@
     "understanding": {
       "original_query": "Find datasets for classifying car types",
       "domain": "automotive",
-      "task": "machine_learning",
+      "task": "classification",
       "data_type": "tabular",
       "keywords": [
         "dataset",
