@@ -1,3 +1,4 @@
+import hmac
 import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from .db import get_db
 from .db_models import User
-from .jwt_manager import decode_access_token
+from .jwt_manager import decode_access_token, password_stamp
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -16,7 +17,10 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(password.encode(), hashed_password.encode())
+    try:
+        return bcrypt.checkpw(password.encode(), hashed_password.encode())
+    except ValueError:
+        return False
 
 
 def get_user_by_email(db: Session, email: str) -> User | None:
@@ -65,6 +69,8 @@ def get_current_user(
         # same way is_admin is re-checked from the DB every request rather
         # than trusted from the token — not just blocked at the next login.
         raise unauthorized
+    if not hmac.compare_digest(str(payload.get("pwd", "")), password_stamp(user.hashed_password)):
+        raise unauthorized
     return user
 
 
@@ -91,7 +97,7 @@ def get_current_user_optional(
     except jwt.PyJWTError:
         return None
     user = db.get(User, payload.get("sub"))
-    if user is not None and not user.is_active:
+    if user is not None and (not user.is_active or not hmac.compare_digest(str(payload.get("pwd", "")), password_stamp(user.hashed_password))):
         # Treated the same as "no token" rather than raising — callers of
         # this dependency (e.g. /discover) must stay usable without an
         # account, and a suspended user degrading to anonymous behavior

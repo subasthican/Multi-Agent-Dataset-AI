@@ -1,0 +1,53 @@
+{
+  "test_id": "PR-07",
+  "objective": "Account enumeration",
+  "input_scenario": "Compare reset responses for registered and unregistered synthetic emails",
+  "expected_behavior": "No account-existence disclosure",
+  "actual_behavior": {
+    "existing": {
+      "message": "If that email is registered, a reset link has been sent.",
+      "dev_reset_token": "[REDACTED]"
+    },
+    "nonexistent": {
+      "message": "If that email is registered, a reset link has been sent.",
+      "dev_reset_token": null
+    }
+  },
+  "outcome": "FAIL",
+  "observations": "Non-null reset token distinguishes registered account from nonexistent account.",
+  "conclusion": "Non-null reset token distinguishes registered account from nonexistent account.",
+  "finding_ids": [
+    "PR-ENUM"
+  ],
+  "duration_seconds": 0.005,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": "[REDACTED]"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "not-registered@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": null
+      }
+    }
+  ]
+}

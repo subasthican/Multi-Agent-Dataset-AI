@@ -1,0 +1,48 @@
+{
+  "test_id": "RA-06",
+  "objective": "Automotive relevance",
+  "input_scenario": "Find datasets for classifying car types",
+  "expected_behavior": "Subject-appropriate top match or honest empty result for absent catalog domain",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for classifying car types",
+      "domain": "automotive",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "car",
+        "type"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "top_result": null,
+    "count": 0
+  },
+  "outcome": "PASS",
+  "observations": "Seed catalog has no automotive entry; empty result honestly reflects this restricted scope.",
+  "conclusion": "Seed catalog has no automotive entry; empty result honestly reflects this restricted scope.",
+  "finding_ids": [],
+  "duration_seconds": 0.015,
+  "trace": [
+    {
+      "query": "Find datasets for classifying car types",
+      "understanding": {
+        "original_query": "Find datasets for classifying car types",
+        "domain": "automotive",
+        "task": "machine_learning",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "car",
+          "type"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

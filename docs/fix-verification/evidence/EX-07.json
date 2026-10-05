@@ -1,0 +1,20 @@
+{
+  "test_id": "EX-07",
+  "objective": "User and plan deletion confirmation",
+  "expected": "Both require password; deleting user preserves audit",
+  "actual": {
+    "checks": [
+      {
+        "missing": 422,
+        "success": 204
+      },
+      {
+        "missing": 422,
+        "success": 204
+      }
+    ],
+    "deleted_user_audit_survives": true
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

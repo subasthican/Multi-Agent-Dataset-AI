@@ -1,0 +1,48 @@
+{
+  "test_id": "PR-13",
+  "objective": "Suspended-account token",
+  "input_scenario": "Admin suspends B, B retries /auth/me",
+  "expected_behavior": "Existing token rejected immediately",
+  "actual_behavior": {
+    "suspend": 200,
+    "existing_token": 401
+  },
+  "outcome": "PASS",
+  "observations": "Suspended account’s old token immediately denied on protected route.",
+  "conclusion": "Suspended account’s old token immediately denied on protected route.",
+  "finding_ids": [],
+  "duration_seconds": 0.005,
+  "trace": [
+    {
+      "method": "PATCH",
+      "path": "/admin/users/e9154d9e-c426-4304-af83-00c32e6f12cc",
+      "params": null,
+      "body": {
+        "is_active": false
+      },
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "id": "e9154d9e-c426-4304-af83-00c32e6f12cc",
+        "name": "Synthetic b",
+        "email": "audit-b@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": false,
+        "created_at": "2026-10-05T05:56:15.603782",
+        "search_count": 1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 401,
+      "response": {
+        "detail": "Not authenticated"
+      }
+    }
+  ]
+}

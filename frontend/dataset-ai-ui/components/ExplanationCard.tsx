@@ -46,17 +46,21 @@ export default function ExplanationCard({ understanding }: { understanding: Quer
           </span>
         ))}
       </div>
+      {understanding.warnings?.map((warning) => (
+        <p key={warning} role="status" className="text-xs text-amber-300">{warning}</p>
+      ))}
+      <p className="text-[11px] text-white/30">Match scores are heuristic relevance scores, not measured accuracy. Email/phone patterns are redacted before processing; other sensitive information may remain. Queries may be sent to Gemini when available.</p>
       <p className="text-[11px] text-white/30">
         {user ? (
           <>
-            Transparency note: since you&apos;re signed in, this query is saved to power your{" "}
+            Transparency note: since you&apos;re signed in, this processed query is saved to power your{" "}
             <Link href="/profile" className="text-nebula-cyan hover:underline">
               personalized recommendations
             </Link>
             . You can clear your search history anytime from your profile.
           </>
         ) : (
-          "Transparency note: this query text isn't stored anywhere. Since you're not signed in, only your IP address and a timestamp are logged, to enforce the daily search limit — never the query itself."
+          "Transparency note: the application does not save anonymous query text. A daily counter keyed by a protected representation of the connection address enforces usage limits."
         )}
       </p>
     </motion.div>

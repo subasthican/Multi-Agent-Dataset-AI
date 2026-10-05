@@ -1,4 +1,14 @@
 # Individual Assignment — AI Security Audit & Vulnerability Assessment
+## Verified application fixes — 5 October 2026
+
+The original assessment findings are retained as baseline evidence. The fixes were implemented at the user's request and **all 69 application retests passed**, with a separate passing, idempotent migration check. See [fix verification](fix-verification/README.md) for outcomes, evidence and limitations.
+
+- **Subasthican:** input guards, untrusted-input prompt framing, strict model-output schema and safe fallback. Fifteen original attack inputs are rejected before provider invocation; fifteen controlled malformed outputs are handled safely. Live Gemini resistance remains unverified because the provider rejects the existing key.
+- **Gowsika:** private reset-email flow, reset-token digests and single-use handling, password-change/recovery session invalidation, contact redaction, independent atomic usage counters, quotas on standalone routes HTTP(S) catalog URL validation, transactional admin audit logs and password confirmation with failed-attempt throttling for deletions, plus authenticated encryption and migration of stored search text. SMTP delivery needs local configuration; tests mock delivery.
+- **Kageepan:** specific intent precedence, language/unsupported-domain warnings, modality metadata and filtering, consistent normalized similarity, discriminatory-request guards, clearer heuristic score/privacy disclosures and frontend recovery/session updates.
+
+Student IDs, lecturer-confirmed specializations and each member's own reflection are deferred as requested. Draft notes and viva practice material are provided; they do not certify independent student work or a completed viva. These finite checks do not establish 100% system security or assessment completion.
+
 
 Source: `Individual Assignment Brief.pdf` (IT3041 – Information Retrieval and Web
 Analytics). **This is separate from, and in addition to, the group assignment** —
@@ -35,10 +45,22 @@ there's a 4th member not yet reflected in this repo:
 | **Member 1 (you)** | Prompt Injection & Jailbreak Analysis | You built the NLP Agent and the Gemini prompt/LLM integration (`backend/agents/nlp_agent/`, `backend/llm/`) — you know exactly what the prompt does and doesn't guard against. |
 | **Member 2 (Gowsika)** | Privacy & Data Leakage Assessment | She owns the auth system (`backend/security/`) — JWT, password hashing, the reset-token flow — the exact surface this specialization tests. |
 | **Member 3 (Kageepan)** | Responsible AI & Bias Assessment | Closest fit to the frontend's transparency/explanation UI (`ExplanationCard`) and the system's Responsible AI story generally, given Information Retrieval & Security overlaps heavily with Member 1's Discovery/Kaggle work. |
-| *(unassigned)* | Information Retrieval & Security Assessment | No 4th member confirmed yet. If your group is actually 4 people, this is the natural specialization for whoever isn't listed in `docs/members.md` yet — otherwise someone doubles up, or confirm with the lecturer whether groups of 3 only get 3 specializations. |
+| *(unassigned)* | Information Retrieval & Security Assessment | No 4th member confirmed yet. If your group is actually 4 people, this is the natural specialization for whoever isn't listed in `docs/members.md` yet — the lecturer must determine how this specialization applies to a three-person group; do not assume a fourth member or double assignment is required. |
 
 This is my proposal based on system ownership, not a lecturer assignment —
 confirm the real assignment before committing significant testing time to it.
+
+## Per-member individual work plans
+
+These existing member files now cover both the group agent responsibility and the proposed individual audit:
+
+| Member | Group responsibility | Proposed individual specialization | Work plan |
+|---|---|---|---|
+| Subasthican | NLP + orchestration | Prompt Injection and Jailbreak Analysis | [Member plan](subasthican-nlp-agent.md#individual-assignment--subasthican) |
+| Gowsika | Discovery + security | Privacy and Data Leakage Assessment | [Member plan](gowsika-discovery-agent.md#individual-assignment--gowsika) |
+| Kageepan | Evaluation + frontend | Responsible AI and Bias Assessment | [Member plan](kageepan-evaluation-agent.md#individual-assignment--kageepan) |
+
+Each contains 15 proposed tests, expected behavior, an evidence template, and a report checklist. **AI-assisted execution is now recorded:** Gowsika’s 15 privacy cases and Kageepan’s 15 local Responsible AI cases completed; Subasthican’s 15 live prompt cases are blocked by Google rejecting the key as reported leaked. Fifteen additional controlled model-output boundary tests completed, separately labeled. See [results and report drafts](individual-assessments/README.md). These are not claims of independent student completion. The lecturer's specialization allocation remains pending. Each member must independently perform and document their assigned testing and author their own report.
 
 ## Testing requirements
 
@@ -78,10 +100,9 @@ attacks succeeded or failed, technical reasoning behind each vulnerability,
 justification of assigned risk levels, proposed mitigations, and Responsible AI
 implications.
 
-## How this maps onto the actual system in this repo
+## Baseline testing map (before the verified fixes)
 
-Once you confirm your specialization, here's roughly where to point your testing
-(happy to help design and run the actual test cases once this is confirmed):
+The following records the original baseline testing targets. Current status is summarized above and in the fix-verification report:
 
 - **Prompt Injection/Jailbreak** → `backend/agents/nlp_agent/` (the Gemini call
   in `llm/gemini_client.py` + `llm/prompts.py`) — there's currently **no input
@@ -100,7 +121,7 @@ Once you confirm your specialization, here's roughly where to point your testing
 - **IR/Security** → `backend/agents/discovery_agent/` (FAISS search),
   `backend/agents/dataset_collection_agent/` (live Kaggle calls), and the API
   layer generally — e.g. no auth currently required on `/discover` itself, CORS
-  config, rate limiting (none implemented).
+  config, daily quotas on `/discover`, and unmetered standalone agent endpoints. Signed-in quotas currently depend on deletable search-history rows.
 
 ## Related: Group Mid Evaluation Marking Rubric (20 marks, Week 6)
 

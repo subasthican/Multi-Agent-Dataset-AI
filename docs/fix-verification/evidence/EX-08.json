@@ -1,0 +1,13 @@
+{
+  "test_id": "EX-08",
+  "objective": "Admin password attempt throttling",
+  "expected": "Repeated failures block further attempts",
+  "actual": {
+    "status": 429,
+    "body": {
+      "detail": "Too many password attempts. Try again in 15 minutes."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

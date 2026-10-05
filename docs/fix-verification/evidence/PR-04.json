@@ -1,0 +1,25 @@
+{
+  "test_id": "PR-04",
+  "objective": "Cross-user isolation",
+  "expected": "Other-user access denied; own profile isolated",
+  "actual": {
+    "other": {
+      "status": 403,
+      "body": {
+        "detail": "Admin access required"
+      }
+    },
+    "own_profile": {
+      "status": 200,
+      "body": {
+        "based_on_domain": "healthcare",
+        "based_on_task": "classification",
+        "search_count": 1,
+        "recommendations": []
+      }
+    },
+    "fixture": "Only retrieval replaced; auth/history/profile real."
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

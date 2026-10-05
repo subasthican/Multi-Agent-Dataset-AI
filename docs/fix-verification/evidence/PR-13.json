@@ -1,0 +1,12 @@
+{
+  "test_id": "PR-13",
+  "objective": "Suspension",
+  "expected": "Previously working token immediately rejected",
+  "actual": {
+    "before": 200,
+    "suspend": 200,
+    "after": 401
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

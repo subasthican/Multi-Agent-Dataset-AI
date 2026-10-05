@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-10",
+  "objective": "Recovery digest and single use",
+  "expected": "Only digest stored; reuse rejected",
+  "actual": {
+    "digest_only": true,
+    "first_status": 204,
+    "reuse_status": 400,
+    "fixture": "Private test-generated recovery token; not obtained publicly."
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

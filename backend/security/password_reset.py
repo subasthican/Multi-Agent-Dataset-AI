@@ -1,6 +1,8 @@
 import secrets
+import hashlib
 from datetime import datetime, timedelta, timezone
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 
 from .authentication import hash_password
@@ -13,7 +15,7 @@ def create_reset_token(db: Session, user: User) -> str:
     token = secrets.token_urlsafe(32)
     reset_token = PasswordResetToken(
         user_id=user.id,
-        token=token,
+        token=hashlib.sha256(token.encode()).hexdigest(),
         expires_at=datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRY_MINUTES),
     )
     db.add(reset_token)
@@ -22,7 +24,7 @@ def create_reset_token(db: Session, user: User) -> str:
 
 
 def consume_reset_token(db: Session, token: str, new_password: str) -> bool:
-    record = db.query(PasswordResetToken).filter(PasswordResetToken.token == token).first()
+    record = db.query(PasswordResetToken).filter(PasswordResetToken.token == hashlib.sha256(token.encode()).hexdigest()).first()
     if not record or record.used:
         return False
 
@@ -36,7 +38,12 @@ def consume_reset_token(db: Session, token: str, new_password: str) -> bool:
     if user is None:
         return False
 
+    claimed = db.execute(update(PasswordResetToken).where(PasswordResetToken.id == record.id, PasswordResetToken.used.is_(False)).values(used=True)).rowcount
+    if not claimed:
+        db.rollback()
+        return False
     user.hashed_password = hash_password(new_password)
-    record.used = True
+    for outstanding in db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user.id).all():
+        outstanding.used = True
     db.commit()
     return True

@@ -1,0 +1,48 @@
+{
+  "test_id": "PR-04",
+  "objective": "Cross-user history access",
+  "input_scenario": "A requests B’s admin detail and own personalized profile",
+  "expected_behavior": "403 for B; A-only history profile",
+  "actual_behavior": {
+    "other_user_status": 403,
+    "own_profile": {
+      "based_on_domain": "healthcare",
+      "based_on_task": "classification",
+      "search_count": 1,
+      "recommendations": []
+    },
+    "fixture": "Only recommendation retrieval replaced with empty result; auth, history lookup and profile building are real."
+  },
+  "outcome": "PASS",
+  "observations": "User A could not access B; A’s profile used A’s history only.",
+  "conclusion": "User A could not access B; A’s profile used A’s history only.",
+  "finding_ids": [],
+  "duration_seconds": 0.011,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/admin/users/e9154d9e-c426-4304-af83-00c32e6f12cc",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 403,
+      "response": {
+        "detail": "Admin access required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recommendations",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "based_on_domain": "healthcare",
+        "based_on_task": "classification",
+        "search_count": 1,
+        "recommendations": []
+      }
+    }
+  ]
+}

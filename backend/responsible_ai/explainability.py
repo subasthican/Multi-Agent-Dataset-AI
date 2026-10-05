@@ -1,2 +1,4 @@
-# Member 2 — TODO: turn a ranked dataset result into a human-readable
-# explanation of why it was recommended (reason, contributing factors, score).
+"""Explain scoring accurately without treating a heuristic as measured accuracy."""
+
+def score_note():
+    return "Match scores are heuristic relevance scores, not probabilities or measured accuracy."

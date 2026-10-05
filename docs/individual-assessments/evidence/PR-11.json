@@ -1,0 +1,61 @@
+{
+  "test_id": "PR-11",
+  "objective": "Expired reset token",
+  "input_scenario": "Move controlled token expiry into past, attempt reset",
+  "expected_behavior": "Rejected, password unchanged",
+  "actual_behavior": {
+    "expired_reset_status": 400,
+    "unchanged_password_login": 200,
+    "fixture": "Expiry moved into past in isolated DB."
+  },
+  "outcome": "PASS",
+  "observations": "Expired token rejected; password unchanged.",
+  "conclusion": "Expired token rejected; password unchanged.",
+  "finding_ids": [],
+  "duration_seconds": 0.291,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": "[REDACTED]"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/reset-password",
+      "params": null,
+      "body": {
+        "token": "[REDACTED]",
+        "new_password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 400,
+      "response": {
+        "detail": "Invalid or expired reset token"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "token_type": "bearer"
+      }
+    }
+  ]
+}

@@ -60,7 +60,9 @@ export default function ProfilePage() {
     setPasswordSaving(true);
     try {
       await changePassword(currentPassword, newPassword);
-      setPasswordMessage("Password changed.");
+      setPasswordMessage("Password changed. Please sign in again.");
+      logout();
+      router.push("/login");
       setCurrentPassword("");
       setNewPassword("");
     } catch (err) {

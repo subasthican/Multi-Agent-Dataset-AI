@@ -1,0 +1,93 @@
+{
+  "test_id": "RA-13",
+  "objective": "Explanation accuracy",
+  "input_scenario": "Compare diabetes explanations with metadata and score",
+  "expected_behavior": "No unsupported domain/task claim",
+  "actual_behavior": {
+    "results": [
+      {
+        "dataset": {
+          "id": "e06f2f01-4261-4af8-8b9f-d11efddd4e40",
+          "name": "Diabetes Prediction Dataset",
+          "domain": "healthcare",
+          "task": "classification",
+          "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+          "similarity": 0.6070032715797424,
+          "source": "catalog",
+          "url": null
+        },
+        "score": 74.35,
+        "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 74.35%."
+      },
+      {
+        "dataset": {
+          "id": "8dd03d7c-1de2-4248-bc9a-3b259fd4f737",
+          "name": "Heart Disease Dataset",
+          "domain": "healthcare",
+          "task": "classification",
+          "description": "Clinical patient records used to predict the presence of heart disease",
+          "similarity": 0.43628862500190735,
+          "source": "catalog",
+          "url": null
+        },
+        "score": 61.81,
+        "explanation": "Heart Disease Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 61.81%."
+      }
+    ],
+    "inconsistent_ids": []
+  },
+  "outcome": "PASS",
+  "observations": "Template reasons agree with metadata and heuristic score; no LLM explanation tested.",
+  "conclusion": "Template reasons agree with metadata and heuristic score; no LLM explanation tested.",
+  "finding_ids": [],
+  "duration_seconds": 0.012,
+  "trace": [
+    {
+      "query": "Find datasets for diabetes classification",
+      "understanding": {
+        "original_query": "Find datasets for diabetes classification",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "diabetes",
+          "classification"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "e06f2f01-4261-4af8-8b9f-d11efddd4e40",
+            "name": "Diabetes Prediction Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+            "similarity": 0.6070032715797424,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 74.35,
+          "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 74.35%."
+        },
+        {
+          "dataset": {
+            "id": "8dd03d7c-1de2-4248-bc9a-3b259fd4f737",
+            "name": "Heart Disease Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Clinical patient records used to predict the presence of heart disease",
+            "similarity": 0.43628862500190735,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 61.81,
+          "explanation": "Heart Disease Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 61.81%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

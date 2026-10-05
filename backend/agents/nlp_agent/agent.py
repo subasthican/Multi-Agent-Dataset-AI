@@ -4,10 +4,14 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from pydantic import ValidationError
+from responsible_ai.privacy import redact_sensitive_text
+from security.input_filter import sanitize_input
+
 from llm.gemini_client import LLMUnavailableError, generate_response
 from llm.prompts import dataset_prompt
 
-from .models import QueryAnalysisResult, QueryInput
+from .models import LLMIntent, QueryAnalysisResult, QueryInput
 from .preprocessing import clean_text, extract_entities, extract_keywords, get_nlp_model
 
 CONFIG_PATH = Path(__file__).parent / "config.json"
@@ -61,7 +65,10 @@ def _parse_llm_json(raw_text: str) -> Optional[dict]:
         return None
     if not isinstance(parsed, dict) or not REQUIRED_LLM_FIELDS.issubset(parsed.keys()):
         return None
-    return parsed
+    try:
+        return LLMIntent.model_validate(parsed).model_dump()
+    except ValidationError:
+        return None
 
 
 def _understand_with_llm(query: str) -> Optional[dict]:
@@ -81,7 +88,12 @@ def analyze_query(text: str) -> QueryAnalysisResult:
     response, so the agent keeps working without an API key.
     """
     validated = QueryInput(query=text)
-    cleaned = clean_text(validated.query)
+    cleaned = clean_text(redact_sensitive_text(sanitize_input(validated.query)))
+    # The fallback uses an English spaCy model/taxonomy. Disclose unsupported
+    # languages instead of producing apparently confident intent from them.
+    from responsible_ai.language import supported_english
+    if not supported_english(cleaned):
+        return QueryAnalysisResult(original_query=cleaned, domain="general", task="machine_learning", data_type="tabular", keywords=[], warnings=["Unsupported language: describe your dataset requirement in English."])
 
     doc = get_nlp_model()(cleaned)
     keywords = extract_keywords(doc)
@@ -89,24 +101,26 @@ def analyze_query(text: str) -> QueryAnalysisResult:
 
     llm_result = _understand_with_llm(cleaned)
     if llm_result is not None:
-        llm_keywords = [str(k).lower() for k in (llm_result.get("keywords") or [])]
+        llm_keywords = [k.lower() for k in llm_result["keywords"]]
         merged_keywords = list(dict.fromkeys([*keywords, *llm_keywords]))
         return QueryAnalysisResult(
-            original_query=validated.query,
-            domain=str(llm_result["domain"]).lower(),
-            task=str(llm_result["task"]).lower(),
-            data_type=str(llm_result["data_type"]).lower(),
+            original_query=cleaned,
+            domain=llm_result["domain"],
+            task=llm_result["task"],
+            data_type=llm_result["data_type"],
             keywords=merged_keywords,
             entities=entities,
             understanding_source="llm",
+            warnings=["Please specify a supported dataset domain before relying on recommendations."] if llm_result["domain"] == "general" else [],
         )
 
     return QueryAnalysisResult(
-        original_query=validated.query,
+        original_query=cleaned,
         domain=classify_domain(cleaned, keywords),
         task=classify_task(cleaned, keywords),
         data_type=classify_data_type(cleaned, keywords),
         keywords=keywords,
         entities=entities,
         understanding_source="rule_based",
+        warnings=["Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."] if classify_domain(cleaned, keywords) == DEFAULT_DOMAIN else [],
     )

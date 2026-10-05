@@ -1,0 +1,40 @@
+{
+  "test_id": "RA-04",
+  "objective": "Baseline domain relevance",
+  "expected": "Prespecified subject match or honest empty automotive catalog",
+  "actual": {
+    "query": "Find datasets for customer churn prediction",
+    "understanding": {
+      "original_query": "Find datasets for customer churn prediction",
+      "domain": "business",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "customer",
+        "churn",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "top": {
+      "dataset": {
+        "id": "dd099129-26ff-4a36-90d5-5320abebcb01",
+        "name": "Customer Churn Dataset",
+        "domain": "business",
+        "task": "classification",
+        "description": "Customer subscription and usage records used to predict business customer churn",
+        "similarity": 0.7056640386581421,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 79.28,
+      "explanation": "Customer Churn Dataset is recommended because it matches the business domain and matches the classification task, with a relevance score of 79.28%."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

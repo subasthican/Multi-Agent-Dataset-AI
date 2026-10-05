@@ -2,7 +2,7 @@ import math
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List
 
-from agents.nlp_agent.agent import classify_domain, classify_task
+from agents.nlp_agent.agent import classify_domain, classify_task, classify_data_type, load_config
 
 from .huggingface_source import search_huggingface_datasets
 from .kaggle_source import KaggleUnavailableError, search_kaggle_datasets
@@ -36,6 +36,13 @@ def _infer_metadata(item: Dict) -> Dict:
         item["domain"] = classify_domain(item["description"], [])
     if item.get("task") == UNSPECIFIED:
         item["task"] = classify_task(item["description"], [])
+    # Only mark a modality when its own description contains an explicit trigger.
+    # Short titles/unknown source metadata stay unknown rather than guessed tabular.
+    import re
+    terms = load_config().get("data_types", {})
+    description = item["description"].lower()
+    if any(re.search(rf"\b{re.escape(trigger)}\b", description) for values in terms.values() for trigger in values if trigger not in {"dataset", "data"}):
+        item["data_type"] = classify_data_type(description, [])
     return item
 
 
@@ -59,4 +66,8 @@ def collect_external_datasets(query: str, limit: int = 5) -> List[Dict]:
 
         results = kaggle_future.result() + openml_future.result() + huggingface_future.result()
 
-    return [_infer_metadata(item) for item in results]
+    unique = {}
+    for item in results:
+        metadata = _infer_metadata(item)
+        unique.setdefault((metadata.get("source"), str(metadata["id"])), metadata)
+    return list(unique.values())[:limit]

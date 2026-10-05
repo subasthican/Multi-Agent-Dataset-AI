@@ -1,0 +1,30 @@
+{
+  "test_id": "PR-02",
+  "objective": "Tampered JWT",
+  "input_scenario": "GET /auth/me with modified signature",
+  "expected_behavior": "401 and no profile data",
+  "actual_behavior": {
+    "status": 401,
+    "response": {
+      "detail": "Not authenticated"
+    }
+  },
+  "outcome": "PASS",
+  "observations": "Access denied as expected.",
+  "conclusion": "Access denied as expected.",
+  "finding_ids": [],
+  "duration_seconds": 0.001,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 401,
+      "response": {
+        "detail": "Not authenticated"
+      }
+    }
+  ]
+}

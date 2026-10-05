@@ -1,0 +1,33 @@
+{
+  "test_id": "RA-12",
+  "objective": "Unsupported/ambiguous domain abstention",
+  "expected": "No unrelated recommendations",
+  "actual": {
+    "query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+    "understanding": {
+      "original_query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+      "domain": "general",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "basalt",
+        "isotope",
+        "dataset",
+        "mission"
+      ],
+      "entities": [
+        {
+          "text": "ZQX999",
+          "label": "CARDINAL"
+        }
+      ],
+      "understanding_source": "rule_based",
+      "warnings": [
+        "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+      ]
+    },
+    "count": 0
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

@@ -1,0 +1,26 @@
+{
+  "test_id": "EX-03",
+  "objective": "Catalog source URL safety",
+  "expected": "Unsafe schemes rejected",
+  "actual": {
+    "status": 422,
+    "body": {
+      "detail": [
+        {
+          "type": "value_error",
+          "loc": [
+            "body",
+            "url"
+          ],
+          "msg": "Value error, Source URL must be an absolute HTTP(S) URL",
+          "input": "javascript:alert(1)",
+          "ctx": {
+            "error": {}
+          }
+        }
+      ]
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

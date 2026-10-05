@@ -1,0 +1,54 @@
+{
+  "test_id": "EX-06",
+  "objective": "Admin audit and catalog deletion confirmation",
+  "expected": "Denied deletes preserve data; successful CRUD audited without secrets; log admin-only",
+  "actual": {
+    "missing_password": 422,
+    "wrong_password": 403,
+    "record_preserved_after_denial": true,
+    "update": 200,
+    "delete": 204,
+    "audit_events": [
+      {
+        "id": "fac3be27-2acc-4a91-b815-8455e56cadd5",
+        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "action": "delete",
+        "target_type": "catalog",
+        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "changed_fields": [],
+        "created_at": "2026-10-05T07:55:09.954791Z"
+      },
+      {
+        "id": "7290a9cd-5c2e-42ab-afc6-21adfdd38326",
+        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "action": "update",
+        "target_type": "catalog",
+        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "changed_fields": [
+          "description"
+        ],
+        "created_at": "2026-10-05T07:55:09.668688Z"
+      },
+      {
+        "id": "cf64c4d9-c78c-4a26-bfa5-5132c7958e33",
+        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "action": "create",
+        "target_type": "catalog",
+        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "changed_fields": [
+          "data_type",
+          "description",
+          "domain",
+          "name",
+          "task",
+          "url"
+        ],
+        "created_at": "2026-10-05T07:55:09.370841Z"
+      }
+    ],
+    "non_admin": 403,
+    "secrets_excluded": true
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

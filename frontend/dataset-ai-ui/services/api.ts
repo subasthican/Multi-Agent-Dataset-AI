@@ -1,5 +1,8 @@
+import { confirmAdminPassword } from "./confirmAdminPassword";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 const TOKEN_STORAGE_KEY = "data_nebula_token";
+
+export type DatasetDataType = "tabular" | "image" | "text" | "time_series";
 
 export interface QueryAnalysisResult {
   original_query: string;
@@ -9,6 +12,7 @@ export interface QueryAnalysisResult {
   keywords: string[];
   entities: { text: string; label: string }[];
   understanding_source: "llm" | "rule_based";
+  warnings?: string[];
 }
 
 export interface DatasetMatch {
@@ -19,6 +23,7 @@ export interface DatasetMatch {
   description: string;
   similarity: number;
   source: "catalog" | "kaggle" | "openml" | "huggingface";
+  data_type?: DatasetDataType | null;
   // A real link to the dataset's page on its source platform — null for a
   // catalog entry with no admin-provided reference. Never fabricated.
   url: string | null;
@@ -94,6 +99,7 @@ export interface AdminStats {
 }
 
 export interface CatalogDataset {
+  data_type?: DatasetDataType | null;
   id: string;
   name: string;
   description: string;
@@ -107,6 +113,7 @@ export interface CatalogDataset {
 }
 
 export interface CatalogDatasetInput {
+  data_type?: DatasetDataType | null;
   name: string;
   description: string;
   domain: string;
@@ -245,7 +252,7 @@ export async function changePassword(currentPassword: string, newPassword: strin
   });
 }
 
-export async function forgotPassword(email: string): Promise<{ message: string; dev_reset_token?: string }> {
+export async function forgotPassword(email: string): Promise<{ message: string }> {
   return request("/auth/forgot-password", { method: "POST", body: { email } });
 }
 
@@ -282,7 +289,9 @@ export async function updateAdminUser(
 }
 
 export async function deleteAdminUser(userId: string): Promise<void> {
-  return request<void>(`/admin/users/${userId}`, { method: "DELETE", auth: true });
+  const password = await confirmAdminPassword();
+  if (password === null) return;
+  return request<void>(`/admin/users/${userId}`, { method: "DELETE", body: { password }, auth: true });
 }
 
 export async function getAdminCatalog(): Promise<CatalogDataset[]> {
@@ -301,7 +310,9 @@ export async function updateCatalogDataset(
 }
 
 export async function deleteCatalogDataset(id: string): Promise<void> {
-  return request<void>(`/admin/catalog/${id}`, { method: "DELETE", auth: true });
+  const password = await confirmAdminPassword();
+  if (password === null) return;
+  return request<void>(`/admin/catalog/${id}`, { method: "DELETE", body: { password }, auth: true });
 }
 
 export async function getPlans(): Promise<Plan[]> {
@@ -328,5 +339,21 @@ export async function updatePlan(id: string, payload: PlanUpdateInput): Promise<
 }
 
 export async function deletePlan(id: string): Promise<void> {
-  return request<void>(`/admin/plans/${id}`, { method: "DELETE", auth: true });
+  const password = await confirmAdminPassword();
+  if (password === null) return;
+  return request<void>(`/admin/plans/${id}`, { method: "DELETE", body: { password }, auth: true });
+}
+
+export interface AdminAuditEvent {
+  id: string;
+  actor_id: string;
+  action: string;
+  target_type: string;
+  target_id: string;
+  changed_fields: string[];
+  created_at: string;
+}
+
+export async function getAdminAudit(): Promise<AdminAuditEvent[]> {
+  return request<AdminAuditEvent[]>("/admin/audit", { auth: true });
 }

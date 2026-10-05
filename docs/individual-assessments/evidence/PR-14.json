@@ -1,0 +1,65 @@
+{
+  "test_id": "PR-14",
+  "objective": "Synthetic PII handling",
+  "input_scenario": "Store a fake query through record_search; inspect admin view and prompt construction",
+  "expected_behavior": "Minimize sensitive data and document access/transmission",
+  "actual_behavior": {
+    "raw_query_persisted": true,
+    "admin_can_view": true,
+    "PII_in_prompt": true,
+    "network_send_performed": false
+  },
+  "outcome": "FAIL",
+  "observations": "Synthetic PII stored verbatim, exposed to admins, and included in provider-bound prompt construction; actual provider transmission not tested.",
+  "conclusion": "Synthetic PII stored verbatim, exposed to admins, and included in provider-bound prompt construction; actual provider transmission not tested.",
+  "finding_ids": [
+    "PR-PII"
+  ],
+  "duration_seconds": 0.004,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/admin/users/891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "id": "891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+        "name": "Synthetic a",
+        "email": "audit-a@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": true,
+        "created_at": "2026-10-05T05:56:15.314077",
+        "search_count": 2,
+        "search_history": [
+          {
+            "id": "42980c34-8e46-4280-bd8a-e7a888b322ab",
+            "query": "Medical dataset for Synthetic Person email fake.person@example.com phone 000-000-0000",
+            "domain": "healthcare",
+            "task": "classification",
+            "understanding_source": "rule_based",
+            "created_at": "2026-10-05T05:56:18.619972"
+          },
+          {
+            "id": "dc1794f9-1d8d-439a-9732-2392d8c6002d",
+            "query": "Synthetic A medical query",
+            "domain": "healthcare",
+            "task": "classification",
+            "understanding_source": "rule_based",
+            "created_at": "2026-10-05T05:56:15.897582"
+          }
+        ]
+      }
+    },
+    {
+      "component": "record_search + admin detail + dataset_prompt",
+      "synthetic_query": "Medical dataset for Synthetic Person email fake.person@example.com phone 000-000-0000",
+      "raw_query_persisted": true,
+      "admin_can_view": true,
+      "PII_in_provider_bound_prompt": true,
+      "network_send_performed": false
+    }
+  ]
+}

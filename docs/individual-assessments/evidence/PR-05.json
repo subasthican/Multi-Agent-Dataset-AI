@@ -1,0 +1,39 @@
+{
+  "test_id": "PR-05",
+  "objective": "Normal-user admin access",
+  "input_scenario": "A requests admin users and stats",
+  "expected_behavior": "403 for both routes",
+  "actual_behavior": [
+    403,
+    403
+  ],
+  "outcome": "PASS",
+  "observations": "Normal user denied both admin routes.",
+  "conclusion": "Normal user denied both admin routes.",
+  "finding_ids": [],
+  "duration_seconds": 0.003,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/admin/users",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 403,
+      "response": {
+        "detail": "Admin access required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/admin/stats",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 403,
+      "response": {
+        "detail": "Admin access required"
+      }
+    }
+  ]
+}

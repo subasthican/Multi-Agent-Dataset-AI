@@ -1,0 +1,23 @@
+{
+  "test_id": "EX-05",
+  "objective": "Valid model output compatibility",
+  "expected": "Valid strict contract remains usable",
+  "actual": {
+    "original_query": "Find healthcare datasets for diabetes classification",
+    "domain": "healthcare",
+    "task": "classification",
+    "data_type": "tabular",
+    "keywords": [
+      "healthcare",
+      "dataset",
+      "diabete",
+      "classification",
+      "diabetes"
+    ],
+    "entities": [],
+    "understanding_source": "llm",
+    "warnings": []
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

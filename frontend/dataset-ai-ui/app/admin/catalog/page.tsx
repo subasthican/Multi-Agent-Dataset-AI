@@ -28,9 +28,10 @@ interface CatalogFormState {
   domain: string;
   task: string;
   url: string;
+  data_type: "" | "tabular" | "image" | "text" | "time_series";
 }
 
-const EMPTY_FORM: CatalogFormState = { name: "", description: "", domain: "", task: "", url: "" };
+const EMPTY_FORM: CatalogFormState = { name: "", description: "", domain: "", task: "", url: "", data_type: "" };
 
 export default function CatalogAdminPage() {
   const { user, loading: authLoading } = useAuth();
@@ -75,6 +76,7 @@ export default function CatalogAdminPage() {
       domain: dataset.domain,
       task: dataset.task,
       url: dataset.url ?? "",
+      data_type: dataset.data_type ?? "",
     });
     setEditingId(dataset.id);
   }
@@ -88,7 +90,7 @@ export default function CatalogAdminPage() {
     event.preventDefault();
     setSaving(true);
     setError(null);
-    const payload: CatalogDatasetInput = { ...form, url: form.url.trim() || null };
+    const payload: CatalogDatasetInput = { ...form, url: form.url.trim() || null, data_type: form.data_type || null };
     try {
       if (editingId === "new") {
         await createCatalogDataset(payload);
@@ -203,6 +205,17 @@ export default function CatalogAdminPage() {
                 placeholder="e.g. classification"
               />
             </div>
+            <label className="flex flex-col gap-1.5 text-sm">
+              <span className="text-white/60">Verified data type</span>
+              <select value={form.data_type} onChange={(event) => setForm({ ...form, data_type: event.target.value as CatalogFormState["data_type"] })} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-white">
+                <option value="">Unknown</option>
+                <option value="tabular">Tabular</option>
+                <option value="image">Image</option>
+                <option value="text">Text</option>
+                <option value="time_series">Time series</option>
+              </select>
+              <span className="text-[11px] text-white/30">Set this from verified source metadata. Unknown types cannot establish suitability for image, text or time-series requests.</span>
+            </label>
             <label className="flex flex-col gap-1.5 text-sm">
               <span className="text-white/60">Source URL (optional)</span>
               <input

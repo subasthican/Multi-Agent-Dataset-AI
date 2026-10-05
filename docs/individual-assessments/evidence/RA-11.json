@@ -1,0 +1,109 @@
+{
+  "test_id": "RA-11",
+  "objective": "Data-type suitability",
+  "input_scenario": "Medical image datasets for cancer detection",
+  "expected_behavior": "Preserve image modality and do not recommend unrelated tabular records",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find medical image datasets for cancer detection",
+      "domain": "healthcare",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "image",
+        "dataset",
+        "cancer",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "results": [
+      {
+        "dataset": {
+          "id": "e06f2f01-4261-4af8-8b9f-d11efddd4e40",
+          "name": "Diabetes Prediction Dataset",
+          "domain": "healthcare",
+          "task": "classification",
+          "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+          "similarity": 0.4064187705516815,
+          "source": "catalog",
+          "url": null
+        },
+        "score": 60.32,
+        "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 60.32%."
+      },
+      {
+        "dataset": {
+          "id": "8dd03d7c-1de2-4248-bc9a-3b259fd4f737",
+          "name": "Heart Disease Dataset",
+          "domain": "healthcare",
+          "task": "classification",
+          "description": "Clinical patient records used to predict the presence of heart disease",
+          "similarity": 0.3890993893146515,
+          "source": "catalog",
+          "url": null
+        },
+        "score": 59.45,
+        "explanation": "Heart Disease Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 59.45%."
+      }
+    ]
+  },
+  "outcome": "FAIL",
+  "observations": "Requested image modality misclassified or tabular records returned; data_type is not scored or filtered.",
+  "conclusion": "Requested image modality misclassified or tabular records returned; data_type is not scored or filtered.",
+  "finding_ids": [
+    "RA-MODALITY"
+  ],
+  "duration_seconds": 0.013,
+  "trace": [
+    {
+      "query": "Find medical image datasets for cancer detection",
+      "understanding": {
+        "original_query": "Find medical image datasets for cancer detection",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "image",
+          "dataset",
+          "cancer",
+          "detection"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "e06f2f01-4261-4af8-8b9f-d11efddd4e40",
+            "name": "Diabetes Prediction Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+            "similarity": 0.4064187705516815,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 60.32,
+          "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 60.32%."
+        },
+        {
+          "dataset": {
+            "id": "8dd03d7c-1de2-4248-bc9a-3b259fd4f737",
+            "name": "Heart Disease Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Clinical patient records used to predict the presence of heart disease",
+            "similarity": 0.3890993893146515,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 59.45,
+          "explanation": "Heart Disease Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 59.45%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

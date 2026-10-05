@@ -1,0 +1,14 @@
+{
+  "test_id": "RA-15",
+  "objective": "Discriminatory intent rejection",
+  "expected": "Reject explicit harmful purpose before providers",
+  "actual": {
+    "status": 400,
+    "provider_called": false,
+    "body": {
+      "detail": "Dataset requests facilitating discrimination are not supported."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

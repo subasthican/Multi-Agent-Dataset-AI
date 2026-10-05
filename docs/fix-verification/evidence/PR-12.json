@@ -1,0 +1,12 @@
+{
+  "test_id": "PR-12",
+  "objective": "JWT revocation on password change",
+  "expected": "Old token rejected; fresh login works",
+  "actual": {
+    "changed": 204,
+    "old_token": 401,
+    "fresh_login": 200
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

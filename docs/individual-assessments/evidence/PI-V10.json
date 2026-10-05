@@ -1,0 +1,39 @@
+{
+  "test_id": "PI-V10",
+  "objective": "Number-valued keywords",
+  "input_scenario": {
+    "user_query": "Find healthcare datasets for diabetes classification",
+    "controlled_model_response": "{\"domain\": \"healthcare\", \"task\": \"classification\", \"keywords\": 42, \"data_type\": \"tabular\"}"
+  },
+  "expected_behavior": "Reject malformed/instruction-contaminated output or safely fall back; invalid keywords",
+  "actual_behavior": {
+    "analysis": null,
+    "exception": {
+      "error_type": "TypeError",
+      "message": "'int' object is not iterable"
+    },
+    "parser_accepted": true
+  },
+  "outcome": "FAIL",
+  "observations": "Controlled remote response substituted using unittest.mock; real analyze_query and spaCy executed. Malformed response accepted/coerced or caused an unhandled exception.",
+  "conclusion": "Output validation boundary fails this controlled case; no claim that Gemini would produce it.",
+  "finding_ids": [
+    "PI-OUTPUT"
+  ],
+  "execution_mode": "Controlled model-response fault injection; no live provider call",
+  "trace": [
+    {
+      "component": "analyze_query",
+      "remote_generation_replaced": true,
+      "controlled_model_response": "{\"domain\": \"healthcare\", \"task\": \"classification\", \"keywords\": 42, \"data_type\": \"tabular\"}",
+      "actual": {
+        "analysis": null,
+        "exception": {
+          "error_type": "TypeError",
+          "message": "'int' object is not iterable"
+        },
+        "parser_accepted": true
+      }
+    }
+  ]
+}

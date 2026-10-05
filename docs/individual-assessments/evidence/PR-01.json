@@ -1,0 +1,30 @@
+{
+  "test_id": "PR-01",
+  "objective": "Unauthenticated profile access",
+  "input_scenario": "GET /auth/me, no token",
+  "expected_behavior": "401 and no profile data",
+  "actual_behavior": {
+    "status": 401,
+    "response": {
+      "detail": "Not authenticated"
+    }
+  },
+  "outcome": "PASS",
+  "observations": "Access denied as expected.",
+  "conclusion": "Access denied as expected.",
+  "finding_ids": [],
+  "duration_seconds": 0.001,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "params": null,
+      "body": null,
+      "authenticated": false,
+      "status": 401,
+      "response": {
+        "detail": "Not authenticated"
+      }
+    }
+  ]
+}

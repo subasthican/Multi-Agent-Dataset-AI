@@ -167,6 +167,7 @@ export default function AdminPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Admin</h1>
           <div className="flex gap-2">
+            <Link href="/admin/audit" className="btn-secondary rounded-xl px-4 py-2 text-sm">Activity log</Link>
             <Link href="/admin/catalog" className="btn-secondary flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm">
               <Database className="h-4 w-4" />
               Manage catalog

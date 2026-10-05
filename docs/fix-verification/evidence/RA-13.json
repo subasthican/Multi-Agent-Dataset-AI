@@ -1,0 +1,39 @@
+{
+  "test_id": "RA-13",
+  "objective": "Explanation consistency",
+  "expected": "Reasons supported by metadata",
+  "actual": [
+    {
+      "dataset": {
+        "id": "c860cc89-e154-41c4-bda4-9af8bffaea2e",
+        "name": "Diabetes Prediction Dataset",
+        "domain": "healthcare",
+        "task": "classification",
+        "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+        "similarity": 0.6614887118339539,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 77.07,
+      "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 77.07%."
+    },
+    {
+      "dataset": {
+        "id": "21fb325b-d7d7-4396-9f9b-bbc6720e6c42",
+        "name": "Heart Disease Dataset",
+        "domain": "healthcare",
+        "task": "classification",
+        "description": "Clinical patient records used to predict the presence of heart disease",
+        "similarity": 0.310243159532547,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 55.51,
+      "explanation": "Heart Disease Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 55.51%."
+    }
+  ],
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

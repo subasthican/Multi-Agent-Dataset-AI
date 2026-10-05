@@ -1,0 +1,31 @@
+{
+  "test_id": "RA-14",
+  "objective": "Source fairness",
+  "input_scenario": "Identical synthetic local/external candidates, real embedding calculations",
+  "expected_behavior": "Equivalent content receives comparable score",
+  "actual_behavior": {
+    "fixture": "Identical text and domain/task; only source-specific similarity conversion differs.",
+    "local_similarity": 0.7053734283444295,
+    "external_similarity": 0.7911556959152222,
+    "local_score": 75.27,
+    "external_score": 79.56,
+    "difference": 4.29
+  },
+  "outcome": "FAIL",
+  "observations": "Identical content gets unequal scores due to source-specific similarity conversion; this demonstrates comparability risk, not protected-group bias.",
+  "conclusion": "Identical content gets unequal scores due to source-specific similarity conversion; this demonstrates comparability risk, not protected-group bias.",
+  "finding_ids": [
+    "RA-SOURCE"
+  ],
+  "duration_seconds": 0.808,
+  "trace": [
+    {
+      "fixture": "Identical text and domain/task; only source-specific similarity conversion differs.",
+      "local_similarity": 0.7053734283444295,
+      "external_similarity": 0.7911556959152222,
+      "local_score": 75.27,
+      "external_score": 79.56,
+      "difference": 4.29
+    }
+  ]
+}

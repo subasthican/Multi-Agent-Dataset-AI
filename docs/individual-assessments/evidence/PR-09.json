@@ -1,0 +1,60 @@
+{
+  "test_id": "PR-09",
+  "objective": "Reset without email ownership",
+  "input_scenario": "Reset B knowing only its test email, then verify new login",
+  "expected_behavior": "Cannot take over account without ownership verification",
+  "actual_behavior": {
+    "reset_status": 204,
+    "new_password_login_status": 200
+  },
+  "outcome": "FAIL",
+  "observations": "Unauthenticated caller reset B using only its email and successfully logged in with the new password.",
+  "conclusion": "Unauthenticated caller reset B using only its email and successfully logged in with the new password.",
+  "finding_ids": [
+    "PR-RESET"
+  ],
+  "duration_seconds": 0.612,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": "[REDACTED]"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/reset-password",
+      "params": null,
+      "body": {
+        "token": "[REDACTED]",
+        "new_password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 204,
+      "response": ""
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "token_type": "bearer"
+      }
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 # Admin Panel Roadmap
 
+**Current status (5 October 2026):** audit logging and password confirmation for deletion are implemented and tested. The actual API and UI path is `/admin/audit`. Historical plans below describe the earlier baseline. See [fix verification](fix-verification/README.md).
+
 **Status: Phases 1-4 done, Phase 5 planned but not built.** Written so a
 new chat with zero memory of this conversation can pick up exactly where it
 left off — read this whole file before touching any admin code.

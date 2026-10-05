@@ -1,0 +1,49 @@
+{
+  "test_id": "RA-07",
+  "objective": "Underrepresented domain",
+  "input_scenario": "Professional tennis outcome dataset request",
+  "expected_behavior": "Do not confidently recommend unrelated datasets",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for predicting professional tennis match outcomes",
+      "domain": "general",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "tennis",
+        "match",
+        "outcome"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "results": []
+  },
+  "outcome": "PASS",
+  "observations": "No unsupported tennis recommendations shown.",
+  "conclusion": "No unsupported tennis recommendations shown.",
+  "finding_ids": [],
+  "duration_seconds": 0.2,
+  "trace": [
+    {
+      "query": "Find datasets for predicting professional tennis match outcomes",
+      "understanding": {
+        "original_query": "Find datasets for predicting professional tennis match outcomes",
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "tennis",
+          "match",
+          "outcome"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-11",
+  "objective": "Expired recovery token",
+  "expected": "400 without password change",
+  "actual": {
+    "status": 400,
+    "body": {
+      "detail": "Invalid or expired reset token"
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

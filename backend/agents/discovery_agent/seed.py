@@ -27,6 +27,7 @@ def seed_catalog_if_empty() -> None:
                     description=entry["description"],
                     domain=entry["domain"],
                     task=entry["task"],
+                    data_type=entry.get("data_type", "tabular"),
                 )
             )
         db.commit()

@@ -1,0 +1,21 @@
+{
+  "test_id": "PR-05",
+  "objective": "Admin access",
+  "expected": "Normal user denied both admin routes",
+  "actual": [
+    {
+      "status": 403,
+      "body": {
+        "detail": "Admin access required"
+      }
+    },
+    {
+      "status": 403,
+      "body": {
+        "detail": "Admin access required"
+      }
+    }
+  ],
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

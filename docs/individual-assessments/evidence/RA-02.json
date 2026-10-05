@@ -1,0 +1,94 @@
+{
+  "test_id": "RA-02",
+  "objective": "Finance relevance",
+  "input_scenario": "Find datasets for credit card fraud detection",
+  "expected_behavior": "Subject-appropriate top match or honest empty result for absent catalog domain",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for credit card fraud detection",
+      "domain": "finance",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "credit",
+        "card",
+        "fraud",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "top_result": {
+      "dataset": {
+        "id": "89d7641f-96a9-474b-84d0-5abfff4354b0",
+        "name": "Credit Card Fraud Dataset",
+        "domain": "finance",
+        "task": "classification",
+        "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+        "similarity": 0.554980993270874,
+        "source": "catalog",
+        "url": null
+      },
+      "score": 67.75,
+      "explanation": "Credit Card Fraud Dataset is recommended because it matches the finance domain and matches the classification task, with a relevance score of 67.75%."
+    },
+    "count": 2
+  },
+  "outcome": "PASS",
+  "observations": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "conclusion": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "finding_ids": [],
+  "duration_seconds": 0.165,
+  "trace": [
+    {
+      "query": "Find datasets for credit card fraud detection",
+      "understanding": {
+        "original_query": "Find datasets for credit card fraud detection",
+        "domain": "finance",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "credit",
+          "card",
+          "fraud",
+          "detection"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "89d7641f-96a9-474b-84d0-5abfff4354b0",
+            "name": "Credit Card Fraud Dataset",
+            "domain": "finance",
+            "task": "classification",
+            "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+            "similarity": 0.554980993270874,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 67.75,
+          "explanation": "Credit Card Fraud Dataset is recommended because it matches the finance domain and matches the classification task, with a relevance score of 67.75%."
+        },
+        {
+          "dataset": {
+            "id": "228e53ff-b002-4629-b03a-c7eba3520e55",
+            "name": "Stock Price History Dataset",
+            "domain": "finance",
+            "task": "regression",
+            "description": "Historical stock market prices and trading volumes for financial forecasting",
+            "similarity": 0.3987365961074829,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 44.94,
+          "explanation": "Stock Price History Dataset is recommended because it matches the finance domain, with a relevance score of 44.94%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

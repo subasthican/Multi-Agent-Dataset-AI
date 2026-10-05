@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-01",
+  "objective": "Reject missing/tampered/expired credential",
+  "expected": "401 without data",
+  "actual": {
+    "status": 401,
+    "body": {
+      "detail": "Not authenticated"
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

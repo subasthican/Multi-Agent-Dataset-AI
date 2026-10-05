@@ -1,0 +1,48 @@
+{
+  "test_id": "PR-12",
+  "objective": "JWT after password change",
+  "input_scenario": "Change A’s password then reuse pre-change token",
+  "expected_behavior": "Old compromised token should be revoked",
+  "actual_behavior": {
+    "password_change": 204,
+    "old_token_profile": 200
+  },
+  "outcome": "FAIL",
+  "observations": "Old JWT remains usable after password change; application has no session-version check.",
+  "conclusion": "Old JWT remains usable after password change; application has no session-version check.",
+  "finding_ids": [
+    "PR-SESSION"
+  ],
+  "duration_seconds": 0.569,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/change-password",
+      "params": null,
+      "body": {
+        "current_password": "[REDACTED]",
+        "new_password": "[REDACTED]"
+      },
+      "authenticated": true,
+      "status": 204,
+      "response": ""
+    },
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "id": "891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+        "name": "Synthetic a",
+        "email": "audit-a@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": true,
+        "created_at": "2026-10-05T05:56:15.314077"
+      }
+    }
+  ]
+}

@@ -12,6 +12,7 @@ from .authentication import (
 from .db import get_db
 from .db_models import User
 from .jwt_manager import create_access_token
+from .email_delivery import send_reset_email
 from .password_reset import consume_reset_token, create_reset_token
 from .schemas import (
     ChangePasswordRequest,
@@ -31,14 +32,14 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 def register(payload: RegisterRequest, db: Session = Depends(get_db)):
     user = register_user(db, payload.name, payload.email, payload.password)
-    token = create_access_token(user.id, user.email)
+    token = create_access_token(user.id, user.email, user.hashed_password)
     return TokenResponse(access_token=token)
 
 
 @router.post("/login", response_model=TokenResponse)
 def login(payload: LoginRequest, db: Session = Depends(get_db)):
     user = authenticate_user(db, payload.email, payload.password)
-    token = create_access_token(user.id, user.email)
+    token = create_access_token(user.id, user.email, user.hashed_password)
     return TokenResponse(access_token=token)
 
 
@@ -77,16 +78,11 @@ def forgot_password(payload: ForgotPasswordRequest, db: Session = Depends(get_db
     user = get_user_by_email(db, payload.email)
     if not user:
         # Don't reveal whether an email is registered.
-        return ForgotPasswordResponse(message="If that email is registered, a reset link has been sent.")
+        return ForgotPasswordResponse(message="If that email is registered, recovery instructions will be sent when email delivery is available.")
 
     token = create_reset_token(db, user)
-    # No email provider is configured yet (see backend/security/README.md) —
-    # the token is returned directly so the reset flow is usable end to end
-    # in development. Swap this for a real email send before production.
-    return ForgotPasswordResponse(
-        message="If that email is registered, a reset link has been sent.",
-        dev_reset_token=token,
-    )
+    send_reset_email(user.email, token)
+    return ForgotPasswordResponse(message="If that email is registered, recovery instructions will be sent when email delivery is available.")
 
 
 @router.post("/reset-password", status_code=status.HTTP_204_NO_CONTENT)

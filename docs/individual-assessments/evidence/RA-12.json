@@ -1,0 +1,59 @@
+{
+  "test_id": "RA-12",
+  "objective": "No suitable dataset",
+  "input_scenario": "Absent narrow fictional lunar dataset request",
+  "expected_behavior": "Empty/limited result; no fabrication",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+      "domain": "general",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "basalt",
+        "isotope",
+        "dataset",
+        "mission"
+      ],
+      "entities": [
+        {
+          "text": "ZQX999",
+          "label": "CARDINAL"
+        }
+      ],
+      "understanding_source": "rule_based"
+    },
+    "results": []
+  },
+  "outcome": "PASS",
+  "observations": "No fabricated or unrelated dataset returned for absent niche request.",
+  "conclusion": "No fabricated or unrelated dataset returned for absent niche request.",
+  "finding_ids": [],
+  "duration_seconds": 0.013,
+  "trace": [
+    {
+      "query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+      "understanding": {
+        "original_query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular",
+        "keywords": [
+          "basalt",
+          "isotope",
+          "dataset",
+          "mission"
+        ],
+        "entities": [
+          {
+            "text": "ZQX999",
+            "label": "CARDINAL"
+          }
+        ],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

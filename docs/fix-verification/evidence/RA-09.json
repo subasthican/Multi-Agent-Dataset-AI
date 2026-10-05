@@ -1,0 +1,22 @@
+{
+  "test_id": "RA-09",
+  "objective": "Language limitation disclosure",
+  "expected": "Explicit unsupported-language warning and no recommendations",
+  "actual": {
+    "understanding": {
+      "original_query": "Encuentra conjuntos de datos médicos para clasificar la diabetes",
+      "domain": "general",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [
+        "Unsupported language: describe your dataset requirement in English."
+      ]
+    },
+    "count": 0
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

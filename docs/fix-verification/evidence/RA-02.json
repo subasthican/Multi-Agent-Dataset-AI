@@ -1,0 +1,41 @@
+{
+  "test_id": "RA-02",
+  "objective": "Baseline domain relevance",
+  "expected": "Prespecified subject match or honest empty automotive catalog",
+  "actual": {
+    "query": "Find datasets for credit card fraud detection",
+    "understanding": {
+      "original_query": "Find datasets for credit card fraud detection",
+      "domain": "finance",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "credit",
+        "card",
+        "fraud",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "top": {
+      "dataset": {
+        "id": "1bad075d-68a5-4958-8b20-97f862fe53c3",
+        "name": "Credit Card Fraud Dataset",
+        "domain": "finance",
+        "task": "classification",
+        "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+        "similarity": 0.570496678352356,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 68.52,
+      "explanation": "Credit Card Fraud Dataset is recommended because it matches the finance domain and matches the classification task, with a relevance score of 68.52%."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

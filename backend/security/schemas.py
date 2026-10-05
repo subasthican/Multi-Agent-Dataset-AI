@@ -1,9 +1,18 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
-class RegisterRequest(BaseModel):
+class PasswordInput(BaseModel):
+    @field_validator("password", "new_password", check_fields=False)
+    @classmethod
+    def bcrypt_length(cls, value):
+        if len(value.encode()) > 72:
+            raise ValueError("Password must be at most 72 UTF-8 bytes")
+        return value
+
+
+class RegisterRequest(PasswordInput):
     name: str = Field(..., min_length=1, max_length=100)
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=128)
@@ -66,7 +75,7 @@ class AdminStatsResponse(BaseModel):
     catalog_size: int
 
 
-class ChangePasswordRequest(BaseModel):
+class ChangePasswordRequest(PasswordInput):
     current_password: str
     new_password: str = Field(..., min_length=8, max_length=128)
 
@@ -81,13 +90,10 @@ class ForgotPasswordRequest(BaseModel):
 
 class ForgotPasswordResponse(BaseModel):
     message: str
-    # Dev-mode only: no email provider is configured, so the reset token is
-    # returned directly instead of being emailed. Remove this field once
-    # real email delivery (SMTP/SendGrid/etc.) is wired up.
-    dev_reset_token: str | None = None
 
 
-class ResetPasswordRequest(BaseModel):
+
+class ResetPasswordRequest(PasswordInput):
     token: str
     new_password: str = Field(..., min_length=8, max_length=128)
 
@@ -135,3 +141,23 @@ class UsageResponse(BaseModel):
     limit: int | None
     used: int
     remaining: int | None
+
+
+class AdminDeleteRequest(PasswordInput):
+    password: str = Field(..., min_length=1, max_length=72, repr=False)
+
+
+class AdminAuditResponse(BaseModel):
+    id: str
+    actor_id: str
+    action: str
+    target_type: str
+    target_id: str
+    changed_fields: list[str]
+    created_at: datetime
+    model_config = {"from_attributes": True}
+
+    @field_validator("created_at")
+    @classmethod
+    def utc_timestamp(cls, value):
+        return value.replace(tzinfo=timezone.utc) if value.tzinfo is None else value

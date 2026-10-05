@@ -1,0 +1,19 @@
+{
+  "test_id": "EX-02",
+  "objective": "Concurrent quota enforcement",
+  "expected": "Six simultaneous requests reserve only two permitted slots",
+  "actual": {
+    "statuses": [
+      200,
+      429,
+      200,
+      429,
+      429,
+      429
+    ],
+    "used": 2,
+    "limit": 2
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

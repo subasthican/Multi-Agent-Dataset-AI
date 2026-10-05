@@ -1,0 +1,14 @@
+{
+  "test_id": "EX-09",
+  "objective": "Authenticated search-history encryption",
+  "expected": "Raw SQL stores ciphertext; authorized reads work; missing/wrong keys fail closed",
+  "actual": {
+    "ciphertext_prefix": "fernet:v1:",
+    "raw_storage_contains_plaintext": false,
+    "authorized_orm_read_matches": true,
+    "wrong_key_rejected": true,
+    "missing_key_rejected": true
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

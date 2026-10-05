@@ -1,0 +1,45 @@
+{
+  "test_id": "RA-10",
+  "objective": "Ambiguous request",
+  "input_scenario": "Find data to predict risk",
+  "expected_behavior": "Avoid confident unsupported domain/ranking",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find data to predict risk",
+      "domain": "general",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "datum",
+        "risk"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "results": []
+  },
+  "outcome": "PASS",
+  "observations": "No confident ranked recommendation for ambiguous need.",
+  "conclusion": "No confident ranked recommendation for ambiguous need.",
+  "finding_ids": [],
+  "duration_seconds": 0.456,
+  "trace": [
+    {
+      "query": "Find data to predict risk",
+      "understanding": {
+        "original_query": "Find data to predict risk",
+        "domain": "general",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "datum",
+          "risk"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

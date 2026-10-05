@@ -1,0 +1,13 @@
+{
+  "outcome": "PASS",
+  "migration_idempotent": true,
+  "legacy_search_text_encrypted": true,
+  "authorized_reads_work": true,
+  "preserved_row_counts": {
+    "users": 4,
+    "catalog_datasets": 10,
+    "search_history": 26
+  },
+  "row_counts_unchanged": true,
+  "original_database_unchanged": true
+}

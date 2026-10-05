@@ -1,0 +1,13 @@
+{
+  "test_id": "RA-14",
+  "objective": "Cross-source metric parity",
+  "expected": "Same content produces equivalent similarities",
+  "actual": {
+    "max_similarity_difference": 8.195638656616211e-08,
+    "local_metric": "Normalized FAISS inner product (cosine)",
+    "external_metric": "Normalized cosine",
+    "real_catalog_entries": 10
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

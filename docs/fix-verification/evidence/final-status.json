@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-10-05T13:27:00.892986+05:30",
+  "application_cases": {
+    "PASS": 69,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "frontend_lint": "PASS",
+  "frontend_types": "PASS",
+  "frontend_production_build": "PASS",
+  "backend_compilation": "PASS",
+  "dependency_consistency": "PASS",
+  "original_database_unchanged": true,
+  "provider": {
+    "status": "BLOCKED",
+    "error": "403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+    "checked_at": "2026-10-05T12:56:44.994338+05:30"
+  },
+  "smtp": "SKIPPED at user request",
+  "assessment_submission": "INCOMPLETE: deferred personal details/reflections, independent validation and viva",
+  "whole_project_100_percent_complete": false,
+  "other_unimplemented_items": [],
+  "admin_auditing": "PASS",
+  "destructive_admin_password_confirmation": "PASS",
+  "admin_password_throttling": "PASS",
+  "stored_search_text_encryption": "PASS",
+  "local_database_migration": {
+    "status": "APPLIED",
+    "applied_at": "2026-10-05T13:26:08.833153+05:30",
+    "database_before_sha256": "fff29965c0e9977dc0dddaf301fa4504962304c73d5d0a8a921c9e929b4a64a1",
+    "database_after_sha256": "b5f6e433e0a6ae4a04063af0f57f3b98086ef80f207b486098e8e38617b04075",
+    "encrypted_backup": "database/private-backups/app-before-encryption-20261005-132608.enc",
+    "row_counts_before": {
+      "users": 4,
+      "catalog_datasets": 10,
+      "search_history": 26
+    },
+    "row_counts_after": {
+      "users": 4,
+      "catalog_datasets": 10,
+      "search_history": 26
+    },
+    "all_search_text_encrypted": true,
+    "authorized_reads_work": true
+  }
+}

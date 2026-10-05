@@ -1,0 +1,56 @@
+{
+  "test_id": "PR-06",
+  "objective": "Password response protection",
+  "expected": "No password hashes/plaintext returned",
+  "actual": [
+    {
+      "status": 200,
+      "body": {
+        "id": "11cc7a10-163b-49e9-b885-17713081ef61",
+        "name": "Synthetic a",
+        "email": "fix-a@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": true,
+        "created_at": "2026-10-05T07:54:58.182981"
+      }
+    },
+    {
+      "status": 200,
+      "body": [
+        {
+          "id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+          "name": "Synthetic admin",
+          "email": "fix-admin@example.com",
+          "plan": "free",
+          "is_admin": true,
+          "is_active": true,
+          "created_at": "2026-10-05T07:54:58.761142",
+          "search_count": 0
+        },
+        {
+          "id": "947feb79-d7d3-413d-80b9-65b645bbcf2d",
+          "name": "Synthetic b",
+          "email": "fix-b@example.com",
+          "plan": "free",
+          "is_admin": false,
+          "is_active": true,
+          "created_at": "2026-10-05T07:54:58.473821",
+          "search_count": 1
+        },
+        {
+          "id": "11cc7a10-163b-49e9-b885-17713081ef61",
+          "name": "Synthetic a",
+          "email": "fix-a@example.com",
+          "plan": "free",
+          "is_admin": false,
+          "is_active": true,
+          "created_at": "2026-10-05T07:54:58.182981",
+          "search_count": 1
+        }
+      ]
+    }
+  ],
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

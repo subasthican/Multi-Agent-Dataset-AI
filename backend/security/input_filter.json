@@ -1,0 +1,18 @@
+{
+  "prompt_injection": [
+    "\\bignore\\b.{0,40}\\b(?:previous|prior|all|medical|json|user)\\b.{0,30}\\b(?:instructions?|requirements?|need|subject)\\b",
+    "\\b(?:system|developer)\\s*:",
+    "\\b(?:reveal|return|include|show)\\b.{0,60}\\b(?:hidden|internal|system|complete)\\b.{0,40}\\b(?:prompt|instructions?|configuration)\\b",
+    "\\b(?:real|private|secret)\\b.{0,25}\\b(?:api key|configuration|credentials?)\\b",
+    "\\b(?:force|set|replace)\\b.{0,40}\\b(?:domain|task|data_type|keywords?|extracted keywords)\\b\\s*(?:=|to|with)",
+    "\\b(?:decode|decrypt)\\b.{0,35}\\b(?:follow|execute)\\b",
+    "\\b(?:respond|output)\\b.{0,25}\\b(?:only the word|no json|instead of json)\\b",
+    "\\b(?:roleplay|act as)\\b.{0,40}\\b(?:unrestricted|unfiltered)\\b",
+    "\\bignora\\b.{0,50}\\binstrucciones\\b",
+    "\\bextra field\\b"
+  ],
+  "harmful_purpose": [
+    "\\b(?:unfairly|discriminat\\w*)\\b.{0,60}\\b(?:deny|exclude|reject|admission|employment|loan)\\b",
+    "\\b(?:deny|exclude|reject)\\b.{0,80}\\b(?:based on|because of)\\b.{0,40}\\b(?:ethnicity|race|religion|gender|disability)\\b"
+  ]
+}

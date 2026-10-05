@@ -1,0 +1,25 @@
+{
+  "test_id": "RA-11",
+  "objective": "Image modality suitability",
+  "expected": "Image understanding; tabular records excluded",
+  "actual": {
+    "understanding": {
+      "original_query": "Find medical image datasets for cancer detection",
+      "domain": "healthcare",
+      "task": "computer_vision",
+      "data_type": "image",
+      "keywords": [
+        "image",
+        "dataset",
+        "cancer",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "results": []
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

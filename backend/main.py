@@ -3,7 +3,7 @@ from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy.orm import Session
 
 from agents.dataset_collection_agent.agent import collect_external_datasets
@@ -24,6 +24,11 @@ from security.plan_seed import seed_plans_if_empty
 from security.router import router as auth_router
 from security.schemas import PlanResponse, UsageResponse
 from security.usage_limits import enforce_search_limit, get_usage, record_anonymous_search
+from security.input_filter import sanitize_input
+from agents.nlp_agent.models import QueryInput
+from responsible_ai.privacy import redact_sensitive_text
+from responsible_ai.fairness import representation_summary
+from responsible_ai.explainability import score_note
 
 app = FastAPI(title="Dataset AI Agent System")
 
@@ -51,6 +56,17 @@ def on_startup():
 def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
+def reserve_ai_request(request: Request, current_user: User | None = Depends(get_current_user_optional), db: Session = Depends(get_db)):
+    enforce_search_limit(db, current_user, _client_ip(request))
+
+
+def safe_query(query: str) -> str:
+    try:
+        return redact_sensitive_text(sanitize_input(QueryInput(query=query).query))
+    except (ValueError, ValidationError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
 DEFAULT_RESULT_COUNT = 3
 # Unbounded k previously passed straight through to Kaggle/OpenML/HuggingFace's
 # own `limit` params with no validation — found while auditing the Discovery
@@ -68,12 +84,13 @@ MAX_EXTERNAL_KEYWORDS = 2
 class DiscoverResponse(BaseModel):
     understanding: QueryAnalysisResult
     recommendations: List[EvaluatedDataset]
+    diagnostics: dict = Field(default_factory=dict)
 
 
 def _discovery_query(understanding: QueryAnalysisResult) -> str:
     """Query for the FAISS-embedded catalog search — embeddings handle a
     longer, denser bag of terms fine."""
-    return " ".join([understanding.domain, understanding.task, *understanding.keywords])
+    return f"{understanding.original_query} Domain: {understanding.domain}. Task: {understanding.task}."
 
 
 def _external_query(understanding: QueryAnalysisResult) -> str:
@@ -107,32 +124,32 @@ def home():
     return {"message": "Multi Agent Dataset Recommendation System"}
 
 
-@app.post("/nlp-agent", response_model=QueryAnalysisResult)
+@app.post("/nlp-agent", response_model=QueryAnalysisResult, dependencies=[Depends(reserve_ai_request)])
 def nlp_agent(query: str):
     try:
         return analyze_query(query)
-    except ValidationError as exc:
-        raise HTTPException(status_code=400, detail=exc.errors()) from exc
+    except (ValidationError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=exc.errors(include_context=False) if isinstance(exc, ValidationError) else str(exc)) from exc
 
 
-@app.post("/discovery-agent", response_model=DiscoveryResult)
+@app.post("/discovery-agent", response_model=DiscoveryResult, dependencies=[Depends(reserve_ai_request)])
 def discovery_agent(query: str, k: int = ResultCount):
-    return search_datasets(query, k=k)
+    return search_datasets(safe_query(query), k=k)
 
 
-@app.post("/dataset-collection-agent", response_model=List[DatasetMatch])
+@app.post("/dataset-collection-agent", response_model=List[DatasetMatch], dependencies=[Depends(reserve_ai_request)])
 def dataset_collection_agent(query: str, k: int = ResultCount):
-    return [DatasetMatch(**item) for item in collect_external_datasets(query, limit=k)]
+    return [DatasetMatch(**item) for item in collect_external_datasets(safe_query(query), limit=k)]
 
 
-@app.post("/evaluation-agent", response_model=List[EvaluatedDataset])
+@app.post("/evaluation-agent", response_model=List[EvaluatedDataset], dependencies=[Depends(reserve_ai_request)])
 def evaluation_agent(query: str, k: int = ResultCount):
     try:
         understanding = analyze_query(query)
-    except ValidationError as exc:
-        raise HTTPException(status_code=400, detail=exc.errors()) from exc
+    except (ValidationError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=exc.errors(include_context=False) if isinstance(exc, ValidationError) else str(exc)) from exc
 
-    candidates = _candidate_datasets(understanding, k)
+    candidates = [] if understanding.warnings else _candidate_datasets(understanding, k)
     return evaluate_datasets(candidates, understanding)
 
 
@@ -165,10 +182,10 @@ def discover(
 
     try:
         understanding = analyze_query(query)
-    except ValidationError as exc:
-        raise HTTPException(status_code=400, detail=exc.errors()) from exc
+    except (ValidationError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=exc.errors(include_context=False) if isinstance(exc, ValidationError) else str(exc)) from exc
 
-    candidates = _candidate_datasets(understanding, k)
+    candidates = [] if understanding.warnings else _candidate_datasets(understanding, k)
     recommendations = evaluate_datasets(candidates, understanding)
 
     if current_user is not None:
@@ -176,7 +193,7 @@ def discover(
     else:
         record_anonymous_search(db, ip_address)
 
-    return DiscoverResponse(understanding=understanding, recommendations=recommendations)
+    return DiscoverResponse(understanding=understanding, recommendations=recommendations, diagnostics={**representation_summary(recommendations), "score_note": score_note()})
 
 
 @app.get("/plans", response_model=List[PlanResponse])

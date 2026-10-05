@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-15",
+  "objective": "Deletion isolation",
+  "expected": "A cleared; B preserved",
+  "actual": {
+    "status": 204,
+    "A_after": 0,
+    "B_before": 1,
+    "B_after": 1
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

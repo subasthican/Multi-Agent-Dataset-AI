@@ -1,14 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from agents.discovery_agent import vector_store
 from agents.discovery_agent.models import CatalogDatasetCreate, CatalogDatasetResponse, CatalogDatasetUpdate
 
-from .authentication import get_current_admin_user
+from .authentication import get_current_admin_user, verify_password
 from .db import get_db
-from .db_models import CatalogDataset, Plan, SearchHistory, User
+from .db_models import AdminAuditLog, CatalogDataset, Plan, SearchHistory, User
 from .schemas import (
+    AdminDeleteRequest,
+    AdminAuditResponse,
     AdminSearchHistoryItem,
     AdminStatsResponse,
     AdminUpdateUserRequest,
@@ -23,6 +27,33 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 SORT_OPTIONS = {"newest", "oldest", "most_searches", "name"}
 MAX_DETAIL_HISTORY = 100
+
+
+def _audit(db: Session, actor: User, action: str, target_type: str, target_id: str, fields=()):
+    db.add(AdminAuditLog(actor_id=actor.id, action=action, target_type=target_type,
+                         target_id=target_id, changed_fields=sorted(fields)))
+
+
+def require_delete_password(payload: AdminDeleteRequest,
+                            current_admin: User = Depends(get_current_admin_user),
+                            db: Session = Depends(get_db)):
+    since = datetime.now(timezone.utc) - timedelta(minutes=15)
+    failures = db.query(func.count(AdminAuditLog.id)).filter(
+        AdminAuditLog.actor_id == current_admin.id,
+        AdminAuditLog.action == "reauth_failed", AdminAuditLog.created_at >= since).scalar() or 0
+    if failures >= 5:
+        raise HTTPException(status_code=429, detail="Too many password attempts. Try again in 15 minutes.")
+    if not verify_password(payload.password, current_admin.hashed_password):
+        _audit(db, current_admin, "reauth_failed", "session", current_admin.id)
+        db.commit()
+        raise HTTPException(status_code=403, detail="Current password is incorrect")
+    return current_admin
+
+
+@router.get("/audit", response_model=list[AdminAuditResponse])
+def list_audit(limit: int = Query(default=100, ge=1, le=200),
+               current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    return db.query(AdminAuditLog).order_by(AdminAuditLog.created_at.desc(), AdminAuditLog.id.desc()).limit(limit).all()
 
 
 def _valid_plan_names(db: Session) -> set[str]:
@@ -157,13 +188,14 @@ def update_user(
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot suspend your own account")
         user.is_active = payload.is_active
 
+    _audit(db, current_admin, "update", "user", user.id, payload.model_dump(exclude_unset=True).keys())
     db.commit()
     db.refresh(user)
     return _to_admin_user_response(db, user)
 
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_user(user_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+def delete_user(user_id: str, current_admin: User = Depends(require_delete_password), db: Session = Depends(get_db)):
     if user_id == current_admin.id:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot delete your own account here")
 
@@ -172,6 +204,7 @@ def delete_user(user_id: str, current_admin: User = Depends(get_current_admin_us
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
     db.delete(user)  # cascades to their reset tokens + search history (see db_models.py relationships)
+    _audit(db, current_admin, "delete", "user", user.id, ())
     db.commit()
 
 
@@ -206,6 +239,8 @@ def create_catalog_entry(
 ):
     entry = CatalogDataset(**payload.model_dump())
     db.add(entry)
+    db.flush()
+    _audit(db, current_admin, "create", "catalog", entry.id, payload.model_dump().keys())
     db.commit()
     db.refresh(entry)
     vector_store.invalidate_cache()
@@ -226,6 +261,7 @@ def update_catalog_entry(
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(entry, field, value)
 
+    _audit(db, current_admin, "update", "catalog", entry.id, payload.model_dump(exclude_unset=True).keys())
     db.commit()
     db.refresh(entry)
     vector_store.invalidate_cache()
@@ -234,13 +270,14 @@ def update_catalog_entry(
 
 @router.delete("/catalog/{dataset_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_catalog_entry(
-    dataset_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)
+    dataset_id: str, current_admin: User = Depends(require_delete_password), db: Session = Depends(get_db)
 ):
     entry = db.get(CatalogDataset, dataset_id)
     if entry is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
 
     db.delete(entry)
+    _audit(db, current_admin, "delete", "catalog", entry.id, ())
     db.commit()
     vector_store.invalidate_cache()
 
@@ -259,6 +296,8 @@ def create_plan(
 
     plan = Plan(**payload.model_dump())
     db.add(plan)
+    db.flush()
+    _audit(db, current_admin, "create", "plan", plan.id, payload.model_dump().keys())
     db.commit()
     db.refresh(plan)
     return plan
@@ -285,13 +324,14 @@ def update_plan(
     if payload.clear_search_limit:
         plan.daily_search_limit = None
 
+    _audit(db, current_admin, "update", "plan", plan.id, payload.model_dump(exclude_unset=True).keys())
     db.commit()
     db.refresh(plan)
     return plan
 
 
 @router.delete("/plans/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_plan(plan_id: str, current_admin: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+def delete_plan(plan_id: str, current_admin: User = Depends(require_delete_password), db: Session = Depends(get_db)):
     plan = db.get(Plan, plan_id)
     if plan is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Plan not found")
@@ -304,4 +344,5 @@ def delete_plan(plan_id: str, current_admin: User = Depends(get_current_admin_us
         )
 
     db.delete(plan)
+    _audit(db, current_admin, "delete", "plan", plan.id, ())
     db.commit()

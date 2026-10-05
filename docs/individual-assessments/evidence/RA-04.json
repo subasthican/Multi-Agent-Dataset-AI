@@ -1,0 +1,92 @@
+{
+  "test_id": "RA-04",
+  "objective": "Business relevance",
+  "input_scenario": "Find datasets for customer churn prediction",
+  "expected_behavior": "Subject-appropriate top match or honest empty result for absent catalog domain",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for customer churn prediction",
+      "domain": "business",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "customer",
+        "churn",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "top_result": {
+      "dataset": {
+        "id": "1423189f-3720-4b93-aacd-8810c4045fd7",
+        "name": "Customer Churn Dataset",
+        "domain": "business",
+        "task": "classification",
+        "description": "Customer subscription and usage records used to predict business customer churn",
+        "similarity": 0.6756722927093506,
+        "source": "catalog",
+        "url": null
+      },
+      "score": 77.78,
+      "explanation": "Customer Churn Dataset is recommended because it matches the business domain and matches the classification task, with a relevance score of 77.78%."
+    },
+    "count": 2
+  },
+  "outcome": "PASS",
+  "observations": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "conclusion": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "finding_ids": [],
+  "duration_seconds": 0.012,
+  "trace": [
+    {
+      "query": "Find datasets for customer churn prediction",
+      "understanding": {
+        "original_query": "Find datasets for customer churn prediction",
+        "domain": "business",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "customer",
+          "churn",
+          "prediction"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "1423189f-3720-4b93-aacd-8810c4045fd7",
+            "name": "Customer Churn Dataset",
+            "domain": "business",
+            "task": "classification",
+            "description": "Customer subscription and usage records used to predict business customer churn",
+            "similarity": 0.6756722927093506,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 77.78,
+          "explanation": "Customer Churn Dataset is recommended because it matches the business domain and matches the classification task, with a relevance score of 77.78%."
+        },
+        {
+          "dataset": {
+            "id": "4b3d465a-a771-4201-b506-844f72fbaf89",
+            "name": "House Price Prediction Dataset",
+            "domain": "business",
+            "task": "regression",
+            "description": "Real estate property information for predicting housing prices",
+            "similarity": 0.3948096036911011,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 44.74,
+          "explanation": "House Price Prediction Dataset is recommended because it matches the business domain, with a relevance score of 44.74%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

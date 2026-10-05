@@ -1,0 +1,15 @@
+{
+  "test_id": "PR-14",
+  "objective": "Contact redaction",
+  "expected": "Fake email/phone absent from history and prompt",
+  "actual": {
+    "stored_queries": [
+      "Medical dataset for Synthetic Person email [REDACTED_EMAIL] phone [REDACTED_PHONE]",
+      "Synthetic query"
+    ],
+    "prompt_contact_values_absent": true,
+    "scope": "Email/phone patterns only; not comprehensive PII protection. No provider send."
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

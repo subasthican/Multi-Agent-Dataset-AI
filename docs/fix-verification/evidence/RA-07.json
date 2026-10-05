@@ -1,0 +1,28 @@
+{
+  "test_id": "RA-07",
+  "objective": "Unsupported/ambiguous domain abstention",
+  "expected": "No unrelated recommendations",
+  "actual": {
+    "query": "Find datasets for predicting professional tennis match outcomes",
+    "understanding": {
+      "original_query": "Find datasets for predicting professional tennis match outcomes",
+      "domain": "general",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "tennis",
+        "match",
+        "outcome"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [
+        "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+      ]
+    },
+    "count": 0
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

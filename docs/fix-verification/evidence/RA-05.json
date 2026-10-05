@@ -1,0 +1,39 @@
+{
+  "test_id": "RA-05",
+  "objective": "Baseline domain relevance",
+  "expected": "Prespecified subject match or honest empty automotive catalog",
+  "actual": {
+    "query": "Find datasets for solar energy forecasting",
+    "understanding": {
+      "original_query": "Find datasets for solar energy forecasting",
+      "domain": "environment",
+      "task": "regression",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "energy",
+        "forecasting"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "top": {
+      "dataset": {
+        "id": "4d0a87ab-6cc3-4ecf-aefd-1fb33f2d5c40",
+        "name": "Solar Energy Forecast Dataset",
+        "domain": "environment",
+        "task": "regression",
+        "description": "Renewable energy generation data for predicting solar power output",
+        "similarity": 0.696269154548645,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 76.81,
+      "explanation": "Solar Energy Forecast Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 76.81%."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

@@ -1,0 +1,90 @@
+{
+  "test_id": "RA-05",
+  "objective": "Environment relevance",
+  "input_scenario": "Find datasets for solar energy forecasting",
+  "expected_behavior": "Subject-appropriate top match or honest empty result for absent catalog domain",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for solar energy forecasting",
+      "domain": "environment",
+      "task": "regression",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "energy",
+        "forecasting"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "top_result": {
+      "dataset": {
+        "id": "793a8495-9b55-4b08-ab17-81cc12374e82",
+        "name": "Solar Energy Forecast Dataset",
+        "domain": "environment",
+        "task": "regression",
+        "description": "Renewable energy generation data for predicting solar power output",
+        "similarity": 0.5201167464256287,
+        "source": "catalog",
+        "url": null
+      },
+      "score": 68.01,
+      "explanation": "Solar Energy Forecast Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 68.01%."
+    },
+    "count": 2
+  },
+  "outcome": "PASS",
+  "observations": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "conclusion": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "finding_ids": [],
+  "duration_seconds": 0.174,
+  "trace": [
+    {
+      "query": "Find datasets for solar energy forecasting",
+      "understanding": {
+        "original_query": "Find datasets for solar energy forecasting",
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "energy",
+          "forecasting"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "793a8495-9b55-4b08-ab17-81cc12374e82",
+            "name": "Solar Energy Forecast Dataset",
+            "domain": "environment",
+            "task": "regression",
+            "description": "Renewable energy generation data for predicting solar power output",
+            "similarity": 0.5201167464256287,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 68.01,
+          "explanation": "Solar Energy Forecast Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 68.01%."
+        },
+        {
+          "dataset": {
+            "id": "4a6cb490-e29c-42c2-8c0b-7f49ae91f14f",
+            "name": "Air Quality Dataset",
+            "domain": "environment",
+            "task": "regression",
+            "description": "Pollution and weather sensor readings for environmental monitoring and forecasting",
+            "similarity": 0.5061075687408447,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 67.31,
+          "explanation": "Air Quality Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 67.31%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

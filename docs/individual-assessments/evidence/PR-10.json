@@ -1,0 +1,73 @@
+{
+  "test_id": "PR-10",
+  "objective": "Reset-token reuse",
+  "input_scenario": "Consume controlled reset token twice",
+  "expected_behavior": "Second consumption rejected",
+  "actual_behavior": {
+    "first": 204,
+    "second": 400,
+    "first_password_login": 200
+  },
+  "outcome": "PASS",
+  "observations": "Consumed token rejected on reuse; original reset password retained.",
+  "conclusion": "Consumed token rejected on reuse; original reset password retained.",
+  "finding_ids": [],
+  "duration_seconds": 0.595,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": "[REDACTED]"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/reset-password",
+      "params": null,
+      "body": {
+        "token": "[REDACTED]",
+        "new_password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 204,
+      "response": ""
+    },
+    {
+      "method": "POST",
+      "path": "/auth/reset-password",
+      "params": null,
+      "body": {
+        "token": "[REDACTED]",
+        "new_password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 400,
+      "response": {
+        "detail": "Invalid or expired reset token"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "token_type": "bearer"
+      }
+    }
+  ]
+}

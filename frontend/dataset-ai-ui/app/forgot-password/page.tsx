@@ -9,7 +9,6 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [devResetLink, setDevResetLink] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -18,7 +17,6 @@ export default function ForgotPasswordPage() {
     try {
       const result = await forgotPassword(email);
       setMessage(result.message);
-      setDevResetLink(result.dev_reset_token ? `/reset-password?token=${result.dev_reset_token}` : null);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "Something went wrong. Is the backend running?");
     } finally {
@@ -39,14 +37,7 @@ export default function ForgotPasswordPage() {
       {message ? (
         <div className="flex flex-col gap-3 text-center text-sm text-white/70">
           <p>{message}</p>
-          {devResetLink && (
-            <div className="rounded-lg border border-white/10 bg-white/5 p-3 text-xs text-white/50">
-              <p className="mb-2">
-                No email provider is configured for this demo, so here&apos;s your reset link directly:
-              </p>
-              <AuthLink href={devResetLink}>Reset your password</AuthLink>
-            </div>
-          )}
+
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

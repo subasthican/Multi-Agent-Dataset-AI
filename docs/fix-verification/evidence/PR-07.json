@@ -1,0 +1,22 @@
+{
+  "test_id": "PR-07",
+  "objective": "Account enumeration",
+  "expected": "Identical response bodies",
+  "actual": {
+    "existing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "missing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "mail_fixture": "Mocked delivery; public bodies compared; no actual email sent."
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

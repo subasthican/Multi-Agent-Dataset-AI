@@ -1,85 +1,77 @@
+"""Atomic daily reservations shared by all public AI routes."""
+import hashlib
+import hmac
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import HTTPException, status
-from sqlalchemy import func
+from fastapi import HTTPException
+from sqlalchemy import func, update
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from .db_models import AnonymousSearchLog, Plan, SearchHistory, User
+from .db_models import AnonymousSearchLog, Plan, SearchHistory, SearchUsage, User
+from .jwt_manager import SECRET_KEY
 
 FREE_PLAN_NAME = "free"
+DEFAULT_FREE_LIMIT = 10
 
 
-def get_plan_by_name(db: Session, name: str) -> Optional[Plan]:
+def get_plan_by_name(db, name):
     return db.query(Plan).filter(Plan.name == name).first()
 
 
-def _start_of_today() -> datetime:
-    """UTC midnight, not the caller's local midnight — a known
-    simplification, not per-user-timezone-aware. A user near the
-    international date line could see their count reset at an odd local
-    hour; acceptable for this project's scope, not claimed as more precise
-    than it is."""
-    now = datetime.now(timezone.utc)
-    return now.replace(hour=0, minute=0, second=0, microsecond=0)
+def _start_of_today():
+    return datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
-def _count_since(db: Session, model, filter_column, filter_value) -> int:
-    since = _start_of_today()
-    return (
-        db.query(func.count(model.id))
-        .filter(filter_column == filter_value, model.created_at >= since)
-        .scalar()
-        or 0
-    )
-
-
-def get_usage(db: Session, user: Optional[User], ip_address: str) -> tuple[str, Optional[int], int]:
-    """Returns (plan_name, limit, used_today). limit of None = unlimited."""
+def _subject(user, ip):
     if user is not None:
-        used = _count_since(db, SearchHistory, SearchHistory.user_id, user.id)
-        # Admins bypass the plan's limit entirely, regardless of which plan
-        # they're actually on — being an admin should mean unlimited access,
-        # not "unlimited if someone also remembered to put them on a
-        # no-limit plan." `used` is still the real count, just never
-        # compared against a limit (see enforce_search_limit below).
-        if user.is_admin:
-            return user.plan, None, used
-        plan = get_plan_by_name(db, user.plan)
-        limit = plan.daily_search_limit if plan else None
-        return user.plan, limit, used
-
-    plan = get_plan_by_name(db, FREE_PLAN_NAME)
-    limit = plan.daily_search_limit if plan else None
-    used = _count_since(db, AnonymousSearchLog, AnonymousSearchLog.ip_address, ip_address)
-    return FREE_PLAN_NAME, limit, used
+        return "user:" + user.id
+    return "peer:" + hmac.new(SECRET_KEY.encode(), ip.encode(), hashlib.sha256).hexdigest()
 
 
-def enforce_search_limit(db: Session, user: Optional[User], ip_address: str) -> None:
-    """Raises 429 if the caller has hit their plan's daily search limit.
-    Signed-in users are checked against their own plan (falling back to the
-    Free limit if their plan was deleted from under them); anonymous
-    callers are always checked against the Free plan's limit, tracked by
-    IP so logging out can't be used to bypass it.
+def _legacy_usage(db, user, ip):
+    model = SearchHistory if user else AnonymousSearchLog
+    column = SearchHistory.user_id if user else AnonymousSearchLog.ip_address
+    value = user.id if user else ip
+    return db.query(func.count(model.id)).filter(column == value, model.created_at >= _start_of_today()).scalar() or 0
 
-    Deliberately called BEFORE running the actual NLP/Discovery/Evaluation
-    pipeline in main.py, so a request that's about to be rejected doesn't
-    still burn a real Gemini/Kaggle/OpenML/HuggingFace call first.
+
+def get_usage(db: Session, user: Optional[User], ip_address: str):
+    row = db.get(SearchUsage, (_subject(user, ip_address), _start_of_today().date().isoformat()))
+    used = row.count if row else _legacy_usage(db, user, ip_address)
+    name = user.plan if user else FREE_PLAN_NAME
+    if user and user.is_admin:
+        return name, None, used
+    plan = get_plan_by_name(db, name) or get_plan_by_name(db, FREE_PLAN_NAME)
+    return name, plan.daily_search_limit if plan else DEFAULT_FREE_LIMIT, used
+
+
+def enforce_search_limit(db: Session, user: Optional[User], ip_address: str):
+    """Reserve a request before provider work; even concurrent requests count.
+
+    Accepted requests consume a slot even if downstream services fail. This avoids
+    using provider failures or history deletion to erase resource usage.
     """
-    plan_name, limit, used = get_usage(db, user, ip_address)
-    if limit is None:
-        return
-
-    if used >= limit:
-        raise HTTPException(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail=(
-                f"Daily search limit reached ({limit}/day on the {plan_name} plan). "
-                "Try again tomorrow, or upgrade to Pro for unlimited searches."
-            ),
-        )
-
-
-def record_anonymous_search(db: Session, ip_address: str) -> None:
-    db.add(AnonymousSearchLog(ip_address=ip_address))
+    name, limit, legacy = get_usage(db, user, ip_address)
+    subject, day = _subject(user, ip_address), _start_of_today().date().isoformat()
+    if db.get(SearchUsage, (subject, day)) is None:
+        try:
+            with db.begin_nested():
+                db.add(SearchUsage(subject=subject, day=day, count=legacy))
+                db.flush()
+        except IntegrityError:
+            # Another request initialized this same counter.
+            pass
+    statement = update(SearchUsage).where(SearchUsage.subject == subject, SearchUsage.day == day)
+    if limit is not None:
+        statement = statement.where(SearchUsage.count < limit)
+    changed = db.execute(statement.values(count=SearchUsage.count + 1)).rowcount
     db.commit()
+    if not changed:
+        raise HTTPException(status_code=429, detail=f"Daily search limit reached ({limit}/day on the {name} plan).")
+
+
+def record_anonymous_search(db, ip_address):
+    # Reservation above already records usage without retaining plaintext IPs.
+    pass

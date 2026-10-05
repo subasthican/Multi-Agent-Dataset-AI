@@ -12,7 +12,7 @@ from .embeddings import create_embeddings
 # dataset list, so a stale dataset list means a stale index regardless of
 # which one actually changed.
 _datasets_cache: Optional[List[Dict]] = None
-_index_cache: Optional[faiss.IndexFlatL2] = None
+_index_cache: Optional[faiss.IndexFlatIP] = None
 
 
 def invalidate_cache() -> None:
@@ -39,6 +39,7 @@ def load_datasets() -> List[Dict]:
                     "description": row.description,
                     "domain": row.domain,
                     "task": row.task,
+                    "data_type": row.data_type,
                     "url": row.url,
                 }
                 for row in rows
@@ -48,7 +49,7 @@ def load_datasets() -> List[Dict]:
     return _datasets_cache
 
 
-def build_index() -> Optional[faiss.IndexFlatL2]:
+def build_index() -> Optional[faiss.IndexFlatIP]:
     global _index_cache
     if _index_cache is None:
         datasets = load_datasets()
@@ -56,7 +57,8 @@ def build_index() -> Optional[faiss.IndexFlatL2]:
             return None
         descriptions = [dataset["description"] for dataset in datasets]
         vectors = np.array(create_embeddings(descriptions)).astype("float32")
-        index = faiss.IndexFlatL2(vectors.shape[1])
+        faiss.normalize_L2(vectors)
+        index = faiss.IndexFlatIP(vectors.shape[1])
         index.add(vectors)
         _index_cache = index
     return _index_cache
@@ -70,11 +72,12 @@ def search_vectors(query: str, k: int = 3) -> List[Dict]:
         return []
 
     query_vector = np.array(create_embeddings([query])).astype("float32")
-    distances, indices = index.search(query_vector, k)
+    faiss.normalize_L2(query_vector)
+    similarities, indices = index.search(query_vector, k)
 
     results = []
-    for distance, position in zip(distances[0], indices[0]):
-        # Convert L2 distance to a 0-1 similarity score (higher = more similar).
-        similarity = float(1 / (1 + distance))
+    for value, position in zip(similarities[0], indices[0]):
+        # Same normalized cosine metric as external-source ranking.
+        similarity = max(0.0, min(1.0, float(value)))
         results.append({**datasets[position], "similarity": similarity})
     return results

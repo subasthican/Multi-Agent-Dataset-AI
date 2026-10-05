@@ -1,0 +1,33 @@
+{
+  "test_id": "PR-08",
+  "objective": "Reset-token disclosure",
+  "input_scenario": "Unauthenticated forgot-password for controlled B",
+  "expected_behavior": "No token returned to requester",
+  "actual_behavior": {
+    "status": 200,
+    "token_present": true
+  },
+  "outcome": "FAIL",
+  "observations": "Public API exposes a usable reset capability.",
+  "conclusion": "Public API exposes a usable reset capability.",
+  "finding_ids": [
+    "PR-RESET"
+  ],
+  "duration_seconds": 0.002,
+  "trace": [
+    {
+      "method": "POST",
+      "path": "/auth/forgot-password",
+      "params": null,
+      "body": {
+        "email": "audit-b@example.com"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "message": "If that email is registered, a reset link has been sent.",
+        "dev_reset_token": "[REDACTED]"
+      }
+    }
+  ]
+}

@@ -30,10 +30,10 @@ def rank_by_similarity(query: str, texts: List[str]) -> List[float]:
 
     vectors = np.array(create_embeddings([query, *texts]))
     query_vector, text_vectors = vectors[0], vectors[1:]
-    query_norm = query_vector / np.linalg.norm(query_vector)
+    query_norm = query_vector / max(float(np.linalg.norm(query_vector)), 1e-12)
 
     similarities = []
     for vector in text_vectors:
-        vector_norm = vector / np.linalg.norm(vector)
-        similarities.append(max(0.0, float(np.dot(query_norm, vector_norm))))
+        vector_norm = vector / max(float(np.linalg.norm(vector)), 1e-12)
+        similarities.append(max(0.0, min(1.0, float(np.dot(query_norm, vector_norm)))))
     return similarities

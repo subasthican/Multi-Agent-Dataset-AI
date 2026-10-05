@@ -1,0 +1,25 @@
+{
+  "test_id": "RA-06",
+  "objective": "Baseline domain relevance",
+  "expected": "Prespecified subject match or honest empty automotive catalog",
+  "actual": {
+    "query": "Find datasets for classifying car types",
+    "understanding": {
+      "original_query": "Find datasets for classifying car types",
+      "domain": "automotive",
+      "task": "machine_learning",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "car",
+        "type"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "top": null
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

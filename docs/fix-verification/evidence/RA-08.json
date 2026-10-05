@@ -1,0 +1,43 @@
+{
+  "test_id": "RA-08",
+  "objective": "English paraphrase consistency",
+  "expected": "Same domain/task/top subject",
+  "actual": [
+    {
+      "understanding": {
+        "original_query": "Find healthcare datasets for diabetes classification",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "healthcare",
+          "dataset",
+          "diabete",
+          "classification"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": []
+      },
+      "top": "Diabetes Prediction Dataset"
+    },
+    {
+      "understanding": {
+        "original_query": "Find medical data to classify diabetes",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "datum",
+          "diabete"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": []
+      },
+      "top": "Diabetes Prediction Dataset"
+    }
+  ],
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

@@ -1,0 +1,11 @@
+{
+  "test_id": "EX-04",
+  "objective": "JWT revocation on recovery",
+  "expected": "Password reset also invalidates previous JWT",
+  "actual": {
+    "reset": 204,
+    "old_token": 401
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

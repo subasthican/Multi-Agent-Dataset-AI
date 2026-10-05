@@ -6,6 +6,7 @@ from sqlalchemy import JSON, DateTime, ForeignKey, Integer, String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
+from .encryption import EncryptedText
 
 
 def _uuid() -> str:
@@ -63,7 +64,7 @@ class SearchHistory(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
     user_id: Mapped[str] = mapped_column(String, ForeignKey("users.id"), index=True, nullable=False)
-    query: Mapped[str] = mapped_column(String, nullable=False)
+    query: Mapped[str] = mapped_column(EncryptedText(), nullable=False)
     domain: Mapped[str] = mapped_column(String, nullable=False)
     task: Mapped[str] = mapped_column(String, nullable=False)
     understanding_source: Mapped[str] = mapped_column(String, default="rule_based", nullable=False)
@@ -87,6 +88,7 @@ class CatalogDataset(Base):
     description: Mapped[str] = mapped_column(String, nullable=False)
     domain: Mapped[str] = mapped_column(String, nullable=False)
     task: Mapped[str] = mapped_column(String, nullable=False)
+    data_type: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     # Optional — unlike a live Kaggle/OpenML/HuggingFace result, a curated
     # catalog entry has no inherent real-world page. Null unless an admin
     # attaches one for a specific real dataset this entry represents.
@@ -134,3 +136,30 @@ class AnonymousSearchLog(Base):
     id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
     ip_address: Mapped[str] = mapped_column(String, index=True, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now)
+
+
+class SearchUsage(Base):
+    """Daily request counter independent of deletable personalization history.
+
+    Subject is a user ID or an HMAC of the peer IP, never the query text.
+    """
+    __tablename__ = "search_usage"
+    subject: Mapped[str] = mapped_column(String, primary_key=True)
+    day: Mapped[str] = mapped_column(String, primary_key=True)
+    count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+
+
+class AdminAuditLog(Base):
+    """Minimal append-only application audit records; no passwords or query text.
+
+    Actor/target identifiers intentionally have no cascading foreign keys so
+    account deletion cannot erase the administrative event history.
+    """
+    __tablename__ = "admin_audit_logs"
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=_uuid)
+    actor_id: Mapped[str] = mapped_column(String, index=True, nullable=False)
+    action: Mapped[str] = mapped_column(String, nullable=False)
+    target_type: Mapped[str] = mapped_column(String, nullable=False)
+    target_id: Mapped[str] = mapped_column(String, nullable=False)
+    changed_fields: Mapped[List[str]] = mapped_column(JSON, default=list, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_now, index=True)

@@ -1,0 +1,138 @@
+{
+  "test_id": "PR-06",
+  "objective": "Password-hash exposure",
+  "input_scenario": "Inspect profile, admin, login and registration responses",
+  "expected_behavior": "No plaintext password or hash in responses",
+  "actual_behavior": {
+    "statuses": [
+      200,
+      200,
+      200,
+      201
+    ],
+    "returned_keys": [
+      [
+        "id",
+        "name",
+        "email",
+        "plan",
+        "is_admin",
+        "is_active",
+        "created_at"
+      ],
+      [
+        "id",
+        "name",
+        "email",
+        "plan",
+        "is_admin",
+        "is_active",
+        "created_at",
+        "search_count"
+      ],
+      [
+        "access_token",
+        "token_type"
+      ],
+      [
+        "access_token",
+        "token_type"
+      ]
+    ]
+  },
+  "outcome": "PASS",
+  "observations": "Inspected API response bodies exclude plaintext passwords and hashes.",
+  "conclusion": "Inspected API response bodies exclude plaintext passwords and hashes.",
+  "finding_ids": [],
+  "duration_seconds": 0.62,
+  "trace": [
+    {
+      "method": "GET",
+      "path": "/auth/me",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "id": "891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+        "name": "Synthetic a",
+        "email": "audit-a@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": true,
+        "created_at": "2026-10-05T05:56:15.314077"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/admin/users",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": [
+        {
+          "id": "84262b3b-2062-48c4-acf8-eec2884d7b28",
+          "name": "Synthetic admin",
+          "email": "audit-admin@example.com",
+          "plan": "free",
+          "is_admin": true,
+          "is_active": true,
+          "created_at": "2026-10-05T05:56:15.891163",
+          "search_count": 0
+        },
+        {
+          "id": "e9154d9e-c426-4304-af83-00c32e6f12cc",
+          "name": "Synthetic b",
+          "email": "audit-b@example.com",
+          "plan": "free",
+          "is_admin": false,
+          "is_active": true,
+          "created_at": "2026-10-05T05:56:15.603782",
+          "search_count": 1
+        },
+        {
+          "id": "891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+          "name": "Synthetic a",
+          "email": "audit-a@example.com",
+          "plan": "free",
+          "is_admin": false,
+          "is_active": true,
+          "created_at": "2026-10-05T05:56:15.314077",
+          "search_count": 1
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "params": null,
+      "body": {
+        "email": "audit-a@example.com",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 200,
+      "response": {
+        "access_token": "[REDACTED]",
+        "token_type": "bearer"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/register",
+      "params": null,
+      "body": {
+        "name": "Synthetic C",
+        "email": "audit-c@example.com",
+        "password": "[REDACTED]"
+      },
+      "authenticated": false,
+      "status": 201,
+      "response": {
+        "access_token": "[REDACTED]",
+        "token_type": "bearer"
+      }
+    }
+  ]
+}

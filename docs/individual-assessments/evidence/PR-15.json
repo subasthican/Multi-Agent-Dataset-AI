@@ -1,0 +1,68 @@
+{
+  "test_id": "PR-15",
+  "objective": "History deletion",
+  "input_scenario": "Clear A’s history and inspect DB/admin/recommendations",
+  "expected_behavior": "A removed; B preserved",
+  "actual_behavior": {
+    "delete_status": 204,
+    "A_rows_after": 0,
+    "B_rows_before": 1,
+    "B_rows_after": 1,
+    "admin_history": [],
+    "own_profile": {
+      "based_on_domain": null,
+      "based_on_task": null,
+      "search_count": 0,
+      "recommendations": []
+    }
+  },
+  "outcome": "PASS",
+  "observations": "A’s history and profile cleared; B unchanged. This proves application-visible logical deletion, not forensic erasure of disk pages/backups.",
+  "conclusion": "A’s history and profile cleared; B unchanged. This proves application-visible logical deletion, not forensic erasure of disk pages/backups.",
+  "finding_ids": [],
+  "duration_seconds": 0.008,
+  "trace": [
+    {
+      "method": "DELETE",
+      "path": "/recommendations",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 204,
+      "response": ""
+    },
+    {
+      "method": "GET",
+      "path": "/admin/users/891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "id": "891893f3-dcbd-47ce-9a0c-59eb6f07ec27",
+        "name": "Synthetic a",
+        "email": "audit-a@example.com",
+        "plan": "free",
+        "is_admin": false,
+        "is_active": true,
+        "created_at": "2026-10-05T05:56:15.314077",
+        "search_count": 0,
+        "search_history": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/recommendations",
+      "params": null,
+      "body": null,
+      "authenticated": true,
+      "status": 200,
+      "response": {
+        "based_on_domain": null,
+        "based_on_task": null,
+        "search_count": 0,
+        "recommendations": []
+      }
+    }
+  ]
+}

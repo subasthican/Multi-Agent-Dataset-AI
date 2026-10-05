@@ -1,0 +1,22 @@
+{
+  "test_id": "PR-09",
+  "objective": "Account takeover regression",
+  "expected": "Public requester cannot recover another account",
+  "actual": {
+    "public_response": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "attacker_reset": {
+      "status": 400,
+      "body": {
+        "detail": "Invalid or expired reset token"
+      }
+    },
+    "owner_login_status": 200
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

@@ -1,23 +1,134 @@
 {
   "domains": {
-    "healthcare": ["health", "medical", "disease", "patient", "diagnosis", "clinical", "cancer", "diabetes", "hospital", "drug"],
-    "finance": ["finance", "financial", "stock", "trading", "fraud", "bank", "credit", "loan", "investment", "economic"],
-    "education": ["education", "student", "school", "university", "learning", "academic", "course", "exam"],
-    "business": ["business", "sales", "marketing", "customer", "retail", "commerce", "revenue"],
-    "environment": ["environment", "climate", "weather", "pollution", "energy", "sustainability", "carbon"],
-    "automotive": ["car", "cars", "vehicle", "automotive", "automobile", "motorcycle", "truck", "driving"]
+    "healthcare": [
+      "health",
+      "medical",
+      "disease",
+      "patient",
+      "diagnosis",
+      "clinical",
+      "cancer",
+      "diabetes",
+      "hospital",
+      "drug"
+    ],
+    "finance": [
+      "finance",
+      "financial",
+      "stock",
+      "trading",
+      "fraud",
+      "bank",
+      "credit",
+      "loan",
+      "investment",
+      "economic"
+    ],
+    "education": [
+      "education",
+      "student",
+      "school",
+      "university",
+      "learning",
+      "academic",
+      "course",
+      "exam"
+    ],
+    "business": [
+      "business",
+      "sales",
+      "marketing",
+      "customer",
+      "retail",
+      "commerce",
+      "revenue"
+    ],
+    "environment": [
+      "environment",
+      "climate",
+      "weather",
+      "pollution",
+      "energy",
+      "sustainability",
+      "carbon"
+    ],
+    "automotive": [
+      "car",
+      "cars",
+      "vehicle",
+      "automotive",
+      "automobile",
+      "motorcycle",
+      "truck",
+      "driving"
+    ]
   },
   "tasks": {
-    "classification": ["classify", "classification", "predict", "prediction", "detect", "detection", "diagnose"],
-    "regression": ["regression", "forecast", "forecasting", "estimate", "price prediction"],
-    "clustering": ["cluster", "clustering", "segment", "segmentation", "grouping"],
-    "nlp": ["sentiment", "text", "language", "translation", "summarization", "chatbot"],
-    "computer_vision": ["image", "vision", "object detection", "face recognition", "video"]
+    "computer_vision": [
+      "image",
+      "vision",
+      "object detection",
+      "face recognition",
+      "video"
+    ],
+    "nlp": [
+      "sentiment",
+      "text",
+      "language",
+      "translation",
+      "summarization",
+      "chatbot"
+    ],
+    "regression": [
+      "regression",
+      "forecast",
+      "forecasting",
+      "estimate",
+      "price prediction"
+    ],
+    "clustering": [
+      "cluster",
+      "clustering",
+      "segment",
+      "segmentation",
+      "grouping"
+    ],
+    "classification": [
+      "classify",
+      "classification",
+      "predict",
+      "prediction",
+      "detect",
+      "detection",
+      "diagnose"
+    ]
   },
   "data_types": {
-    "tabular": ["dataset", "table", "csv", "structured", "spreadsheet"],
-    "image": ["image", "photo", "picture", "vision"],
-    "text": ["text", "document", "corpus", "review", "article"],
-    "time_series": ["time series", "temporal", "sequential", "trend"]
+    "image": [
+      "image",
+      "photo",
+      "picture",
+      "vision"
+    ],
+    "text": [
+      "text",
+      "document",
+      "corpus",
+      "review",
+      "article"
+    ],
+    "time_series": [
+      "time series",
+      "temporal",
+      "sequential",
+      "trend"
+    ],
+    "tabular": [
+      "dataset",
+      "table",
+      "csv",
+      "structured",
+      "spreadsheet"
+    ]
   }
 }

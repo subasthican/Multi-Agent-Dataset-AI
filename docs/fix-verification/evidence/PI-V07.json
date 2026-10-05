@@ -1,0 +1,12 @@
+{
+  "test_id": "PI-V07",
+  "objective": "Object-valued task",
+  "expected": "Malformed output rejected with safe fallback",
+  "actual": {
+    "source": "rule_based",
+    "parsed_rejected": true,
+    "scope": "Controlled response fixture; no live provider call."
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

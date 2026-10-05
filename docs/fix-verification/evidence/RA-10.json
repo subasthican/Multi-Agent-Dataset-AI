@@ -1,0 +1,26 @@
+{
+  "test_id": "RA-10",
+  "objective": "Unsupported/ambiguous domain abstention",
+  "expected": "No unrelated recommendations",
+  "actual": {
+    "query": "Find data to predict risk",
+    "understanding": {
+      "original_query": "Find data to predict risk",
+      "domain": "general",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "datum",
+        "risk"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [
+        "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+      ]
+    },
+    "count": 0
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

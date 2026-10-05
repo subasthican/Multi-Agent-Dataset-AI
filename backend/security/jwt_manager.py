@@ -1,4 +1,6 @@
 import os
+import hashlib
+import hmac
 import secrets
 from datetime import datetime, timedelta, timezone
 
@@ -14,11 +16,16 @@ DEFAULT_EXPIRY_HOURS = 2
 SECRET_KEY = os.getenv("JWT_SECRET_KEY") or secrets.token_hex(32)
 
 
-def create_access_token(user_id: str, email: str) -> str:
+def password_stamp(hashed_password: str) -> str:
+    return hmac.new(SECRET_KEY.encode(), hashed_password.encode(), hashlib.sha256).hexdigest()
+
+
+def create_access_token(user_id: str, email: str, hashed_password: str) -> str:
     expires_hours = int(os.getenv("JWT_EXPIRY_HOURS", DEFAULT_EXPIRY_HOURS))
     payload = {
         "sub": user_id,
         "email": email,
+        "pwd": password_stamp(hashed_password),
         "exp": datetime.now(timezone.utc) + timedelta(hours=expires_hours),
         "iat": datetime.now(timezone.utc),
     }

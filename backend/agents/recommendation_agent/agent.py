@@ -1,4 +1,5 @@
 from collections import Counter
+from responsible_ai.privacy import redact_sensitive_text
 from typing import Optional, Tuple
 
 from sqlalchemy.orm import Session
@@ -19,7 +20,7 @@ def record_search(db: Session, user: User, understanding: QueryAnalysisResult) -
     anonymous searches are never written anywhere."""
     entry = SearchHistory(
         user_id=user.id,
-        query=understanding.original_query,
+        query=redact_sensitive_text(understanding.original_query),
         domain=understanding.domain,
         task=understanding.task,
         understanding_source=understanding.understanding_source,

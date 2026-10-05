@@ -1,0 +1,90 @@
+{
+  "test_id": "RA-03",
+  "objective": "Education relevance",
+  "input_scenario": "Find datasets for student dropout prediction",
+  "expected_behavior": "Subject-appropriate top match or honest empty result for absent catalog domain",
+  "actual_behavior": {
+    "understanding": {
+      "original_query": "Find datasets for student dropout prediction",
+      "domain": "education",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "student",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based"
+    },
+    "top_result": {
+      "dataset": {
+        "id": "fc2909ee-3532-4694-936a-45c0066b3eca",
+        "name": "Student Performance Dataset",
+        "domain": "education",
+        "task": "classification",
+        "description": "Student demographics and grades used to predict academic performance and dropout risk",
+        "similarity": 0.5156663060188293,
+        "source": "catalog",
+        "url": null
+      },
+      "score": 67.78,
+      "explanation": "Student Performance Dataset is recommended because it matches the education domain and matches the classification task, with a relevance score of 67.78%."
+    },
+    "count": 2
+  },
+  "outcome": "PASS",
+  "observations": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "conclusion": "Top result matches prespecified subject/domain/task criterion in this catalog fixture.",
+  "finding_ids": [],
+  "duration_seconds": 0.014,
+  "trace": [
+    {
+      "query": "Find datasets for student dropout prediction",
+      "understanding": {
+        "original_query": "Find datasets for student dropout prediction",
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "student",
+          "prediction"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based"
+      },
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "fc2909ee-3532-4694-936a-45c0066b3eca",
+            "name": "Student Performance Dataset",
+            "domain": "education",
+            "task": "classification",
+            "description": "Student demographics and grades used to predict academic performance and dropout risk",
+            "similarity": 0.5156663060188293,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 67.78,
+          "explanation": "Student Performance Dataset is recommended because it matches the education domain and matches the classification task, with a relevance score of 67.78%."
+        },
+        {
+          "dataset": {
+            "id": "fd9acd63-d0e9-468a-9524-d489a8749695",
+            "name": "Course Completion Dataset",
+            "domain": "education",
+            "task": "classification",
+            "description": "Online learning platform records for predicting course completion rates",
+            "similarity": 0.5530820488929749,
+            "source": "catalog",
+            "url": null
+          },
+          "score": 67.65,
+          "explanation": "Course Completion Dataset is recommended because it matches the education domain and matches the classification task, with a relevance score of 67.65%."
+        }
+      ],
+      "scope": "Real fallback NLP + real embeddings/FAISS + evaluation; seeded catalog only."
+    }
+  ]
+}

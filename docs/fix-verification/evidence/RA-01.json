@@ -1,0 +1,39 @@
+{
+  "test_id": "RA-01",
+  "objective": "Baseline domain relevance",
+  "expected": "Prespecified subject match or honest empty automotive catalog",
+  "actual": {
+    "query": "Find datasets for diabetes prediction",
+    "understanding": {
+      "original_query": "Find datasets for diabetes prediction",
+      "domain": "healthcare",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "diabetes",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": []
+    },
+    "top": {
+      "dataset": {
+        "id": "c860cc89-e154-41c4-bda4-9af8bffaea2e",
+        "name": "Diabetes Prediction Dataset",
+        "domain": "healthcare",
+        "task": "classification",
+        "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+        "similarity": 0.6347695589065552,
+        "source": "catalog",
+        "data_type": "tabular",
+        "url": null
+      },
+      "score": 73.74,
+      "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 73.74%."
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}

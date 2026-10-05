@@ -30,8 +30,13 @@ def generate_explanation(dataset: DatasetMatch, requirement: QueryAnalysisResult
 
 
 def evaluate_datasets(datasets: List[DatasetMatch], requirement: QueryAnalysisResult) -> List[EvaluatedDataset]:
+    if requirement.warnings:
+        return []
     evaluated = []
     for dataset in datasets:
+        # Unknown modality is not evidence of suitability for non-tabular use.
+        if dataset.data_type != requirement.data_type and (dataset.data_type is not None or requirement.data_type != "tabular"):
+            continue
         score = calculate_score(dataset, requirement)
         evaluated.append(
             EvaluatedDataset(

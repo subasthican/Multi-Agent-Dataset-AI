@@ -1,0 +1,13 @@
+{
+  "outcome": "PASS",
+  "migration_idempotent": true,
+  "modality_column_added": true,
+  "usage_table_added": true,
+  "audit_table_added": true,
+  "preserved_row_counts": {
+    "users": 4,
+    "catalog_datasets": 10,
+    "search_history": 26
+  },
+  "original_database_unchanged": true
+}

@@ -1,0 +1,14 @@
+{
+  "test_id": "EX-01",
+  "objective": "Quota cannot be reset or bypassed",
+  "expected": "Deleting history preserves quota; standalone endpoints share limit",
+  "actual": {
+    "first": 200,
+    "second": 200,
+    "history_deleted": 204,
+    "after_delete": 429,
+    "standalone": 429
+  },
+  "outcome": "PASS",
+  "scope": "Isolated real application routes/components; explicitly stated provider/mail fixtures only."
+}
