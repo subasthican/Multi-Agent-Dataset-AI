@@ -1,0 +1,73 @@
+{
+  "checked_at": "2026-10-05T14:43:57.960407+05:30",
+  "application_cases": {
+    "PASS": 69,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "frontend_lint": "PASS",
+  "frontend_types": "PASS",
+  "frontend_production_build": "PASS",
+  "backend_compilation": "PASS",
+  "dependency_consistency": "PASS",
+  "database": {
+    "status": "PASS",
+    "records_preserved": true,
+    "migration_idempotent": true,
+    "all_history_queries_encrypted": true,
+    "authorized_history_readback": true,
+    "working_database_unchanged": true,
+    "row_counts": {
+      "users": 4,
+      "catalog_datasets": 10,
+      "search_history": 26
+    }
+  },
+  "provider": {
+    "status": "BLOCKED",
+    "error": "403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
+    "checked_at": "2026-10-05T14:39:33.404087+05:30"
+  },
+  "external_sources": {
+    "openml": {
+      "status": "RETURNED_RESULTS",
+      "count": 2,
+      "source_urls": [
+        "https://www.openml.org/d/37",
+        "https://www.openml.org/d/42608"
+      ],
+      "scope": "Real public source request with a synthetic generic keyword. Empty result cannot distinguish outage from no match."
+    },
+    "huggingface": {
+      "status": "RETURNED_RESULTS",
+      "count": 2,
+      "source_urls": [
+        "https://huggingface.co/datasets/Plashkar/diabetes-predict-db",
+        "https://huggingface.co/datasets/imodels/diabetes-readmission"
+      ],
+      "scope": "Real public source request with a synthetic generic keyword. Empty result cannot distinguish outage from no match."
+    },
+    "kaggle": {
+      "status": "NOT_TESTED",
+      "scope": "Authenticated Kaggle operation not included in this check."
+    }
+  },
+  "smtp": "SKIPPED at user request",
+  "full_project_complete": false,
+  "submission_gaps": [
+    "Lecturer-confirmed specialization and student IDs",
+    "Independent student reproduction and personal reflections",
+    "Final group report in institution template not verified",
+    "3\u20135 minute Gen AI group video not found in repository",
+    "Individual/group viva and actual submissions not verified"
+  ],
+  "implementation_limits": [
+    "No browser end-to-end test evidence",
+    "Cross-platform dataset duplicates not reconciled",
+    "Fallback taxonomy and first-matching category coverage limited",
+    "Heuristic ranking lacks independently labelled relevance benchmark",
+    "Fixed 10-entry catalog; no local automotive entries",
+    "Pipeline animation imposes a 10-second minimum and is not real backend progress",
+    "Inter-agent messages are in-process Pydantic objects, not MCP/A2A or separate HTTP transports"
+  ]
+}

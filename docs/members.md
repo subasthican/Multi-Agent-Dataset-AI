@@ -167,22 +167,7 @@ manageable.
 
 ## Member 2 — Security Agent + Responsible AI (`member2-security-agent`)
 
-**Status: auth is implemented and live; Responsible AI + input sanitization
-are still open.** See `backend/security/README.md` for the exact file-by-file
-status and the full `/auth/*` API reference. Summary:
-
-- **Done** — `db.py`/`db_models.py` (SQLite via SQLAlchemy), `jwt_manager.py`
-  (PyJWT), `authentication.py` (bcrypt + `get_current_user` dependency),
-  `password_reset.py`, `schemas.py`, `router.py`. Register/login/profile
-  update/change-password/forgot-password/reset-password all work and are
-  verified end-to-end (see commit history on `member2-security-agent`).
-- **Open** — `input_filter.py` (prompt-injection filtering in front of the
-  NLP agent's LLM calls — nothing sanitizes user queries before they reach
-  Gemini right now), `encryption.py` (not yet needed — nothing sensitive
-  beyond password hashes is stored), `responsible_ai/{fairness,explainability,privacy}.py`
-  (the Evaluation Agent already generates its own explanation strings;
-  these would add a dedicated bias/fairness angle on top).
-- `docs/security.md` for the report is still to be written.
+**Current status:** authentication, input guards, contact minimization, query-text encryption, strict model-output validation, representation/score disclosures, admin audit and password-confirmed deletion are implemented. See [security report](security.md), [69-case verification](fix-verification/README.md), and [full recheck](full-project-recheck.md). Live Gemini is currently blocked by the rejected key. SMTP configuration is deferred at the user's request. The earlier branch/development notes are historical, not evidence of a completed individual submission.
 
 ### Admin panel
 
@@ -212,13 +197,12 @@ python scripts/seed_admin.py
 # Or promote an account you already registered through /register:
 python scripts/promote_admin.py your-email@example.com
 ```
-See `docs/agent-improvements.md` for what's deliberately *not* built yet
-(no audit log of admin actions, no re-auth before deleting a user).
+Admin audit records and password confirmation on user/catalog/plan deletion are implemented; see `/admin/audit`.
 
 **Building this out further?** See [`docs/admin-panel-roadmap.md`](admin-panel-roadmap.md)
 first — catalog management (phase 2), plan management/limit enforcement
 (phase 3), and user detail/search/filter/suspend (phase 4) are done;
-system health/audit logging is phase 5, planned but not built. That file
+audit logging from phase 5 is implemented; system health monitoring remains a separate roadmap item. That file
 has the detailed plan and is written to be picked up in a fresh chat with
 no other context.
 

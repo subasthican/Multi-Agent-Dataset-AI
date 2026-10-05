@@ -1,0 +1,24 @@
+{
+  "openml": {
+    "status": "RETURNED_RESULTS",
+    "count": 2,
+    "source_urls": [
+      "https://www.openml.org/d/37",
+      "https://www.openml.org/d/42608"
+    ],
+    "scope": "Real public source request with a synthetic generic keyword. Empty result cannot distinguish outage from no match."
+  },
+  "huggingface": {
+    "status": "RETURNED_RESULTS",
+    "count": 2,
+    "source_urls": [
+      "https://huggingface.co/datasets/Plashkar/diabetes-predict-db",
+      "https://huggingface.co/datasets/imodels/diabetes-readmission"
+    ],
+    "scope": "Real public source request with a synthetic generic keyword. Empty result cannot distinguish outage from no match."
+  },
+  "kaggle": {
+    "status": "NOT_TESTED",
+    "scope": "Authenticated Kaggle operation not included in this check."
+  }
+}

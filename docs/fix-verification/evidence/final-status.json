@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T13:27:00.892986+05:30",
+  "checked_at": "2026-10-05T21:08:27.655382+05:30",
   "application_cases": {
     "PASS": 69,
     "FAIL": 0,
@@ -12,9 +12,12 @@
   "dependency_consistency": "PASS",
   "original_database_unchanged": true,
   "provider": {
-    "status": "BLOCKED",
-    "error": "403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-    "checked_at": "2026-10-05T12:56:44.994338+05:30"
+    "credential_status": "ACCEPTED",
+    "configured_model": "gemini-3.5-flash",
+    "diagnostic_model": "gemini-3.8-flash",
+    "single_structured_request": "PASS",
+    "batch_live_tests": "BLOCKED by 429 quota / 503 availability",
+    "evidence": "live-integrations/credential-feedback.json"
   },
   "smtp": "SKIPPED at user request",
   "assessment_submission": "INCOMPLETE: deferred personal details/reflections, independent validation and viva",
@@ -42,5 +45,24 @@
     },
     "all_search_text_encrypted": true,
     "authorized_reads_work": true
-  }
+  },
+  "full_recheck": "full-recheck.json",
+  "remaining_implementation_limits": [
+    "No browser end-to-end test evidence",
+    "Cross-platform dataset duplicates not reconciled",
+    "Fallback taxonomy and first-matching category coverage limited",
+    "Heuristic ranking lacks independently labelled relevance benchmark",
+    "Fixed 10-entry catalog; no local automotive entries",
+    "Pipeline animation imposes a 10-second minimum and is not real backend progress",
+    "Inter-agent messages are in-process Pydantic objects, not MCP/A2A or separate HTTP transports"
+  ],
+  "remaining_submission_gaps": [
+    "Lecturer-confirmed specialization and student IDs",
+    "Independent student reproduction and personal reflections",
+    "Final group report in institution template not verified",
+    "3\u20135 minute Gen AI group video not found in repository",
+    "Individual/group viva and actual submissions not verified"
+  ],
+  "kaggle": "PASS: authenticated search returned 3 datasets",
+  "credentials_published": false
 }

@@ -1,0 +1,6 @@
+{
+  "reason": "Repeated 503 high-demand responses after successful diagnostic request; stopped additional provider calls.",
+  "normal_cases_recorded": 3,
+  "recorded_attack_cases": 3,
+  "unrecorded_cases": "Not completed; not counted as successful live attacks."
+}

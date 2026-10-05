@@ -1,5 +1,5 @@
 {
-  "status": "BLOCKED",
-  "error": "403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'Your API key was reported as leaked. Please use another API key.', 'status': 'PERMISSION_DENIED'}}",
-  "checked_at": "2026-10-05T12:56:44.994338+05:30"
+  "status": "AVAILABLE",
+  "response": "OK",
+  "checked_at": "2026-10-05T15:20:07.492267+05:30"
 }

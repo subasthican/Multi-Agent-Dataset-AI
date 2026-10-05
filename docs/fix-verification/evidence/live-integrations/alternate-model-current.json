@@ -1,0 +1,15 @@
+{
+  "model": "gemini-3.8-flash",
+  "status": "PASS",
+  "parsed": {
+    "domain": "healthcare",
+    "task": "classification",
+    "data_type": "tabular",
+    "keywords": [
+      "diabetes",
+      "healthcare",
+      "classification"
+    ]
+  },
+  "scope": "Diagnostic alternate model only; project configuration unchanged."
+}

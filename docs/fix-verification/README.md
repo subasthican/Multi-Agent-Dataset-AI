@@ -1,5 +1,10 @@
 # Application fixes and verification
 
+## Current credential feedback
+
+The latest locally configured Gemini key is accepted. A short request returned `OK`; a diagnostic `gemini-3.8-flash` request returned valid healthcare/classification/tabular JSON. The project's configured model remains `gemini-3.5-flash`; model overrides were test-only. Subsequent batches encountered 429 quota and repeated 503 high-demand responses, so live attack coverage is still incomplete. This is no longer the earlier leaked-key rejection. Authenticated Kaggle search returned three datasets. The application regression suite was rerun and all 69 cases passed. See [credential feedback](evidence/live-integrations/credential-feedback.json). Model calls/fixtures and interrupted runs are explicitly distinguished; no independent student completion is claimed.
+
+
 Implemented at the user's request, following the preserved [baseline assessment](../individual-assessments/README.md). Student information and personal reflections are deferred as requested.
 
 ## Verified results
@@ -36,7 +41,7 @@ This writes only the separate fix-verification evidence. Original assessment log
 
 ## Remaining configuration and limits
 
-- **Gemini key:** the key supplied by the user was configured locally and checked on 5 October 2026. Google returned `403 PERMISSION_DENIED`: the key was reported leaked. See [provider preflight](evidence/provider-preflight.json). Replace it locally; do not publish it. Live jailbreak/model resistance remains unverified. Passing input guards and controlled output tests cannot substitute for that evaluation.
+- **Gemini:** latest key accepted; full live tests now blocked by quota/availability, as detailed above.
 - **Reset emails — deferred at user request:** SMTP configuration is skipped for now. For future use, configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, optional credentials and `FRONTEND_URL` using [environment example](../../backend/.env.example). Actual SMTP delivery was not exercised.
 - **Individual submissions:** student IDs, lecturer-confirmed allocations, each member's own reflection, independent reproduction and viva remain personal/institutional work. Draft notes and viva practice are supplied in the reports.
 - Input guards and language detection are heuristics with finite coverage. Contact redaction targets email/phone patterns, not all personal data. Search text is encrypted at rest; account metadata and domain/task labels are not covered by this field encryption. Source counts and score parity are not population-level fairness certification. Unknown external modality is excluded for non-tabular requests; metadata still needs validation.
@@ -53,3 +58,11 @@ Deleting a user, catalog entry or plan now requires a JSON body `{"password": "c
 A persistent Fernet key is configured locally in the gitignored `.env`. New `search_history.query` values are authenticated ciphertext in SQLite, transparently decrypted for authorized ORM/API reads. Startup encrypts legacy plaintext after contact redaction and validates already-encrypted records; repeated startup does not rewrite unchanged ciphertext. Missing/invalid keys stop startup, and incorrect keys cannot read encrypted history. This protects query text, not the entire database or an authorized application's runtime access.
 
 The [isolated migration evidence](evidence/encryption-migration.json) and [local migration receipt](evidence/local-encryption-migration.json) record preserved row counts. The pre-migration snapshot is itself Fernet-encrypted in the gitignored, restricted `database/private-backups/` directory. Keep a secure backup of `DATA_ENCRYPTION_KEY`; replacing or losing it makes both stored queries and encrypted backups unreadable. Rotation requires explicit decryption/re-encryption using both keys. Restart an already-running backend to load the new code and environment.
+
+## Latest full review
+
+See [full project recheck](../full-project-recheck.md) for fresh results, group/individual brief coverage and remaining implementation/submission gaps beyond this fix suite.
+
+## Credential verification and live tests
+
+After configuring keys locally, run `python docs/fix-verification/run_live_integrations.py`. Credentials are loaded from the gitignored root `.env` and omitted from saved evidence. Normal requests exercise real spaCy and Gemini analysis. Adversarial prompt tests deliberately bypass the input guard to examine the provider prompt/output boundary; actual application guard tests remain in the 69-case suite. New timestamped evidence runs preserve previous outcomes. Kaggle is tested directly to verify the authenticated integration rather than relying on another source's results. Requests are paced to avoid the observed free-tier limit; provider/network/quota failures are recorded as BLOCKED, not resistance. Single samples cannot establish general model safety.

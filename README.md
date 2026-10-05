@@ -68,6 +68,10 @@ the full list of variables — it's just a reference, the actual file is read fr
 project root). Optional — the NLP Agent falls back to rule-based classification without
 it.
 
+`DATA_ENCRYPTION_KEY` is required for stored search-text encryption; retain the persistent key in the repo-root `.env` and back it up securely. See `backend/.env.example`.
+
+Current verification and remaining submission gaps: [full recheck](docs/full-project-recheck.md).
+
 API docs: `http://localhost:8000/docs`
 
 Try the full pipeline:

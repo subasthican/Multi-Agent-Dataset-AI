@@ -22,7 +22,7 @@
     },
     "top": {
       "dataset": {
-        "id": "1bad075d-68a5-4958-8b20-97f862fe53c3",
+        "id": "eb927455-b67c-4832-a62b-5164e816f119",
         "name": "Credit Card Fraud Dataset",
         "domain": "finance",
         "task": "classification",

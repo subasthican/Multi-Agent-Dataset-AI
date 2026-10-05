@@ -1,0 +1,5 @@
+{
+  "reason": "Repeated 503 high-demand responses from configured model. Stopped this run to test the provider-recommended working alternate model without changing .env.",
+  "recorded_attack_cases": 6,
+  "remaining_cases": "Not completed in this run; separate model override run follows."
+}

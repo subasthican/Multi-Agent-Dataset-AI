@@ -40,7 +40,7 @@ for prefix,filename,name,special,scope in roles:
 
 ## Current Fix Status
 
-The findings below preserve the original baseline. Application fixes and subsequent retesting are documented separately in [fix verification](../fix-verification/README.md). All 69 fixed-application checks passed; these include application input guards and controlled model outputs, not live Gemini jailbreak verification. Student details and personal reflections are deferred by the user.
+The findings below preserve the original baseline. Application fixes and subsequent retesting are documented separately in [fix verification](../fix-verification/README.md). All 69 fixed-application checks passed; these include application input guards and controlled model outputs, not live Gemini jailbreak verification. Latest credential checks confirmed Gemini key acceptance and three authenticated Kaggle results; larger Gemini batches remain blocked by quota/high-demand errors. See [credential feedback](../fix-verification/evidence/live-integrations/credential-feedback.json). Student details and personal reflections are deferred by the user.
 
 ## Executive Summary
 
@@ -48,7 +48,7 @@ DATA NEBULA AI was assessed at commit `{manifest['tested_commit']}` on {manifest
 
 '''
  if present:text+='Major findings: '+ '; '.join(findings[f][0] for f in present)+'.\n\n'
- if counts['BLOCKED']: text+='**Coverage limitation:** the 15 live prompt cases were rejected by the provider because the configured key was reported leaked. Controlled response tests assess only application output handling. Blocked cases do not satisfy evidence of completed model/security evaluation. Resolve their recorded environment/provider failure and rerun before claiming the 15-test requirement is fulfilled.\n\n'
+ if counts['BLOCKED']: text+='**Baseline coverage limitation:** the 15 live prompt cases were rejected by the provider because the configured key was reported leaked. Controlled response tests assess only application output handling. Blocked cases do not satisfy evidence of completed model/security evaluation. Resolve their recorded environment/provider failure and rerun before claiming the 15-test requirement is fulfilled.\n\n'
  text+=f'''## Scope of Testing
 
 {scope}

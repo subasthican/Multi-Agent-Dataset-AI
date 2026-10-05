@@ -10,31 +10,31 @@
     "delete": 204,
     "audit_events": [
       {
-        "id": "fac3be27-2acc-4a91-b815-8455e56cadd5",
-        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "id": "a0ea891f-291a-49a1-8a22-b71afbfefbc0",
+        "actor_id": "25af6d59-1239-4551-b53e-656973d00111",
         "action": "delete",
         "target_type": "catalog",
-        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "target_id": "14295403-65a7-44df-8676-7ee833caac9e",
         "changed_fields": [],
-        "created_at": "2026-10-05T07:55:09.954791Z"
+        "created_at": "2026-10-05T15:31:51.159032Z"
       },
       {
-        "id": "7290a9cd-5c2e-42ab-afc6-21adfdd38326",
-        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "id": "336c0c20-2382-4209-ac98-3d96aeda5376",
+        "actor_id": "25af6d59-1239-4551-b53e-656973d00111",
         "action": "update",
         "target_type": "catalog",
-        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "target_id": "14295403-65a7-44df-8676-7ee833caac9e",
         "changed_fields": [
           "description"
         ],
-        "created_at": "2026-10-05T07:55:09.668688Z"
+        "created_at": "2026-10-05T15:31:50.873941Z"
       },
       {
-        "id": "cf64c4d9-c78c-4a26-bfa5-5132c7958e33",
-        "actor_id": "fd86556a-c2e4-42a9-8b53-7964219ef3b9",
+        "id": "396ec474-9073-49c2-872c-9115c8a6a6df",
+        "actor_id": "25af6d59-1239-4551-b53e-656973d00111",
         "action": "create",
         "target_type": "catalog",
-        "target_id": "ee2e1917-ee64-40e0-9916-7f05cd870237",
+        "target_id": "14295403-65a7-44df-8676-7ee833caac9e",
         "changed_fields": [
           "data_type",
           "description",
@@ -43,7 +43,7 @@
           "task",
           "url"
         ],
-        "created_at": "2026-10-05T07:55:09.370841Z"
+        "created_at": "2026-10-05T15:31:50.579593Z"
       }
     ],
     "non_admin": 403,
