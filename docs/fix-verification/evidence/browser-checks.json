@@ -1,0 +1,78 @@
+{
+  "checked_at": "2026-10-05T21:48:10.639879+05:30",
+  "method": "Manual computer-use verification in native Chrome through accessibility state and screenshot; not a Playwright automated suite. Observations transcribed from returned UI state.",
+  "frontend": "http://localhost:3015",
+  "backend": "http://127.0.0.1:8015",
+  "database": "Temporary synthetic SQLite; working database unused.",
+  "cases": [
+    {
+      "test_id": "UI-01",
+      "outcome": "PASS",
+      "observation": "Homepage loaded with search box, examples and 10/10 anonymous usage badge."
+    },
+    {
+      "test_id": "UI-02",
+      "outcome": "PASS",
+      "observation": "Synthetic admin login redirected to profile; expected email, name, admin link, password form and history controls displayed. Browser password-save prompt declined."
+    },
+    {
+      "test_id": "UI-03",
+      "outcome": "PASS",
+      "observation": "Admin page displayed user counts, catalog size, admin navigation and disabled self-revoke/suspend/delete controls."
+    },
+    {
+      "test_id": "UI-04",
+      "outcome": "PASS",
+      "observation": "Catalog rendered 11 synthetic/seed records; edit form exposed verified modality and URL fields; description change saved and appeared in the list."
+    },
+    {
+      "test_id": "UI-05",
+      "outcome": "PASS",
+      "observation": "Audit viewer displayed the catalog update with actor/target IDs, local timestamp and changed field names; description values and passwords were absent."
+    },
+    {
+      "test_id": "UI-06",
+      "outcome": "PASS",
+      "observation": "Plans page rendered Free 10/day, Pro unlimited and Enterprise unlimited with management controls."
+    },
+    {
+      "test_id": "UI-07",
+      "outcome": "PASS",
+      "observation": "Pricing rendered the same three plans and explicitly disclosed that billing is not wired."
+    },
+    {
+      "test_id": "UI-08",
+      "outcome": "PASS",
+      "observation": "Keyboard-submitted browser search completed with labelled rule-based fallback, domain/task/modality, heuristic score/privacy disclosures, catalog results and live Kaggle cards with source links. This validates fallback plus live retrieval, not Gemini availability."
+    },
+    {
+      "test_id": "UI-09",
+      "outcome": "PASS",
+      "observation": "Pointer click on Explore completed a second search and rendered catalog plus Kaggle cards."
+    },
+    {
+      "test_id": "UI-10",
+      "outcome": "PASS",
+      "observation": "Sign-out returned to login and removed the admin navigation."
+    },
+    {
+      "test_id": "UI-11",
+      "outcome": "PASS",
+      "observation": "Ordinary user login had no Admin link; direct /admin navigation redirected to homepage with 10/10 free quota."
+    },
+    {
+      "test_id": "UI-12",
+      "outcome": "PASS",
+      "observation": "Ordinary user /admin/audit displayed Admin access required without audit records."
+    }
+  ],
+  "counts": {
+    "PASS": 12,
+    "FAIL": 0
+  },
+  "limits": "Password changes, reset delivery, delete confirmation/submission, mobile devices and cross-browser behavior were not exercised in UI; application route tests cover applicable security flows. Search used real providers with declared fallback, not a successful live Gemini understanding.",
+  "cleanup": "Both synthetic sessions signed out; test tab closed and original browser tab restored; test servers stopped. No browser passwords saved.",
+  "warnings": [
+    "Non-blocking THREE.Clock deprecation warning emitted by the 3D stack in dev logs."
+  ]
+}

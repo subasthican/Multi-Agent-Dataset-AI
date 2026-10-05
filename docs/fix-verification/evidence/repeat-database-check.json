@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "migration_idempotent": true,
+  "all_history_queries_encrypted": true,
+  "authorized_history_readback": true,
+  "working_database_unchanged": true,
+  "row_counts": {
+    "users": 4,
+    "catalog_datasets": 10,
+    "search_history": 26
+  }
+}

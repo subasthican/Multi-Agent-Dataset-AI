@@ -1,0 +1,79 @@
+{
+  "checked_at": "2026-10-05T22:04:39.589782+05:30",
+  "counts": {
+    "PASS": 12,
+    "FAIL": 0
+  },
+  "method": "Manual native Chrome interactions with accessibility-state verification and screenshot inspection; not an automated cross-browser suite.",
+  "isolation": "Temporary SQLite database with synthetic accounts/catalog fixture; working database untouched.",
+  "checks": [
+    {
+      "id": "UI-01",
+      "outcome": "PASS",
+      "observation": "Fresh anonymous homepage and 10/10 quota rendered."
+    },
+    {
+      "id": "UI-02",
+      "outcome": "PASS",
+      "observation": "Fresh admin login showed expected profile; password-save declined."
+    },
+    {
+      "id": "UI-03",
+      "outcome": "PASS",
+      "observation": "Admin table/counts and self-protection controls rendered correctly."
+    },
+    {
+      "id": "UI-04",
+      "outcome": "PASS",
+      "observation": "Catalog edit/save displayed the updated synthetic description."
+    },
+    {
+      "id": "UI-05",
+      "outcome": "PASS",
+      "observation": "Fresh catalog update appeared in audit with actor/target/time and field names, excluding values."
+    },
+    {
+      "id": "UI-06",
+      "outcome": "PASS",
+      "observation": "Plan management showed correct free limit and unlimited tiers."
+    },
+    {
+      "id": "UI-07",
+      "outcome": "PASS",
+      "observation": "Pricing matched plan rows and disclosed missing billing."
+    },
+    {
+      "id": "UI-08",
+      "outcome": "PASS",
+      "observation": "Keyboard search returned explanations, declared fallback and catalog plus live Kaggle cards."
+    },
+    {
+      "id": "UI-09",
+      "outcome": "PASS",
+      "observation": "Pointer-submitted search completed with catalog and Kaggle results."
+    },
+    {
+      "id": "UI-10",
+      "outcome": "PASS",
+      "observation": "Sign-out returned to login and removed admin links."
+    },
+    {
+      "id": "UI-11",
+      "outcome": "PASS",
+      "observation": "Ordinary user sign-in succeeded; direct /admin access redirected home with no admin navigation."
+    },
+    {
+      "id": "UI-12",
+      "outcome": "PASS",
+      "observation": "Ordinary user direct /admin/audit access showed Admin access required and no audit records."
+    }
+  ],
+  "cleanup": {
+    "users_signed_out": true,
+    "password_saving_declined": true,
+    "test_tab_closed": true,
+    "original_tab_restored": true,
+    "temporary_servers_stopped": true
+  },
+  "limits": "Password-change/reset-delivery/deletion UI submissions and full mobile/cross-browser coverage were not exercised. API security behavior is tested separately."
+}

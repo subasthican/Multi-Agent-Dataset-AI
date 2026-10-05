@@ -1093,7 +1093,7 @@
     "expected": "Explicit unsupported-language warning and no recommendations",
     "actual": {
       "understanding": {
-        "original_query": "Encuentra conjuntos de datos médicos para clasificar la diabetes",
+        "original_query": "Encuentra conjuntos de datos m\u00e9dicos para clasificar la diabetes",
         "domain": "general",
         "task": "machine_learning",
         "data_type": "tabular",

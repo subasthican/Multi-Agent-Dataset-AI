@@ -49,6 +49,5 @@
     "scope": "Authenticated direct Kaggle component; empty does not prove authentication failure."
   },
   "model": "gemini-3.5-flash",
-  "scope": "Live remote model tests sequentially paced at least 17 seconds between starts, using the application SDK client; provider failures stay blocked. Original baseline evidence preserved. Single observations do not estimate general attack success rates; no independent student authorship claim.",
-  "evidence_run": "docs/fix-verification/evidence/live-integrations/run-20261005-213834"
+  "scope": "Live remote model tests sequentially paced at least 17 seconds between starts, using the application SDK client; provider failures stay blocked. Original baseline evidence preserved. Single observations do not estimate general attack success rates; no independent student authorship claim."
 }

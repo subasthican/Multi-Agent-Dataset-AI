@@ -1,5 +1,7 @@
 # Full project recheck — 5 October 2026
 
+**Latest update:** see [complete test attempt](fix-verification/latest-full-test.md). Twelve native Chrome flows passed; four ranking smoke checks passed; cross-source duplicate identity failed. Live Gemini cases hit the configured model's daily quota of 20. A further repeated run passed the same 69 application cases, 12 manual browser flows and 4 ranking smoke checks; Kaggle returned 3 datasets and OpenML/Hugging Face 2 each. [Fresh repeated evidence](fix-verification/evidence/repeat-full-test.json). Earlier observations below are retained as historical scope.
+
 **The implemented fixes pass their checks, but the whole project and submissions are not 100% complete.** This review checked current application code, both full assignment briefs, individual evidence/reports, the original DOCX planning material and repository deliverables. Recorded outcomes are in [full-recheck.json](fix-verification/evidence/full-recheck.json).
 
 ## Fresh verification
@@ -16,7 +18,7 @@
 | Kaggle | PASS in subsequent credential check | Authenticated direct search returned three datasets; see latest credential feedback |
 | SMTP | SKIPPED | User explicitly deferred configuration; recovery mail remains mocked in tests |
 
-All 69 passes apply to their finite criteria. Input-guard passes and controlled malformed-output passes do not establish live model jailbreak resistance. No browser end-to-end, deployed network/TLS or population-level fairness certification is claimed.
+All 69 passes apply to their finite criteria. Input-guard passes and controlled malformed-output passes do not establish live model jailbreak resistance. Twelve selected browser flows now pass manually; full cross-browser/mobile coverage, deployed network/TLS and population-level fairness certification remain unverified.
 
 ## Assignment coverage
 
@@ -24,7 +26,7 @@ All 69 passes apply to their finite criteria. Input-guard passes and controlled 
 |---|---|
 | Group of 3–4 | Three member documents exist; IDs/registration/lecturer details not verified |
 | At least two interacting intelligent agents | NLP, discovery and evaluation modules wired through the FastAPI coordinator, plus collection and personalized recommendation modules |
-| LLM / NLP / IR | Gemini integration present but current live credential blocked; spaCy and real MiniLM/FAISS execute successfully |
+| LLM / NLP / IR | Gemini integration present and credential accepted, but current live evaluation is daily-quota blocked; spaCy and real MiniLM/FAISS execute successfully |
 | Security | Authentication, strict model schema, heuristic guards, contact minimization, password recovery/session invalidation, quotas, admin audit/confirmation and stored query-text encryption implemented and tested |
 | Agent communication protocol | Frontend-to-gateway HTTP/JSON; internal agent messages are direct Python/Pydantic objects. No MCP/A2A or separate-process agent HTTP transport. Clearly disclose and confirm the lecturer accepts this communication design |
 | Responsible AI | Warnings/abstention, modality filtering, score transparency, misuse guards and limited representation diagnostics implemented; not proof of comprehensive fairness/compliance |
@@ -44,11 +46,11 @@ These are distinct from the implemented security fixes and may need work or expl
 3. Ranking weights and the relevance threshold are heuristic. No independently labelled benchmark measures broad retrieval quality or calibration. Source-parity cases do not prove fairness across users/populations.
 4. The seed catalog remains 10 entries without automotive coverage; unsupported modalities/domains may abstain or rely on external metadata. OpenML searches the first keyword's technical name; unknown external modality remains a limitation.
 5. Frontend stage animation imposes an artificial 10-second minimum. It represents a simulated walkthrough, not actual per-agent progress.
-6. Browser end-to-end, authenticated Kaggle, SMTP and deployed infrastructure have not been fully tested. Optional roadmap items such as system-health monitoring and payment integration are not completed by these checks.
+6. Twelve manual Chrome flows and authenticated Kaggle smoke tests pass; full cross-browser/mobile coverage and deployed infrastructure remain unverified. SMTP is explicitly excluded. Optional roadmap items such as system-health monitoring and payment integration are not completed by these checks.
 7. Encryption protects stored search text; email/name, domain/task and other metadata are outside this field scope. SQLite owners can alter audit records. Backup/key handling and production retention/access policy need deployment decisions.
 
 ## Documentation corrections
 
 Older `members.md` and `agent-improvements.md` still described guards, encryption, JWT revocation, audit and tests as missing. Current status has been corrected while historical baseline evidence is preserved. Older mid-evaluation notes describe earlier development and must not be presented as current implementation status. The root setup guide now identifies the required persistent encryption key.
 
-SMTP remains deferred as requested. Personal work, lecturer decisions, submissions and an accepted Gemini credential cannot be marked complete by editing code or checking boxes.
+SMTP and submissions remain deferred as requested. Gemini credentials are accepted, but live model evaluation requires available provider quota. Personal work and lecturer decisions cannot be completed by editing code or checking boxes.

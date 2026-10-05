@@ -1,5 +1,7 @@
 # Application fixes and verification
 
+**Latest full attempt and fresh repeat:** [69 regression passes, 12 browser passes, 4 ranking smoke passes, one duplicate-identity failure and daily-quota-blocked Gemini evaluation](latest-full-test.md). These supplemental outcomes are separate from the original fix suite.
+
 ## Current credential feedback
 
 The latest locally configured Gemini key is accepted. A short request returned `OK`; a diagnostic `gemini-3.8-flash` request returned valid healthcare/classification/tabular JSON. The project's configured model remains `gemini-3.5-flash`; model overrides were test-only. Subsequent batches encountered 429 quota and repeated 503 high-demand responses, so live attack coverage is still incomplete. This is no longer the earlier leaked-key rejection. Authenticated Kaggle search returned three datasets. The application regression suite was rerun and all 69 cases passed. See [credential feedback](evidence/live-integrations/credential-feedback.json). Model calls/fixtures and interrupted runs are explicitly distinguished; no independent student completion is claimed.
@@ -51,7 +53,7 @@ This writes only the separate fix-verification evidence. Original assessment log
 
 Successful user updates/deletes and catalog/plan create/update/delete actions store actor ID, action, target ID/type, timestamp and changed field names. Failed password confirmation stores a minimal failure event. Values, passwords, email addresses and search text are excluded. The application exposes no audit edit/delete endpoint; records survive account deletion. Database owners can still alter SQLite records, so this is not a tamper-proof external audit service. The viewer lists the latest 100 records (API limit at most 200); archival and retention policy remain deployment decisions.
 
-Deleting a user, catalog entry or plan now requires a JSON body `{"password": "current admin password"}` in addition to the bearer token. Missing passwords return 422, incorrect passwords 403 and excessive failures 429. The frontend uses a masked password dialog and clears the entered value on close. UI behavior was checked by lint/type/build validation; no browser end-to-end run is claimed.
+Deleting a user, catalog entry or plan now requires a JSON body `{"password": "current admin password"}` in addition to the bearer token. Missing passwords return 422, incorrect passwords 403 and excessive failures 429. The frontend uses a masked password dialog and clears the entered value on close. Selected browser flows have now been manually verified in native Chrome; see the latest full attempt for scope and limitations.
 
 ## Search-history encryption
 
@@ -65,4 +67,4 @@ See [full project recheck](../full-project-recheck.md) for fresh results, group/
 
 ## Credential verification and live tests
 
-After configuring keys locally, run `python docs/fix-verification/run_live_integrations.py`. Credentials are loaded from the gitignored root `.env` and omitted from saved evidence. Normal requests exercise real spaCy and Gemini analysis. Adversarial prompt tests deliberately bypass the input guard to examine the provider prompt/output boundary; actual application guard tests remain in the 69-case suite. New timestamped evidence runs preserve previous outcomes. Kaggle is tested directly to verify the authenticated integration rather than relying on another source's results. Requests are paced to avoid the observed free-tier limit; provider/network/quota failures are recorded as BLOCKED, not resistance. Single samples cannot establish general model safety.
+After configuring keys locally, run `python docs/fix-verification/run_live_integrations.py`. Credentials are loaded from the gitignored root `.env` and omitted from saved evidence. Normal requests exercise real spaCy and Gemini analysis. Adversarial prompt tests deliberately bypass the input guard to examine the provider prompt/output boundary; actual application guard tests remain in the 69-case suite. New timestamped evidence runs preserve previous outcomes. Kaggle is tested directly to verify the authenticated integration rather than relying on another source's results. Requests are paced to reduce short-window throttling; pacing cannot restore an exhausted daily allowance. Provider/network/quota failures are recorded as BLOCKED, not resistance. Single samples cannot establish general model safety.

@@ -1,0 +1,117 @@
+{
+  "checked_at": "2026-10-05T22:04:39.589782+05:30",
+  "scope": "Fresh repeated application, frontend, database, live source smoke and manual browser checks. SMTP and submissions excluded at user request.",
+  "application_cases": {
+    "PASS": 69,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "application_evidence": "repeat-application-results.json",
+  "application_manifest": "manifest.json",
+  "frontend": {
+    "lint": "PASS",
+    "typescript": "PASS",
+    "production_build": "PASS",
+    "generated_routes": 14
+  },
+  "backend": {
+    "compilation": "PASS",
+    "dependency_consistency": "PASS"
+  },
+  "database": {
+    "status": "PASS",
+    "migration_idempotent": true,
+    "all_history_queries_encrypted": true,
+    "authorized_history_readback": true,
+    "working_database_unchanged": true,
+    "row_counts": {
+      "users": 4,
+      "catalog_datasets": 10,
+      "search_history": 26
+    }
+  },
+  "browser_checks": {
+    "PASS": 12,
+    "FAIL": 0,
+    "evidence": "repeat-browser-checks.json"
+  },
+  "gemini": {
+    "model": "gemini-3.5-flash",
+    "status": "BLOCKED",
+    "executed_preflight_requests": 1,
+    "daily_quota_limit": 20,
+    "quota_id": "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
+    "retry_delay_seconds_at_observation": 27375,
+    "evidence": "repeat-provider-check.json",
+    "live_attack_suite": "NOT_RERUN: daily quota preflight failed; no new live attack passes claimed.",
+    "previous_live_attempt": "latest-full-test.json"
+  },
+  "kaggle": {
+    "checked_at": "2026-10-05T21:54:11.961153+05:30",
+    "query": "diabetes",
+    "status": "PASS",
+    "count": 3,
+    "dataset_ids": [
+      "imtkaggleteam/diabetes",
+      "iammustafatz/diabetes-prediction-dataset",
+      "ehababoelnaga/diabetes-dataset"
+    ]
+  },
+  "other_live_sources": {
+    "openml": {
+      "status": "RETURNED_RESULTS",
+      "count": 2,
+      "urls": [
+        "https://www.openml.org/d/37",
+        "https://www.openml.org/d/42608"
+      ]
+    },
+    "huggingface": {
+      "status": "RETURNED_RESULTS",
+      "count": 2,
+      "urls": [
+        "https://huggingface.co/datasets/Plashkar/diabetes-predict-db",
+        "https://huggingface.co/datasets/imodels/diabetes-readmission"
+      ]
+    }
+  },
+  "supplemental_validation": {
+    "deduplication": {
+      "check": "Cross-source same URL dataset identity",
+      "outcome": "FAIL",
+      "expected_cards": 1,
+      "actual_cards": 2,
+      "same_canonical_url": true,
+      "scope": "Controlled retrieval results; real coordinator/evaluation. No live source or student-independent evidence claim."
+    },
+    "ranking_smoke_cases": [
+      {
+        "query": "Find healthcare datasets for diabetes classification",
+        "expected_top": "Diabetes Prediction Dataset",
+        "actual_top": "Diabetes Prediction Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find datasets for student dropout prediction",
+        "expected_top": "Student Performance Dataset",
+        "actual_top": "Student Performance Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find financial datasets for forecasting stock prices",
+        "expected_top": "Stock Price History Dataset",
+        "actual_top": "Stock Price History Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find datasets for solar energy forecasting",
+        "expected_top": "Solar Energy Forecast Dataset",
+        "actual_top": "Solar Energy Forecast Dataset",
+        "outcome": "PASS"
+      }
+    ],
+    "ranking_scope": "Four project-author-labelled seed examples; not an independent benchmark, broad accuracy measure or calibrated ranking score."
+  },
+  "all_checks_complete_and_passing": false,
+  "remaining": "Cross-source duplicate case failed; Gemini live evaluation blocked; ranking is only four seed smoke cases, and browser coverage is limited."
+}

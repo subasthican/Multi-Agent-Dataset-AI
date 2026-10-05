@@ -1,0 +1,18 @@
+{
+  "openml": {
+    "status": "RETURNED_RESULTS",
+    "count": 2,
+    "urls": [
+      "https://www.openml.org/d/37",
+      "https://www.openml.org/d/42608"
+    ]
+  },
+  "huggingface": {
+    "status": "RETURNED_RESULTS",
+    "count": 2,
+    "urls": [
+      "https://huggingface.co/datasets/Plashkar/diabetes-predict-db",
+      "https://huggingface.co/datasets/imodels/diabetes-readmission"
+    ]
+  }
+}

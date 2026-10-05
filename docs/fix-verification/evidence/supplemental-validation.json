@@ -1,0 +1,37 @@
+{
+  "deduplication": {
+    "check": "Cross-source same URL dataset identity",
+    "outcome": "FAIL",
+    "expected_cards": 1,
+    "actual_cards": 2,
+    "same_canonical_url": true,
+    "scope": "Controlled retrieval results; real coordinator/evaluation. No live source or student-independent evidence claim."
+  },
+  "ranking_smoke_cases": [
+    {
+      "query": "Find healthcare datasets for diabetes classification",
+      "expected_top": "Diabetes Prediction Dataset",
+      "actual_top": "Diabetes Prediction Dataset",
+      "outcome": "PASS"
+    },
+    {
+      "query": "Find datasets for student dropout prediction",
+      "expected_top": "Student Performance Dataset",
+      "actual_top": "Student Performance Dataset",
+      "outcome": "PASS"
+    },
+    {
+      "query": "Find financial datasets for forecasting stock prices",
+      "expected_top": "Stock Price History Dataset",
+      "actual_top": "Stock Price History Dataset",
+      "outcome": "PASS"
+    },
+    {
+      "query": "Find datasets for solar energy forecasting",
+      "expected_top": "Solar Energy Forecast Dataset",
+      "actual_top": "Solar Energy Forecast Dataset",
+      "outcome": "PASS"
+    }
+  ],
+  "ranking_scope": "Four project-author-labelled seed examples; not an independent benchmark, broad accuracy measure or calibrated ranking score."
+}

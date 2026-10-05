@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T21:08:27.655382+05:30",
+  "checked_at": "2026-10-05T22:04:39.589782+05:30",
   "application_cases": {
     "PASS": 69,
     "FAIL": 0,
@@ -12,17 +12,22 @@
   "dependency_consistency": "PASS",
   "original_database_unchanged": true,
   "provider": {
-    "credential_status": "ACCEPTED",
-    "configured_model": "gemini-3.5-flash",
-    "diagnostic_model": "gemini-3.8-flash",
-    "single_structured_request": "PASS",
-    "batch_live_tests": "BLOCKED by 429 quota / 503 availability",
-    "evidence": "live-integrations/credential-feedback.json"
+    "model": "gemini-3.5-flash",
+    "normal_query_counts": {
+      "PASS": 1,
+      "FAIL": 0,
+      "BLOCKED": 2
+    },
+    "live_attack_counts": {
+      "PASS": 0,
+      "FAIL": 0,
+      "BLOCKED": 15
+    },
+    "scope": "Historical completed live attempt retained: 1 normal PASS, 2 normal BLOCKED and 15 attack BLOCKED. Fresh repeat executed one preflight, daily-quota BLOCKED; attack batch not rerun. See repeat-full-test.json."
   },
   "smtp": "SKIPPED at user request",
   "assessment_submission": "INCOMPLETE: deferred personal details/reflections, independent validation and viva",
   "whole_project_100_percent_complete": false,
-  "other_unimplemented_items": [],
   "admin_auditing": "PASS",
   "destructive_admin_password_confirmation": "PASS",
   "admin_password_throttling": "PASS",
@@ -48,13 +53,13 @@
   },
   "full_recheck": "full-recheck.json",
   "remaining_implementation_limits": [
-    "No browser end-to-end test evidence",
     "Cross-platform dataset duplicates not reconciled",
     "Fallback taxonomy and first-matching category coverage limited",
     "Heuristic ranking lacks independently labelled relevance benchmark",
     "Fixed 10-entry catalog; no local automotive entries",
     "Pipeline animation imposes a 10-second minimum and is not real backend progress",
-    "Inter-agent messages are in-process Pydantic objects, not MCP/A2A or separate HTTP transports"
+    "Inter-agent messages are in-process Pydantic objects, not MCP/A2A or separate HTTP transports",
+    "Browser flows manually verified; full automated cross-browser/mobile coverage and selected destructive/password UI flows remain unverified."
   ],
   "remaining_submission_gaps": [
     "Lecturer-confirmed specialization and student IDs",
@@ -64,5 +69,61 @@
     "Individual/group viva and actual submissions not verified"
   ],
   "kaggle": "PASS: authenticated search returned 3 datasets",
-  "credentials_published": false
+  "credentials_published": false,
+  "browser_checks": {
+    "PASS": 12,
+    "FAIL": 0
+  },
+  "latest_full_test": "latest-full-test.json",
+  "supplemental_validation": {
+    "deduplication": {
+      "check": "Cross-source same URL dataset identity",
+      "outcome": "FAIL",
+      "expected_cards": 1,
+      "actual_cards": 2,
+      "same_canonical_url": true,
+      "scope": "Controlled retrieval results; real coordinator/evaluation. No live source or student-independent evidence claim."
+    },
+    "ranking_smoke_cases": [
+      {
+        "query": "Find healthcare datasets for diabetes classification",
+        "expected_top": "Diabetes Prediction Dataset",
+        "actual_top": "Diabetes Prediction Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find datasets for student dropout prediction",
+        "expected_top": "Student Performance Dataset",
+        "actual_top": "Student Performance Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find financial datasets for forecasting stock prices",
+        "expected_top": "Stock Price History Dataset",
+        "actual_top": "Stock Price History Dataset",
+        "outcome": "PASS"
+      },
+      {
+        "query": "Find datasets for solar energy forecasting",
+        "expected_top": "Solar Energy Forecast Dataset",
+        "actual_top": "Solar Energy Forecast Dataset",
+        "outcome": "PASS"
+      }
+    ],
+    "ranking_scope": "Four project-author-labelled seed examples; not an independent benchmark, broad accuracy measure or calibrated ranking score."
+  },
+  "gemini_blocker": {
+    "status": "DAILY_QUOTA_EXHAUSTED",
+    "model": "gemini-3.5-flash",
+    "daily_free_tier_limit": 20,
+    "provider_retry_delay_seconds_at_observation": 27375,
+    "action": "Wait for provider quota reset, or use an account/model with available quota. Pacing alone does not restore daily allowance.",
+    "observed_at": "2026-10-05T21:53:43.386170+05:30"
+  },
+  "latest_repeat_full_test": "repeat-full-test.json",
+  "latest_repeat_browser_checks": "repeat-browser-checks.json",
+  "latest_repeat_gemini": "repeat-provider-check.json",
+  "latest_repeat_kaggle": "repeat-kaggle-check.json",
+  "latest_repeat_external_sources": "repeat-external-check.json",
+  "latest_repeat_database": "repeat-database-check.json"
 }

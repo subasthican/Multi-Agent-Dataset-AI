@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-05T21:54:11.961153+05:30",
+  "query": "diabetes",
+  "status": "PASS",
+  "count": 3,
+  "dataset_ids": [
+    "imtkaggleteam/diabetes",
+    "iammustafatz/diabetes-prediction-dataset",
+    "ehababoelnaga/diabetes-dataset"
+  ]
+}
