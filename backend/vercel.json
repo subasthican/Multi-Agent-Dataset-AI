@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "python scripts/build_models.py",
+  "functions": {
+    "main.py": {
+      "maxDuration": 120,
+      "includeFiles": "model_assets/**",
+      "excludeFiles": "{tests/**,.env,.env.*,__pycache__/**,**/*.pyc}"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-from .db import SessionLocal
+from .db import SessionLocal, lock_seed
 from .db_models import Plan
 
 # Mirrors the tiers that used to be hardcoded in
@@ -63,6 +63,7 @@ def seed_plans_if_empty() -> None:
     deleted a seed plan on purpose)."""
     db = SessionLocal()
     try:
+        lock_seed(db, 682409111)
         if db.query(Plan).first() is not None:
             return
 

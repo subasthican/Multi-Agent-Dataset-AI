@@ -26,6 +26,7 @@ from security.router import router as auth_router
 from security.schemas import PlanResponse, UsageResponse
 from security.usage_limits import enforce_search_limit, get_usage, record_anonymous_search
 from security.input_filter import sanitize_input
+from security.client_ip import client_ip
 from agents.nlp_agent.models import QueryInput
 from responsible_ai.privacy import redact_sensitive_text
 from responsible_ai.fairness import representation_summary
@@ -49,13 +50,15 @@ app.include_router(admin_router)
 
 @app.on_event("startup")
 def on_startup():
+    if os.getenv("VERCEL") == "1" and not os.getenv("JWT_SECRET_KEY"):
+        raise RuntimeError("Set a persistent JWT_SECRET_KEY for the backend Vercel project.")
     init_db()
     seed_catalog_if_empty()
     seed_plans_if_empty()
 
 
 def _client_ip(request: Request) -> str:
-    return request.client.host if request.client else "unknown"
+    return client_ip(request)
 
 def reserve_ai_request(request: Request, current_user: User | None = Depends(get_current_user_optional), db: Session = Depends(get_db)):
     enforce_search_limit(db, current_user, _client_ip(request))

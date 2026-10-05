@@ -1,0 +1,129 @@
+{
+  "checked_at": "2026-10-05T23:37:43.051589+05:30",
+  "scope": "Real isolated PostgreSQL 15, Vercel-mode configuration and bundled model; remote Gemini/external retrieval explicitly unavailable/mocked. Not a Neon or deployed Vercel test.",
+  "counts": {
+    "PASS": 22,
+    "FAIL": 0
+  },
+  "cases": [
+    {
+      "check": "Concurrent cloud startup and seed uniqueness",
+      "outcome": "PASS",
+      "details": {
+        "catalog": 10,
+        "plans": 3
+      }
+    },
+    {
+      "check": "Registration",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Persistent JWT authentication",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Bundled offline model and full search pipeline",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Stored query encryption",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Authorized recommendation readback",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Repeat migration retains ciphertext",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Ordinary user admin denial",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Catalog creation and JSON audit fields",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Shared catalog freshness across cloud workers",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Catalog update",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Password confirmation denial",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Password-confirmed deletion",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Audit survives deletion",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Password update",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Old JWT revoked",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Password recovery capability",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Recovery capability single use",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Concurrent daily reservation",
+      "outcome": "PASS",
+      "details": {
+        "accepted": 10,
+        "limited": 2
+      }
+    },
+    {
+      "check": "History deletion preserves quota",
+      "outcome": "PASS",
+      "details": null
+    },
+    {
+      "check": "Independent anonymous platform-IP quotas",
+      "outcome": "PASS",
+      "details": {
+        "peer_a_used": 1,
+        "peer_b_used": 0
+      }
+    },
+    {
+      "check": "Working SQLite database unchanged",
+      "outcome": "PASS",
+      "details": null
+    }
+  ]
+}

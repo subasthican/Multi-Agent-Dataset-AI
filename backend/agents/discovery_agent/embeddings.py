@@ -1,5 +1,6 @@
 import os
 from functools import lru_cache
+from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -10,6 +11,11 @@ DEFAULT_MODEL_NAME = "all-MiniLM-L6-v2"
 
 @lru_cache(maxsize=1)
 def get_embedding_model() -> SentenceTransformer:
+    if os.getenv("VERCEL") == "1":
+        bundled = Path(__file__).resolve().parents[2] / "model_assets/embeddings"
+        if not (bundled / "modules.json").is_file():
+            raise RuntimeError("Bundled embedding model missing; run the configured Vercel build command.")
+        return SentenceTransformer(str(bundled), local_files_only=True, device="cpu")
     model_name = os.getenv("DISCOVERY_EMBEDDING_MODEL", DEFAULT_MODEL_NAME)
     return SentenceTransformer(model_name)
 

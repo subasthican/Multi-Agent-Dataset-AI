@@ -1,6 +1,7 @@
 fastapi>=0.110
 uvicorn>=0.29
-spacy>=3.7
+spacy>=3.8,<3.9
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 pydantic>=2.6
 google-genai>=0.3
 python-dotenv>=1.0
@@ -9,8 +10,13 @@ sentence-transformers>=3.0
 kaggle>=2.2
 requests>=2.31
 sqlalchemy>=2.0
+psycopg[binary]>=3.2,<4
 bcrypt>=4.0
 pyjwt>=2.8
 email-validator>=2.0
 langdetect==1.0.9
 cryptography>=38.0
+
+# Vercel uses Linux: avoid bundling CUDA libraries for CPU-only inference.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.13.0+cpu; sys_platform == "linux"

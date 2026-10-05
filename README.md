@@ -72,6 +72,8 @@ it.
 
 Current verification and remaining submission gaps: [full recheck](docs/full-project-recheck.md).
 
+For hosted setup, follow the [two-project Vercel and PostgreSQL guide](docs/vercel-deployment.md). Local deployment preparation is tested; a live Vercel/Neon deployment is not yet verified.
+
 API docs: `http://localhost:8000/docs`
 
 Try the full pipeline:

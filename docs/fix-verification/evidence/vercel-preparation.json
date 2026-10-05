@@ -1,8 +1,45 @@
 {
-  "verified_at": "2026-10-05T23:37:51.743878+05:30",
-  "baseline_commit": "244ee2712fafc98c63e85346552a809acbdd89df",
+  "checked_at": "2026-10-05T23:41:43.651697+05:30",
+  "status": "LOCAL_PREPARATION_PASS; HOSTED_DEPLOYMENT_NOT_VERIFIED",
+  "application_cases": {
+    "PASS": 69,
+    "FAIL": 0,
+    "ERROR": 0
+  },
+  "unit_cases": {
+    "PASS": 32,
+    "FAIL": 0
+  },
+  "postgres_cases": {
+    "PASS": 22,
+    "FAIL": 0
+  },
+  "postgres_scope": "Real isolated PostgreSQL 15, Vercel-mode configuration and bundled model; remote Gemini/external retrieval explicitly unavailable/mocked. Not a Neon or deployed Vercel test.",
+  "model_build": {
+    "status": "PASS",
+    "offline_load": "PASS",
+    "embedding_asset_bytes": 91588813,
+    "local_platform": "Darwin",
+    "linux_cpu_wheel_availability": "PASS for pinned PyTorch CPython 3.12 x86_64 wheel",
+    "spacy_model_wheel_url": "HTTP 200",
+    "hosted_linux_bundle_verified": false
+  },
+  "backend_compilation": "PASS",
+  "dependency_consistency": "PASS",
+  "working_sqlite_unchanged": true,
+  "credentials_disclosed": false,
+  "required_user_steps": [
+    "Create a hosted PostgreSQL database.",
+    "Configure backend environment variables in Vercel.",
+    "Commit/push prepared source to the connected branch.",
+    "Deploy backend and verify hosted build, models and database access.",
+    "Deploy frontend with NEXT_PUBLIC_API_BASE_URL, then update backend ALLOWED_ORIGINS.",
+    "Verify the application online."
+  ],
+  "deployed": false,
+  "neon_connection_tested": false,
+  "smtp": "SKIPPED at user request",
   "source_sha256": {
-    "backend/vercel.json": "b95d18aad12f5aa370edd2b4983e6547effdeeb72de47e4ae7f13c5750465054",
     "backend/main.py": "28a4c7b66940220ebc026f57fcdee6589a6cc07b86ea4b79f48693400454ac6d",
     "backend/llm/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/llm/prompts.py": "a63c71e6cfbac1fc8399086081b942363f4d2534e79e0cca4b51e918ca22a963",
@@ -22,10 +59,9 @@
     "backend/security/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/security/usage_limits.py": "dbbbe75a9e792a5ab081c9f2d574781dbe95132b4b2344aeb43e9ab69211b84a",
     "backend/security/plan_seed.py": "8c0ada92c22f9adbce7362e5ba5359d5cb85f5d3322318473aa9ce75f3d7323c",
-    "backend/security/input_filter.json": "4ac689068c47eb72e2540caeb755b6d175c31902c5f2e4edb6cc0a1df8ecf581",
     "backend/security/schemas.py": "b223d45b493bae5205feaa627519a0067f796e7212f865d5d20765ba56bef8fa",
     "backend/security/jwt_manager.py": "1bdf3d5a59298f68ff07a771449f4e924facf2bfd2d4b1e486f0f24917fe4ef6",
-    "backend/security/db_models.py": "6e59b17f85dcc5e29aeb1cd5462f0c8045529374ac7e1dfb477bf2c9f80c834a",
+    "backend/security/db_models.py": "46ea6e2ebb7eb2e52adcca8206fd7cb5a9ac3a897b2a6f7e3b79c005a237d80a",
     "backend/security/authentication.py": "eb3fb1f74be4ff417324c5d78e21e2838cecabd41e3d11736dac52bcc41398fa",
     "backend/security/input_filter.py": "8c267bf55fb776489e9544e266cb4b6154e0ea8f6730847d7f75df573c0905a7",
     "backend/security/router.py": "a8a0f068ba2c3437ef1389c7302fb9bdcc75010971dc2ac459fbdf7153f6dbf5",
@@ -38,21 +74,12 @@
     "backend/scripts/build_models.py": "5ea8c15fabb34d28aab255524e43a51a3f32339300c830b089aa77cbed755d00",
     "backend/scripts/promote_admin.py": "436c6863cd71a023c50da97491ea27d02833b081c213a115b3ea5b620c933392",
     "backend/scripts/seed_admin.py": "5929d0d9d4b3be4ccbb5f0e064d3a9ac4d0b149551cbafa4756a88fe9402f4e4",
-    "backend/model_assets/embeddings/tokenizer_config.json": "4817907ff3846ed899a62cccad0193c21d0792130c6139d8362187153eeff283",
-    "backend/model_assets/embeddings/config.json": "ba0d0bf80d151f8f5f9b4002f6bbbe3cd142bfc454a0f1572ea08bb6e5cf3d66",
-    "backend/model_assets/embeddings/config_sentence_transformers.json": "ed4399b496d092820785b629240e4cc2274ba44fa5c98d5fc120f9f784a04cc5",
-    "backend/model_assets/embeddings/tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
-    "backend/model_assets/embeddings/sentence_bert_config.json": "3084164002c0bca01b0259c5327123803fce32e660a57feb93184ffead186fc8",
-    "backend/model_assets/embeddings/modules.json": "3d02572a0455b832de67fb8e63a54981bc7e8b46e337c95e917bd8122a533bfd",
-    "backend/model_assets/embeddings/2_Normalize/config.json": "cdb09dfca347a56aa2d691744e38d5ad3c7cbc2834e7181272b9a15328b82524",
-    "backend/model_assets/embeddings/1_Pooling/config.json": "4fef0a7e8c8ee36e74c0fad89bab60ade72324442d43f559ea219bb7c2580710",
     "backend/agents/dataset_collection_agent/openml_source.py": "9dc23fe0d4473af212f8cb1553f425bf5ee6f29fc9b5284fada7024431c1771a",
     "backend/agents/dataset_collection_agent/huggingface_source.py": "bc4f9297049c89c9abad5248d068fa90b514658431d4421148aa23a0fee49b71",
     "backend/agents/dataset_collection_agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/agents/dataset_collection_agent/kaggle_source.py": "91d70b4c7ddd30fd7067766fba78505eccf2eea33c5a377ce0e1c9db321783da",
     "backend/agents/dataset_collection_agent/agent.py": "b348b8ac37f594a4b8282882537000ccb3fac4b123fb9b756cf73bb4289b1f0f",
     "backend/agents/nlp_agent/models.py": "fdce3004861c5f76cffe8899f6bffb9630ea746250d3d61fb3e8410ed1881fc6",
-    "backend/agents/nlp_agent/config.json": "6fadae04e5556ed86c70c88e3bb66fd9dd56649b1cd7eb16dbc2669484691f07",
     "backend/agents/nlp_agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/agents/nlp_agent/preprocessing.py": "3aaa2bb1cf5361c0af09e44b2c61d5daa2a2c4cdc7df11880d1640c8785363b0",
     "backend/agents/nlp_agent/agent.py": "a7f70015a35e87974a111b095c744262da2f6076675ea2fabe67174bfd1c318a",
@@ -66,19 +93,12 @@
     "backend/agents/discovery_agent/models.py": "2fb2e81050a2196a63ace84bdc8ce483c216b2d40000ac311a7e91e79be30084",
     "backend/agents/discovery_agent/vector_store.py": "4344c18887aad5a0f0c621ea1b74d0077c6498020210a6181d78ca9e7bff60d8",
     "backend/agents/discovery_agent/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "backend/agents/discovery_agent/datasets.json": "91ddecd29dd05be91518c635b882a012092d327e5094783b9b38adb3a9001a02",
     "backend/agents/discovery_agent/seed.py": "6d2d641b6d53ece4ea393d99ccad75fd59f477e35ae68118efdf0d38ec52bf1c",
     "backend/agents/discovery_agent/embeddings.py": "a981aa9a676dbaa5eaa907bddf09671cc8e263fa1c44704cad38f74b5e90242e",
     "backend/agents/discovery_agent/agent.py": "431be8348296c6b877392a378a36167b29ead2194bf0f2c8d882a460900b2720",
-    "backend/agents/discovery_agent/identity.py": "f1fbf1f00085f9c998a43a3d8298b3699e66077c78ffb8816b0018cb8eb585dc"
-  },
-  "original_database_unchanged": true,
-  "counts": {
-    "PASS": 69,
-    "FAIL": 0,
-    "ERROR": 0
-  },
-  "provider_scope": "Live Gemini remains unavailable; input guard and controlled-output tests do not certify model resistance.",
-  "mail_scope": "Recovery delivery was mocked; actual SMTP requires user configuration.",
-  "student_details": "Deferred by user; no lecturer confirmation or independent student completion claimed."
+    "backend/agents/discovery_agent/identity.py": "f1fbf1f00085f9c998a43a3d8298b3699e66077c78ffb8816b0018cb8eb585dc",
+    "backend/requirements.txt": "78312de53c71c2c3497a4cfcc2b0614814f76d94008d062b64afd9575eb53c12",
+    "backend/vercel.json": "b95d18aad12f5aa370edd2b4983e6547effdeeb72de47e4ae7f13c5750465054",
+    "backend/.python-version": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d"
+  }
 }

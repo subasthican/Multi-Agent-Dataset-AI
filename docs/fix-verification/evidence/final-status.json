@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-10-05T22:47:59.243470+05:30",
+  "checked_at": "2026-10-05T23:41:43.651697+05:30",
   "application_cases": {
     "PASS": 69,
     "FAIL": 0,
@@ -153,5 +153,20 @@
     "group submission",
     "individual submission"
   ],
-  "additional_browser_check": "BLOCKED by reported user activity; previous 12 PASS retained, no new PASS claimed."
+  "additional_browser_check": "BLOCKED by reported user activity; previous 12 PASS retained, no new PASS claimed.",
+  "vercel_preparation": {
+    "status": "LOCAL_PREPARATION_PASS; HOSTED_DEPLOYMENT_NOT_VERIFIED",
+    "evidence": "vercel-preparation.json",
+    "guide": "../../vercel-deployment.md",
+    "postgres_cases": {
+      "PASS": 22,
+      "FAIL": 0
+    },
+    "unit_cases": {
+      "PASS": 32,
+      "FAIL": 0
+    },
+    "deployed": false,
+    "neon_connection_tested": false
+  }
 }

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from security.db import SessionLocal
+from security.db import SessionLocal, lock_seed
 from security.db_models import CatalogDataset
 
 SEED_DATA_PATH = Path(__file__).parent / "datasets.json"
@@ -14,6 +14,7 @@ def seed_catalog_if_empty() -> None:
     admin changes, it only fills a genuinely empty table on first run."""
     db = SessionLocal()
     try:
+        lock_seed(db, 682409112)
         if db.query(CatalogDataset).first() is not None:
             return
 

@@ -92,46 +92,46 @@
       {
         "status": 200,
         "body": {
-          "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
+          "id": "fe03f1e5-9c4c-4b4c-9a96-ea029cdc58ae",
           "name": "Synthetic a",
           "email": "fix-a@example.com",
           "plan": "free",
           "is_admin": false,
           "is_active": true,
-          "created_at": "2026-10-05T17:14:34.523126"
+          "created_at": "2026-10-05T18:07:40.210455"
         }
       },
       {
         "status": 200,
         "body": [
           {
-            "id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
+            "id": "575c6c16-42ca-4386-9993-1be5301c6f35",
             "name": "Synthetic admin",
             "email": "fix-admin@example.com",
             "plan": "free",
             "is_admin": true,
             "is_active": true,
-            "created_at": "2026-10-05T17:14:35.097655",
+            "created_at": "2026-10-05T18:07:40.784581",
             "search_count": 0
           },
           {
-            "id": "698c1963-325f-43b4-8635-5ad56c6c4eab",
+            "id": "7b29a81d-0e78-487f-a522-a53829fd3e43",
             "name": "Synthetic b",
             "email": "fix-b@example.com",
             "plan": "free",
             "is_admin": false,
             "is_active": true,
-            "created_at": "2026-10-05T17:14:34.810824",
+            "created_at": "2026-10-05T18:07:40.498418",
             "search_count": 1
           },
           {
-            "id": "9d5e712d-45c3-4cb0-9b12-5dd10b54b278",
+            "id": "fe03f1e5-9c4c-4b4c-9a96-ea029cdc58ae",
             "name": "Synthetic a",
             "email": "fix-a@example.com",
             "plan": "free",
             "is_admin": false,
             "is_active": true,
-            "created_at": "2026-10-05T17:14:34.523126",
+            "created_at": "2026-10-05T18:07:40.210455",
             "search_count": 1
           }
         ]
@@ -756,7 +756,7 @@
       },
       "top": {
         "dataset": {
-          "id": "c70fa64b-f9a8-4fe9-afda-eba261b2b37d",
+          "id": "92ee7e42-abe5-400c-a7a0-833d41be8da2",
           "name": "Diabetes Prediction Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -797,7 +797,7 @@
       },
       "top": {
         "dataset": {
-          "id": "b1b4b82c-d9c9-42a9-883c-ca946103dc3d",
+          "id": "84d8355a-cacb-4e07-8c8c-09eb34eccdfb",
           "name": "Credit Card Fraud Dataset",
           "domain": "finance",
           "task": "classification",
@@ -836,7 +836,7 @@
       },
       "top": {
         "dataset": {
-          "id": "8d15a4d6-bbe0-4613-8e9b-965871d70705",
+          "id": "fe59ba51-5529-413d-a5f4-e439f0fecd7f",
           "name": "Student Performance Dataset",
           "domain": "education",
           "task": "classification",
@@ -876,7 +876,7 @@
       },
       "top": {
         "dataset": {
-          "id": "308f3c37-6741-4316-b350-08cb33ee1bfd",
+          "id": "4b446e9f-dfa2-470b-9d89-dfc7dcc3bcf8",
           "name": "Customer Churn Dataset",
           "domain": "business",
           "task": "classification",
@@ -915,7 +915,7 @@
       },
       "top": {
         "dataset": {
-          "id": "9e1ee508-5450-4385-b9e2-900632f837de",
+          "id": "e6cb71ab-c883-476e-9691-f7bc0049db75",
           "name": "Solar Energy Forecast Dataset",
           "domain": "environment",
           "task": "regression",
@@ -1141,7 +1141,7 @@
     "actual": [
       {
         "dataset": {
-          "id": "c70fa64b-f9a8-4fe9-afda-eba261b2b37d",
+          "id": "92ee7e42-abe5-400c-a7a0-833d41be8da2",
           "name": "Diabetes Prediction Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -1156,7 +1156,7 @@
       },
       {
         "dataset": {
-          "id": "91f5c038-5a2c-4240-9432-aab3af90a27e",
+          "id": "3803e65a-23c5-46e8-83af-a97c38cddfdd",
           "name": "Heart Disease Dataset",
           "domain": "healthcare",
           "task": "classification",
@@ -1221,9 +1221,9 @@
     "actual": {
       "statuses": [
         200,
+        429,
+        429,
         200,
-        429,
-        429,
         429,
         429
       ],
@@ -1305,31 +1305,31 @@
       "delete": 204,
       "audit_events": [
         {
-          "id": "51151d97-db12-4a51-b284-20c4bcc7bcf3",
-          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
+          "id": "50a2ef02-d3ff-4555-adb6-a97061532099",
+          "actor_id": "575c6c16-42ca-4386-9993-1be5301c6f35",
           "action": "delete",
           "target_type": "catalog",
-          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
+          "target_id": "df27e5f7-17c5-4287-9580-afa94e04c0f2",
           "changed_fields": [],
-          "created_at": "2026-10-05T17:14:46.399118Z"
+          "created_at": "2026-10-05T18:07:50.563645Z"
         },
         {
-          "id": "eb7e1c29-ba12-4b39-b3da-9791e29b8eb4",
-          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
+          "id": "ab3a27e5-91c4-4148-b750-0e1522f9ea63",
+          "actor_id": "575c6c16-42ca-4386-9993-1be5301c6f35",
           "action": "update",
           "target_type": "catalog",
-          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
+          "target_id": "df27e5f7-17c5-4287-9580-afa94e04c0f2",
           "changed_fields": [
             "description"
           ],
-          "created_at": "2026-10-05T17:14:46.113622Z"
+          "created_at": "2026-10-05T18:07:50.275566Z"
         },
         {
-          "id": "641ea4a9-b574-4065-9469-15fd8c7a7b3b",
-          "actor_id": "f707ce63-777b-4b3f-921d-6cc435e6ba50",
+          "id": "5d6e1dba-ecf7-4409-b80c-89c06f5459b9",
+          "actor_id": "575c6c16-42ca-4386-9993-1be5301c6f35",
           "action": "create",
           "target_type": "catalog",
-          "target_id": "f98af25c-07ee-415f-a2c3-4dad9d8e00d1",
+          "target_id": "df27e5f7-17c5-4287-9580-afa94e04c0f2",
           "changed_fields": [
             "data_type",
             "description",
@@ -1338,7 +1338,7 @@
             "task",
             "url"
           ],
-          "created_at": "2026-10-05T17:14:45.820389Z"
+          "created_at": "2026-10-05T18:07:49.970996Z"
         }
       ],
       "non_admin": 403,

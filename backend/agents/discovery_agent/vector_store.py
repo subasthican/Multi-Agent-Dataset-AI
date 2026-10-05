@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional
+import os
 
 import faiss
 import numpy as np
@@ -26,47 +27,51 @@ def invalidate_cache() -> None:
     _index_cache = None
 
 
+def _read_datasets() -> List[Dict]:
+    db = SessionLocal()
+    try:
+        rows = db.query(CatalogDataset).order_by(CatalogDataset.created_at).all()
+        return [{"id": row.id, "name": row.name, "description": row.description,
+                 "domain": row.domain, "task": row.task, "data_type": row.data_type,
+                 "url": row.url} for row in rows]
+    finally:
+        db.close()
+
+
 def load_datasets() -> List[Dict]:
     global _datasets_cache
     if _datasets_cache is None:
-        db = SessionLocal()
-        try:
-            rows = db.query(CatalogDataset).order_by(CatalogDataset.created_at).all()
-            _datasets_cache = [
-                {
-                    "id": row.id,
-                    "name": row.name,
-                    "description": row.description,
-                    "domain": row.domain,
-                    "task": row.task,
-                    "data_type": row.data_type,
-                    "url": row.url,
-                }
-                for row in rows
-            ]
-        finally:
-            db.close()
+        _datasets_cache = _read_datasets()
     return _datasets_cache
+
+
+def _index_for(datasets):
+    if not datasets:
+        return None
+    vectors = np.array(create_embeddings([dataset["description"] for dataset in datasets])).astype("float32")
+    faiss.normalize_L2(vectors)
+    index = faiss.IndexFlatIP(vectors.shape[1])
+    index.add(vectors)
+    return index
 
 
 def build_index() -> Optional[faiss.IndexFlatIP]:
     global _index_cache
     if _index_cache is None:
-        datasets = load_datasets()
-        if not datasets:
-            return None
-        descriptions = [dataset["description"] for dataset in datasets]
-        vectors = np.array(create_embeddings(descriptions)).astype("float32")
-        faiss.normalize_L2(vectors)
-        index = faiss.IndexFlatIP(vectors.shape[1])
-        index.add(vectors)
-        _index_cache = index
+        _index_cache = _index_for(load_datasets())
     return _index_cache
 
 
 def search_vectors(query: str, k: int = 3) -> List[Dict]:
-    datasets = load_datasets()
-    index = build_index()
+    if os.getenv("VERCEL") == "1":
+        # Other function instances can edit the shared catalog. Search a fresh
+        # local snapshot rather than retain an index invalidated only in the
+        # instance that handled an admin update. The embedding model is cached.
+        datasets = _read_datasets()
+        index = _index_for(datasets)
+    else:
+        datasets = load_datasets()
+        index = build_index()
     k = min(k, len(datasets))
     if k == 0 or index is None:
         return []

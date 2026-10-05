@@ -126,9 +126,9 @@ class AnonymousSearchLog(Base):
     this table exists purely for rate limiting, nothing reads it back for
     any personalization purpose.
 
-    Known limitation: request.client.host is the direct TCP peer, not the
-    real client IP behind a reverse proxy (no X-Forwarded-For handling) -
-    fine for local/direct deployment, would need revisiting behind a proxy.
+    Local deployments use the direct TCP peer. On Vercel, the app uses its
+    overwritten platform client-IP header. Other reverse-proxy deployments
+    need their own explicitly trusted client-IP configuration.
     """
 
     __tablename__ = "anonymous_search_log"
