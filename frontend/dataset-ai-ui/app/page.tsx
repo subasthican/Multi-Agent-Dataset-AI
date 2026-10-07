@@ -56,7 +56,7 @@ export default function Home() {
     loadUsage();
   }, [loadUsage]);
 
-  async function handleSearch(query: string) {
+  async function handleSearch(query: string, task?: string) {
     setLoading(true);
     setError(null);
     setResult(null);
@@ -82,7 +82,7 @@ export default function Home() {
       // Race the real request against the minimum stage-hold sequence —
       // whichever is slower decides when this resolves, so the animation
       // can't be cut short by a fast backend answer.
-      const [response] = await Promise.all([discover(query, 6), runStageSequence()]);
+      const [response] = await Promise.all([discover(query, 6, task), runStageSequence()]);
       setResult(response);
       setStage("done");
     } catch (err) {
@@ -154,13 +154,34 @@ export default function Home() {
         {result && (
           <div className="flex w-full max-w-4xl flex-col gap-6">
             <ExplanationCard understanding={result.understanding} />
+            {result.understanding.needs_task_selection && !result.understanding.warnings?.length && (
+              <div className="glass flex flex-col gap-3 p-5 text-sm">
+                <p>Which task should these datasets support?</p>
+                <div className="flex flex-wrap gap-2">
+                  {["classification", "regression", "clustering", "nlp", "computer_vision"].map((task) => (
+                    <button key={task} className="btn-secondary rounded-lg px-3 py-2" disabled={loading}
+                      onClick={() => handleSearch(result.understanding.original_query, task)}>
+                      {task.replaceAll("_", " ")}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {result.recommendations.map((item, index) => (
                 <DatasetCard key={`${item.dataset.source}-${item.dataset.id}`} item={item} index={index} />
               ))}
             </div>
             {result.recommendations.length === 0 && (
-              <p className="text-center text-sm text-white/40">No matching datasets found — try rephrasing.</p>
+              <div className="flex flex-col gap-3 text-center text-sm text-white/50">
+                <p>No matching datasets found. Specify a topic, task and data type.</p>
+                <p>Supported domains: healthcare, finance, education, business, environment and automotive.</p>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {["cancer image classification dataset", "credit card fraud classification dataset", "house price regression dataset"].map((query) => (
+                    <button key={query} className="btn-secondary rounded-lg px-3 py-2" disabled={loading} onClick={() => handleSearch(query)}>{query}</button>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         )}

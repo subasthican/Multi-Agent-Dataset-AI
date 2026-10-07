@@ -46,10 +46,15 @@ def _match_category(text: str, keywords: List[str], categories: Dict[str, List[s
 
 
 def classify_domain(text: str, keywords: List[str]) -> str:
+    for domain in load_config().get("domains", {}):
+        if re.search(rf"\b{re.escape(domain)}\b", text.lower()):
+            return domain
     return _match_category(text, keywords, load_config().get("domains", {}), DEFAULT_DOMAIN)
 
 
 def classify_task(text: str, keywords: List[str]) -> str:
+    if re.search(r"\b(fraud|churn)\b", text.lower()) and not re.search(r"\b(regression|clustering|forecast)\b", text.lower()):
+        return "classification"
     return _match_category(text, keywords, load_config().get("tasks", {}), DEFAULT_TASK)
 
 
@@ -111,6 +116,7 @@ def analyze_query(text: str) -> QueryAnalysisResult:
             keywords=merged_keywords,
             entities=entities,
             understanding_source="llm",
+            needs_task_selection=llm_result["task"] == DEFAULT_TASK,
             warnings=["Please specify a supported dataset domain before relying on recommendations."] if llm_result["domain"] == "general" else [],
         )
 
@@ -122,5 +128,6 @@ def analyze_query(text: str) -> QueryAnalysisResult:
         keywords=keywords,
         entities=entities,
         understanding_source="rule_based",
+        needs_task_selection=classify_task(cleaned, keywords) == DEFAULT_TASK,
         warnings=["Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."] if classify_domain(cleaned, keywords) == DEFAULT_DOMAIN else [],
     )

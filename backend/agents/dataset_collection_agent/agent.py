@@ -42,7 +42,7 @@ def _infer_metadata(item: Dict) -> Dict:
     import re
     terms = load_config().get("data_types", {})
     description = item["description"].lower()
-    if any(re.search(rf"\b{re.escape(trigger)}\b", description) for values in terms.values() for trigger in values if trigger not in {"dataset", "data"}):
+    if not item.get("data_type") and any(re.search(rf"\b{re.escape(trigger)}\b", description) for values in terms.values() for trigger in values if trigger not in {"dataset", "data"}):
         item["data_type"] = classify_data_type(description, [])
     return item
 

@@ -9,7 +9,7 @@ class DatabaseConfigTests(unittest.TestCase):
     def test_local_sqlite_default(self):
         url = database_url(None, Path("/tmp/synthetic/app.db"))
         self.assertEqual(url.drivername, "sqlite")
-        self.assertEqual(url.database, "/tmp/synthetic/app.db")
+        self.assertEqual(Path(url.database), Path("/tmp/synthetic/app.db"))
 
     def test_provider_urls_select_installed_psycopg_driver(self):
         for scheme in ("postgres", "postgresql", "postgresql+psycopg"):

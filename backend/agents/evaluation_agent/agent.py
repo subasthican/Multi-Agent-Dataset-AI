@@ -5,6 +5,7 @@ from agents.nlp_agent.models import QueryAnalysisResult
 
 from .models import EvaluatedDataset
 from .scorer import calculate_score
+from .topics import matches_topic
 
 # Below this, a result is domain/task-mismatched noise being shown only to
 # pad the list out to k, not a genuine match — e.g. a "car types" search
@@ -30,12 +31,16 @@ def generate_explanation(dataset: DatasetMatch, requirement: QueryAnalysisResult
 
 
 def evaluate_datasets(datasets: List[DatasetMatch], requirement: QueryAnalysisResult) -> List[EvaluatedDataset]:
-    if requirement.warnings:
+    if requirement.warnings or requirement.needs_task_selection:
         return []
     evaluated = []
     for dataset in datasets:
+        if not matches_topic(dataset, requirement):
+            continue
+        if dataset.source != "catalog" and (not dataset.url or not dataset.license or dataset.task == "machine_learning" or not dataset.metadata_verified):
+            continue
         # Unknown modality is not evidence of suitability for non-tabular use.
-        if dataset.data_type != requirement.data_type and (dataset.data_type is not None or requirement.data_type != "tabular"):
+        if dataset.data_type != requirement.data_type:
             continue
         score = calculate_score(dataset, requirement)
         evaluated.append(

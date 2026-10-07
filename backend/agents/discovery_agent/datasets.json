@@ -4,69 +4,89 @@
     "name": "Diabetes Prediction Dataset",
     "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
     "domain": "healthcare",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+    "data_type": "tabular"
   },
   {
     "id": 2,
     "name": "Heart Disease Dataset",
     "description": "Clinical patient records used to predict the presence of heart disease",
     "domain": "healthcare",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://archive.ics.uci.edu/dataset/45/heart+disease",
+    "data_type": "tabular"
   },
   {
     "id": 3,
     "name": "Credit Card Fraud Dataset",
     "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
     "domain": "finance",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud",
+    "data_type": "tabular"
   },
   {
     "id": 4,
     "name": "Stock Price History Dataset",
     "description": "Historical stock market prices and trading volumes for financial forecasting",
     "domain": "finance",
-    "task": "regression"
+    "task": "regression",
+    "url": "https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset",
+    "data_type": "tabular"
   },
   {
     "id": 5,
     "name": "Solar Energy Forecast Dataset",
     "description": "Renewable energy generation data for predicting solar power output",
     "domain": "environment",
-    "task": "regression"
+    "task": "regression",
+    "url": "https://www.kaggle.com/datasets/anikannal/solar-power-generation-data",
+    "data_type": "tabular"
   },
   {
     "id": 6,
     "name": "Air Quality Dataset",
     "description": "Pollution and weather sensor readings for environmental monitoring and forecasting",
     "domain": "environment",
-    "task": "regression"
+    "task": "regression",
+    "url": "https://archive.ics.uci.edu/dataset/360/air+quality",
+    "data_type": "tabular"
   },
   {
     "id": 7,
     "name": "House Price Prediction Dataset",
     "description": "Real estate property information for predicting housing prices",
     "domain": "business",
-    "task": "regression"
+    "task": "regression",
+    "url": "https://archive.ics.uci.edu/dataset/477/real+estate+valuation+data+set",
+    "data_type": "tabular"
   },
   {
     "id": 8,
     "name": "Customer Churn Dataset",
     "description": "Customer subscription and usage records used to predict business customer churn",
     "domain": "business",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
+    "data_type": "tabular"
   },
   {
     "id": 9,
     "name": "Student Performance Dataset",
     "description": "Student demographics and grades used to predict academic performance and dropout risk",
     "domain": "education",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://archive.ics.uci.edu/dataset/320/student+performance",
+    "data_type": "tabular"
   },
   {
     "id": 10,
     "name": "Course Completion Dataset",
     "description": "Online learning platform records for predicting course completion rates",
     "domain": "education",
-    "task": "classification"
+    "task": "classification",
+    "url": "https://research.stem.open.ac.uk/ouanalyse/dataset/",
+    "data_type": "tabular"
   }
 ]

@@ -13,6 +13,7 @@ export interface QueryAnalysisResult {
   entities: { text: string; label: string }[];
   understanding_source: "llm" | "rule_based";
   warnings?: string[];
+  needs_task_selection?: boolean;
 }
 
 export interface DatasetMatch {
@@ -27,6 +28,7 @@ export interface DatasetMatch {
   // A real link to the dataset's page on its source platform — null for a
   // catalog entry with no admin-provided reference. Never fabricated.
   url: string | null;
+  license?: string | null;
 }
 
 export interface EvaluatedDataset {
@@ -213,11 +215,11 @@ async function request<T>(
   return response.json();
 }
 
-export async function discover(query: string, k = 5): Promise<DiscoverResponse> {
+export async function discover(query: string, k = 5, task?: string): Promise<DiscoverResponse> {
   // auth: true attaches a token when one exists, but never requires it —
   // search stays usable signed-out. When signed in, it's what lets the
   // backend attribute the search to the user for /recommendations.
-  return request<DiscoverResponse>("/discover", { method: "POST", query: { query, k: String(k) }, auth: true });
+  return request<DiscoverResponse>("/discover", { method: "POST", query: { query, k: String(k), ...(task ? { task } : {}) }, auth: true });
 }
 
 export async function getRecommendations(k = 3): Promise<RecommendationResponse> {

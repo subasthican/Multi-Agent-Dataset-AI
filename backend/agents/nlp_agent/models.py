@@ -26,6 +26,7 @@ class QueryAnalysisResult(BaseModel):
     entities: List[Dict[str, str]] = Field(default_factory=list)
     understanding_source: str = "rule_based"
     warnings: List[str] = Field(default_factory=list)
+    needs_task_selection: bool = False
 
 
 # Validate model output before coercion or downstream retrieval.

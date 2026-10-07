@@ -1,4 +1,5 @@
 from typing import Dict, List
+import re
 
 import requests
 
@@ -41,13 +42,43 @@ def search_huggingface_datasets(query: str, limit: int = 5) -> List[Dict]:
 
     results = []
     for item, description, similarity in zip(items, descriptions, similarities):
+        try:
+            detail = requests.get(f"{HF_DATASETS_URL}/{item['id']}", timeout=REQUEST_TIMEOUT_SECONDS)
+            detail.raise_for_status()
+            metadata = detail.json()
+        except (requests.RequestException, ValueError, TypeError):
+            continue
+        card = metadata.get("cardData") or {}
+        if not isinstance(card, dict):
+            continue
+        tags = metadata.get("tags") or []
+        categories = card.get("task_categories") or []
+        if isinstance(categories, str):
+            categories = [categories]
+        categories += [tag.split(":", 1)[1] for tag in tags if tag.startswith("task_categories:")]
+        task_map = {"image-classification": ("computer_vision", "image"), "object-detection": ("computer_vision", "image"), "text-classification": ("nlp", "text"), "text-generation": ("nlp", "text"), "tabular-classification": ("classification", "tabular"), "tabular-regression": ("regression", "tabular"), "time-series-forecasting": ("regression", "time_series")}
+        task, modality = next((task_map[c] for c in categories if c in task_map), (DEFAULT_TASK, None))
+        license_value = card.get("license") or next((tag.split(":", 1)[1] for tag in tags if tag.startswith("license:")), None)
+        if isinstance(license_value, list):
+            license_value = ", ".join(license_value)
+        contents = metadata.get("description") or card.get("description") or ""
+        if modality is None and "modality:tabular" in tags:
+            modality = "tabular"
+            if re.search(r"\bclassification\b", contents, re.I):
+                task = "classification"
+            elif re.search(r"\bregression\b", contents, re.I):
+                task = "regression"
+        description = f"{contents}\nIntended tasks: {', '.join(categories)}"[:2000]
         results.append(
             {
                 "id": item["id"],
                 "name": item["id"],
                 "description": description,
                 "domain": DEFAULT_DOMAIN,
-                "task": DEFAULT_TASK,
+                "task": task,
+                "data_type": modality,
+                "license": license_value,
+                "metadata_verified": bool(contents and modality and license_value),
                 "similarity": similarity,
                 "source": "huggingface",
                 # The Hub's own dataset page — the "Files and versions" tab

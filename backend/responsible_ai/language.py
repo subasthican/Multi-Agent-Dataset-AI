@@ -21,6 +21,9 @@ def supported_english(text: str) -> bool:
     technical = {"student", "image", "images", "data", "dataset", "datasets", "computer", "vision",
                  "medical", "records", "financial", "classification", "forecasting", "regression",
                  "customer", "weather", "pollution", "property", "housing", "clinical"}
+    technical.update({"cancer", "prediction", "credit", "card", "fraud", "stock", "price", "diabetes", "heart"})
+    if len(words) <= 8 and len(words & technical) >= 3 and words <= technical:
+        return True
     if words.intersection({"for", "from", "using", "with", "the"}) and len(words & technical) >= 3:
         return True
     if len(re.findall(r"\w+", text)) < 4:

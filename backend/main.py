@@ -15,6 +15,7 @@ from agents.evaluation_agent.agent import evaluate_datasets
 from agents.evaluation_agent.models import EvaluatedDataset
 from agents.nlp_agent.agent import analyze_query
 from agents.nlp_agent.models import QueryAnalysisResult
+from agents.evaluation_agent.topics import requested_topics
 from agents.recommendation_agent.agent import clear_history, get_recommendations, record_search
 from agents.recommendation_agent.models import RecommendationResponse
 from security.admin_router import router as admin_router
@@ -102,8 +103,12 @@ def _external_query(understanding: QueryAnalysisResult) -> str:
     unlike FAISS similarity — return zero results for long multi-keyword
     strings, so this stays to a short domain + a couple of meaningful
     keywords. (OpenML narrows this further itself, to just the first word.)"""
-    meaningful_keywords = [k for k in understanding.keywords if k.lower() not in GENERIC_KEYWORDS]
-    terms = [understanding.domain, *meaningful_keywords[:MAX_EXTERNAL_KEYWORDS]]
+    topics = requested_topics(understanding.original_query)
+    if topics:
+        return topics[0]
+    generic = GENERIC_KEYWORDS | {"classification", "regression", "image", "tabular", "text", "forecast", "forecasting", "need", "find"}
+    meaningful_keywords = [k for k in understanding.keywords if k.lower() not in generic and k.lower() != understanding.domain]
+    terms = meaningful_keywords[:MAX_EXTERNAL_KEYWORDS] or [understanding.domain]
 
     deduped = []
     for term in terms:
@@ -116,9 +121,9 @@ def _candidate_datasets(understanding: QueryAnalysisResult, k: int) -> List[Data
     """Curated catalog matches plus any live external matches from Kaggle,
     OpenML, and HuggingFace (each best-effort — an unconfigured or
     unreachable source just contributes nothing, never an error)."""
-    catalog_matches = search_datasets(_discovery_query(understanding), k=k).matches
+    catalog_matches = search_datasets(_discovery_query(understanding), k=max(k, 20)).matches
     external_matches = [
-        DatasetMatch(**item) for item in collect_external_datasets(_external_query(understanding), limit=k)
+        DatasetMatch(**item) for item in collect_external_datasets(_external_query(understanding), limit=max(k, 9))
     ]
     # Catalog comes first to retain curated metadata and its original link.
     return [DatasetMatch(**record) for record in deduplicate_records(
@@ -156,8 +161,8 @@ def evaluation_agent(query: str, k: int = ResultCount):
     except (ValidationError, ValueError) as exc:
         raise HTTPException(status_code=400, detail=exc.errors(include_context=False) if isinstance(exc, ValidationError) else str(exc)) from exc
 
-    candidates = [] if understanding.warnings else _candidate_datasets(understanding, k)
-    return evaluate_datasets(candidates, understanding)
+    candidates = [] if understanding.warnings or understanding.needs_task_selection else _candidate_datasets(understanding, k)
+    return evaluate_datasets(candidates, understanding)[:k]
 
 
 @app.post("/discover", response_model=DiscoverResponse)
@@ -165,6 +170,7 @@ def discover(
     query: str,
     request: Request,
     k: int = ResultCount,
+    task: str | None = Query(default=None, pattern="^(classification|regression|clustering|nlp|computer_vision)$"),
     current_user: User | None = Depends(get_current_user_optional),
     db: Session = Depends(get_db),
 ):
@@ -192,8 +198,11 @@ def discover(
     except (ValidationError, ValueError) as exc:
         raise HTTPException(status_code=400, detail=exc.errors(include_context=False) if isinstance(exc, ValidationError) else str(exc)) from exc
 
-    candidates = [] if understanding.warnings else _candidate_datasets(understanding, k)
-    recommendations = evaluate_datasets(candidates, understanding)
+    if task is not None:
+        understanding.task = task
+        understanding.needs_task_selection = False
+    candidates = [] if understanding.warnings or understanding.needs_task_selection else _candidate_datasets(understanding, k)
+    recommendations = evaluate_datasets(candidates, understanding)[:k]
 
     if current_user is not None:
         record_search(db, current_user, understanding)

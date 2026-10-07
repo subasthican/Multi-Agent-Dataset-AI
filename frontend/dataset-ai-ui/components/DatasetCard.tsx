@@ -50,6 +50,7 @@ export default function DatasetCard({ item, index }: { item: EvaluatedDataset; i
       </div>
 
       <p className="flex-1 text-sm leading-5 break-words text-white/50">{dataset.description}</p>
+      {dataset.license && <p className="text-xs text-white/50">License: {dataset.license}</p>}
 
       <div>
         <div className="mb-1 flex items-center justify-between text-xs text-white/50">

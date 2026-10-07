@@ -18,6 +18,8 @@ class DatasetMatch(BaseModel):
     # no admin-provided reference — never fabricated for a source that
     # doesn't have one, so a link is only ever shown when it's real.
     url: Optional[str] = None
+    license: Optional[str] = None
+    metadata_verified: bool = False
 
 
 class DiscoveryResult(BaseModel):

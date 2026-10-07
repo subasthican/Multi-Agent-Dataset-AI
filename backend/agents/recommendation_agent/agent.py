@@ -1,5 +1,6 @@
 from collections import Counter
 from responsible_ai.privacy import redact_sensitive_text
+from responsible_ai.language import supported_english
 from typing import Optional, Tuple
 
 from sqlalchemy.orm import Session
@@ -18,6 +19,8 @@ DEFAULT_RECOMMENDATION_COUNT = 3
 def record_search(db: Session, user: User, understanding: QueryAnalysisResult) -> None:
     """Only ever called for a signed-in user (see main.py's /discover) —
     anonymous searches are never written anywhere."""
+    if understanding.warnings or understanding.needs_task_selection or understanding.domain == "general" or understanding.task == "machine_learning":
+        return
     entry = SearchHistory(
         user_id=user.id,
         query=redact_sensitive_text(understanding.original_query),
@@ -36,10 +39,13 @@ def _build_profile(db: Session, user: User) -> Tuple[Optional[str], Optional[str
     history = (
         db.query(SearchHistory)
         .filter(SearchHistory.user_id == user.id)
+        .filter(SearchHistory.domain != "general", SearchHistory.task != "machine_learning")
         .order_by(SearchHistory.created_at.desc())
         .limit(MAX_HISTORY_FOR_PROFILE)
         .all()
     )
+    history = [entry for entry in history if supported_english(entry.query) and
+               redact_sensitive_text(entry.query).strip() not in {"", "[REDACTED_EMAIL]", "[REDACTED_PHONE]"}]
     if not history:
         return None, None, 0
 

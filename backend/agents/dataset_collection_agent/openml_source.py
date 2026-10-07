@@ -45,13 +45,27 @@ def search_openml_datasets(query: str, limit: int = 5) -> List[Dict]:
 
     results = []
     for entry, description, similarity in zip(datasets, descriptions, similarities):
+        try:
+            detail = requests.get(f"https://www.openml.org/api/v1/json/data/{entry['did']}", timeout=REQUEST_TIMEOUT_SECONDS)
+            detail.raise_for_status()
+            metadata = detail.json().get("data_set_description", {})
+        except (requests.RequestException, ValueError, TypeError):
+            continue
+        contents = metadata.get("description", "")
+        target = metadata.get("default_target_attribute")
+        quality = {q["name"]: q["value"] for q in entry.get("quality", [])}
+        classes = float(quality.get("NumberOfClasses", 0) or 0)
+        task = "classification" if target and classes >= 2 else "regression" if target and classes == 0 else DEFAULT_TASK
         results.append(
             {
                 "id": f"openml-{entry['did']}",
                 "name": entry["name"],
-                "description": description,
+                "description": f"{contents}\n{description}. Target: {target or 'not specified'}"[:2000],
                 "domain": DEFAULT_DOMAIN,
-                "task": DEFAULT_TASK,
+                "task": task,
+                "data_type": "tabular" if metadata.get("format", "").lower() in {"arff", "csv", "parquet"} else None,
+                "license": metadata.get("licence"),
+                "metadata_verified": bool(contents and target and metadata.get("licence")),
                 "similarity": similarity,
                 "source": "openml",
                 # OpenML's own dataset page for this "did" — its own

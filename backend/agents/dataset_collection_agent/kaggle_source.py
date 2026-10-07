@@ -59,11 +59,24 @@ def search_kaggle_datasets(query: str, limit: int = 5) -> List[Dict]:
 
     datasets = []
     for item, description, similarity in zip(results, descriptions, similarities):
+        try:
+            files = api.dataset_list_files(item.ref).dataset_files
+            names = [getattr(file, "name", "") or getattr(file, "file_name", "") for file in files]
+        except Exception:
+            names = []
+        license_value = getattr(item, "license_name", None)
+        extensions = {Path(name).suffix.lower() for name in names}
+        modality = "image" if extensions & {".jpg", ".jpeg", ".png", ".tif"} else "tabular" if extensions & {".csv", ".parquet", ".xlsx", ".arff"} else None
+        contents = getattr(item, "description", "") or ""
+        verified = bool(contents and names and license_value)
         datasets.append(
             {
                 "id": item.ref,
                 "name": item.title,
-                "description": description,
+                "description": f"{description}\nFiles: {', '.join(names[:10])}"[:2000],
+                "license": license_value,
+                "data_type": modality,
+                "metadata_verified": verified,
                 "domain": DEFAULT_DOMAIN,
                 "task": DEFAULT_TASK,
                 "similarity": similarity,
