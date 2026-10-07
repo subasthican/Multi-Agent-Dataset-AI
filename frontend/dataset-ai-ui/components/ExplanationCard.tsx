@@ -7,6 +7,9 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export default function ExplanationCard({ understanding }: { understanding: QueryAnalysisResult }) {
   const { user } = useAuth();
+  const savedForPersonalization = Boolean(user) && !understanding.warnings?.length &&
+    !understanding.needs_task_selection && understanding.domain !== "general" &&
+    understanding.task !== "machine_learning";
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -51,7 +54,7 @@ export default function ExplanationCard({ understanding }: { understanding: Quer
       ))}
       <p className="text-[11px] text-white/30">Match scores are heuristic relevance scores, not measured accuracy. Email/phone patterns are redacted before processing; other sensitive information may remain. Queries may be sent to Gemini when available.</p>
       <p className="text-[11px] text-white/30">
-        {user ? (
+        {savedForPersonalization ? (
           <>
             Transparency note: since you&apos;re signed in, this processed query is saved to power your{" "}
             <Link href="/profile" className="text-nebula-cyan hover:underline">
@@ -59,6 +62,8 @@ export default function ExplanationCard({ understanding }: { understanding: Quer
             </Link>
             . You can clear your search history anytime from your profile.
           </>
+        ) : user ? (
+          "Transparency note: this request is not saved for personalization because its language, domain or task needs clarification."
         ) : (
           "Transparency note: the application does not save anonymous query text. A daily counter keyed by a protected representation of the connection address enforces usage limits."
         )}

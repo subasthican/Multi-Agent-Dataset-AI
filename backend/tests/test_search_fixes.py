@@ -43,6 +43,14 @@ class SearchFixTests(unittest.TestCase):
         self.assertTrue(result.needs_task_selection)
         self.assertEqual(evaluate_datasets([self.dataset("Healthcare")], result), [])
 
+    def test_kidney_ultrasound_is_healthcare(self):
+        with patch("agents.nlp_agent.agent._understand_with_llm", return_value=None):
+            result = analyze_query("kidney ultrasound image classification dataset")
+        self.assertEqual(result.domain, "healthcare")
+        self.assertEqual(result.task, "computer_vision")
+        self.assertEqual(result.data_type, "image")
+        self.assertEqual(result.warnings, [])
+
     def test_unclear_history_not_recorded(self):
         db = Mock()
         record_search(db, Mock(), self.requirement(warnings=["Unclear request"]))
