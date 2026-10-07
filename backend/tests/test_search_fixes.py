@@ -56,6 +56,8 @@ class SearchFixTests(unittest.TestCase):
         dataset.license = "cc-by-4.0"
         dataset.metadata_verified = True
         self.assertEqual(len(evaluate_datasets([dataset], self.requirement())), 1)
+        dataset.task = "regression"
+        self.assertEqual(evaluate_datasets([dataset], self.requirement()), [])
 
     def test_huggingface_uses_verified_card(self):
         listing = Mock(status_code=200)

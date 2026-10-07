@@ -37,7 +37,11 @@ def evaluate_datasets(datasets: List[DatasetMatch], requirement: QueryAnalysisRe
     for dataset in datasets:
         if not matches_topic(dataset, requirement):
             continue
+        if dataset.task != requirement.task:
+            continue
         if dataset.source != "catalog" and (not dataset.url or not dataset.license or dataset.task == "machine_learning" or not dataset.metadata_verified):
+            continue
+        if dataset.source != "catalog" and dataset.license.strip().lower() in {"unknown", "unspecified", "other"}:
             continue
         # Unknown modality is not evidence of suitability for non-tabular use.
         if dataset.data_type != requirement.data_type:
