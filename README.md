@@ -25,6 +25,16 @@ interface. Internal agent communication uses Python functions and Pydantic
 models. Ranking scores are heuristic relevance indicators; they are not a
 guarantee that a dataset is suitable for a particular research or production use.
 
+## Writing a dataset request
+
+Describe the subject and intended machine-learning task in your search. For
+example, "I need tabular datasets for diabetes classification" communicates more
+specific requirements than "I need medical data."
+
+Review each recommendation's explanation and source link before selecting a
+dataset. Check the source's license, available fields, and data format against
+your intended use; a relevance score alone does not establish suitability.
+
 ## Architecture
 
 ```
