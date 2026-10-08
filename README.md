@@ -87,6 +87,8 @@ branch layout, and API reference.
 
 ### Backend
 
+Run these commands from the repository root in your backend terminal:
+
 ```bash
 cd backend
 pip install -r requirements.txt
@@ -113,6 +115,10 @@ curl -X POST "http://localhost:8000/discover?query=I%20need%20datasets%20for%20p
 ```
 
 ### Frontend
+
+Open a separate terminal at the repository root before running these commands.
+The frontend dependencies are installed in `frontend/dataset-ai-ui`; running
+`npm install` at the repository root does not install the frontend application.
 
 ```bash
 cd frontend/dataset-ai-ui
