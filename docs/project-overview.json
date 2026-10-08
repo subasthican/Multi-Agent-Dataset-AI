@@ -1,0 +1,38 @@
+{
+  "document_type": "project_overview",
+  "purpose": "Descriptive documentation; not application configuration.",
+  "project_name": "DATA NEBULA AI",
+  "description": "A multi-agent system for discovering, ranking, and explaining dataset recommendations.",
+  "architecture": {
+    "frontend": "Next.js",
+    "api_gateway": "FastAPI",
+    "internal_agent_communication": "Python function calls and Pydantic models"
+  },
+  "agents": [
+    {
+      "name": "NLP agent",
+      "role": "Identify the query domain, task, and keywords."
+    },
+    {
+      "name": "Discovery agent",
+      "role": "Retrieve semantically related datasets from the catalog."
+    },
+    {
+      "name": "Dataset collection agent",
+      "role": "Collect external candidates from Kaggle, OpenML, and Hugging Face."
+    },
+    {
+      "name": "Evaluation agent",
+      "role": "Rank dataset candidates and explain their relevance."
+    },
+    {
+      "name": "Recommendation agent",
+      "role": "Suggest datasets using a signed-in user's search history."
+    }
+  ],
+  "reading_guides": [
+    "README.md",
+    "docs/members.md",
+    "docs/full-project-recheck.md"
+  ]
+}
