@@ -110,6 +110,18 @@ npm install
 npm run dev
 ```
 
+## Documentation guide
+
+- [Member responsibilities and API reference](docs/members.md): project roles,
+  branch organization, and endpoint documentation.
+- [Verification status and remaining gaps](docs/full-project-recheck.md): recorded
+  checks, their scope, and outstanding implementation or submission limits.
+- [Deployment guide](docs/vercel-deployment.md): frontend and backend hosting
+  preparation and PostgreSQL configuration.
+
+Recorded verification results describe the checks performed at the time of each
+report. Consult their dates and limitations when assessing the current project.
+
 ## Branches
 
 - `main` — stable
