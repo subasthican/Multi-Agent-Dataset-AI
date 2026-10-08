@@ -120,6 +120,17 @@ npm install
 npm run dev
 ```
 
+### Local startup checks
+
+Keep the backend and frontend running in separate terminals. With the default
+ports, open `http://localhost:8000/docs` to inspect the API and
+`http://localhost:3000` to use the interface. If a development server selects a
+different port, use the address printed in its terminal.
+
+Try a specific dataset request after both services start. If the request fails,
+check the backend terminal for API errors and the frontend terminal for build or
+startup errors before reviewing optional external-source configuration.
+
 ## Documentation guide
 
 - [Member responsibilities and API reference](docs/members.md): project roles,
