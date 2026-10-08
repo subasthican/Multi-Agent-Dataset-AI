@@ -4,6 +4,27 @@ IT3041 (Information Retrieval and Web Analytics) group assignment. A multi-agent
 system that turns a natural-language dataset request into ranked, explained dataset
 recommendations.
 
+## Project overview
+
+The recommendation workflow combines five agent modules:
+
+1. **Query understanding:** the NLP agent identifies the requested domain, task,
+   and keywords using Gemini with a rule-based fallback.
+2. **Catalog discovery:** the discovery agent uses Sentence-BERT embeddings and
+   FAISS to retrieve semantically related datasets from the catalog.
+3. **External collection:** the collection agent searches Kaggle, OpenML, and
+   Hugging Face on a best-effort basis, supplementing catalog results.
+4. **Evaluation:** the evaluation agent ranks candidates using semantic
+   similarity, domain alignment, task matching, and keyword relevance, then
+   provides explanations for the recommendations.
+5. **Personalization:** the recommendation agent uses a signed-in user's search
+   history to suggest relevant datasets.
+
+The FastAPI gateway coordinates these modules and returns results to the Next.js
+interface. Internal agent communication uses Python functions and Pydantic
+models. Ranking scores are heuristic relevance indicators; they are not a
+guarantee that a dataset is suitable for a particular research or production use.
+
 ## Architecture
 
 ```
