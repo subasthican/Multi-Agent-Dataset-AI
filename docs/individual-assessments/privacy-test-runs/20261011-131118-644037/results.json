@@ -1,0 +1,218 @@
+[
+  {
+    "test_id": "PR-01",
+    "objective": "Missing authentication",
+    "expected": "HTTP 401 without account data.",
+    "actual": {
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-02",
+    "objective": "Tampered JWT",
+    "expected": "HTTP 401 for a modified signature.",
+    "actual": {
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-03",
+    "objective": "Expired JWT",
+    "expected": "HTTP 401 for an expired credential.",
+    "actual": {
+      "status": 401,
+      "body": {
+        "detail": "Not authenticated"
+      }
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-04",
+    "objective": "Cross-user isolation",
+    "expected": "Other-account access denied; each profile uses its own history.",
+    "actual": {
+      "other_account_status": 403,
+      "A_status": 200,
+      "B_status": 200,
+      "A_domain": "healthcare",
+      "B_domain": "finance"
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-05",
+    "objective": "Administrator authorization",
+    "expected": "Normal users get 403; administrator gets 200.",
+    "actual": {
+      "normal_user_statuses": [
+        403,
+        403
+      ],
+      "admin_status": 200
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-06",
+    "objective": "Password protection",
+    "expected": "Password is hashed and credentials are absent from account responses.",
+    "actual": {
+      "statuses": [
+        200,
+        200
+      ],
+      "password_hash_verified": true,
+      "credentials_absent_from_responses": true
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-07",
+    "objective": "Account enumeration",
+    "expected": "Existing and missing accounts receive identical HTTP 200 response bodies.",
+    "actual": {
+      "existing": {
+        "status": 200,
+        "body": {
+          "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+        }
+      },
+      "missing": {
+        "status": 200,
+        "body": {
+          "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+        }
+      }
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-08",
+    "objective": "Reset-token confidentiality",
+    "expected": "Reset token goes only to mocked private delivery, never the public response.",
+    "actual": {
+      "existing": {
+        "status": 200,
+        "body": {
+          "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+        }
+      },
+      "missing": {
+        "status": 200,
+        "body": {
+          "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+        }
+      },
+      "private_mock_delivery_calls": 1,
+      "public_token_absent": true
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-09",
+    "objective": "Unauthorized password reset",
+    "expected": "Public requester cannot reset the account; owner's original password still works.",
+    "actual": {
+      "reset_status": 400,
+      "original_owner_login": 200
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-10",
+    "objective": "Reset-token hashing and single use",
+    "expected": "Only digest stored; first reset succeeds; token reuse fails.",
+    "actual": {
+      "digest_only_stored": true,
+      "first_reset": 204,
+      "reused_token": 400,
+      "new_password_login": 200
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-11",
+    "objective": "Expired reset token",
+    "expected": "Expired reset gets 400 and does not change the password.",
+    "actual": {
+      "expired_reset": 400,
+      "original_password_login": 200
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-12",
+    "objective": "Session invalidation after password change",
+    "expected": "Old session rejected; fresh login and fresh session succeed.",
+    "actual": {
+      "password_change": 204,
+      "old_session": 401,
+      "fresh_login": 200,
+      "fresh_session": 200
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-13",
+    "objective": "Suspended account session",
+    "expected": "Suspension invalidates a previously working session.",
+    "actual": {
+      "before_suspension": 200,
+      "suspend": 200,
+      "after_suspension": 401
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-14",
+    "objective": "Personal-data handling",
+    "expected": "Synthetic email/phone absent from history and prompt; raw search text encrypted.",
+    "actual": {
+      "stored_queries_after_redaction": [
+        "Medical dataset email [REDACTED_EMAIL] phone [REDACTED_PHONE]",
+        "Synthetic dataset request"
+      ],
+      "contact_values_absent_from_history_and_prompt": true,
+      "raw_search_text_encrypted": true,
+      "scope": "Email/phone patterns only; no claim of comprehensive PII detection."
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  },
+  {
+    "test_id": "PR-15",
+    "objective": "History deletion isolation",
+    "expected": "A deletes its own history while B's existing history stays unchanged.",
+    "actual": {
+      "delete_status": 204,
+      "A_before": 2,
+      "A_after": 0,
+      "B_before": 1,
+      "B_after": 1
+    },
+    "outcome": "PASS",
+    "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+  }
+]

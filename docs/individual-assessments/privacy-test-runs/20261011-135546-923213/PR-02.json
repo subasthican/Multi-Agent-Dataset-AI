@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-02",
+  "objective": "Tampered JWT",
+  "expected": "HTTP 401 for a modified signature.",
+  "actual": {
+    "status": 401,
+    "body": {
+      "detail": "Not authenticated"
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

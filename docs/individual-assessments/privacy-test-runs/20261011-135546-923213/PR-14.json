@@ -1,0 +1,16 @@
+{
+  "test_id": "PR-14",
+  "objective": "Personal-data handling",
+  "expected": "Synthetic email/phone absent from history and prompt; raw search text encrypted.",
+  "actual": {
+    "stored_queries_after_redaction": [
+      "Medical dataset email [REDACTED_EMAIL] phone [REDACTED_PHONE]",
+      "Synthetic dataset request"
+    ],
+    "contact_values_absent_from_history_and_prompt": true,
+    "raw_search_text_encrypted": true,
+    "scope": "Email/phone patterns only; no claim of comprehensive PII detection."
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

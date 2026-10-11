@@ -1,0 +1,12 @@
+{
+  "test_id": "PR-13",
+  "objective": "Suspended account session",
+  "expected": "Suspension invalidates a previously working session.",
+  "actual": {
+    "before_suspension": 200,
+    "suspend": 200,
+    "after_suspension": 401
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

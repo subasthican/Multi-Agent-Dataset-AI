@@ -1,0 +1,45 @@
+{
+  "test_id": "RA-03",
+  "objective": "Education relevance",
+  "expected": "Identify education/classification; top recommendation concerns student.",
+  "actual": {
+    "query": "Find datasets for student dropout prediction",
+    "understanding": {
+      "original_query": "Find datasets for student dropout prediction",
+      "domain": "education",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "student",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 1,
+    "recommendations": [
+      {
+        "dataset": {
+          "id": "6b762aeb-62fd-4c39-9d97-a351f59bf633",
+          "name": "Student Performance Dataset",
+          "domain": "education",
+          "task": "classification",
+          "description": "Student demographics and grades used to predict academic performance and dropout risk",
+          "similarity": 0.6209592819213867,
+          "source": "catalog",
+          "data_type": "tabular",
+          "url": "https://archive.ics.uci.edu/dataset/320/student+performance",
+          "license": null,
+          "metadata_verified": false
+        },
+        "score": 73.05,
+        "explanation": "Student Performance Dataset is recommended because it matches the education domain and matches the classification task, with a relevance score of 73.05%."
+      }
+    ]
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

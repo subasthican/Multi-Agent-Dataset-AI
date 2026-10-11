@@ -1,0 +1,47 @@
+{
+  "test_id": "RA-02",
+  "objective": "Finance relevance",
+  "expected": "Identify finance/classification; top recommendation concerns fraud.",
+  "actual": {
+    "query": "Find datasets for credit card fraud detection",
+    "understanding": {
+      "original_query": "Find datasets for credit card fraud detection",
+      "domain": "finance",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "credit",
+        "card",
+        "fraud",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 1,
+    "recommendations": [
+      {
+        "dataset": {
+          "id": "039f2722-c51d-4cc0-9a31-055b4509df9a",
+          "name": "Credit Card Fraud Dataset",
+          "domain": "finance",
+          "task": "classification",
+          "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+          "similarity": 0.570496678352356,
+          "source": "catalog",
+          "data_type": "tabular",
+          "url": "https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud",
+          "license": null,
+          "metadata_verified": false
+        },
+        "score": 68.52,
+        "explanation": "Credit Card Fraud Dataset is recommended because it matches the finance domain and matches the classification task, with a relevance score of 68.52%."
+      }
+    ]
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

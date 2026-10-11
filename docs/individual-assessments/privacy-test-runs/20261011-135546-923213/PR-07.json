@@ -1,0 +1,21 @@
+{
+  "test_id": "PR-07",
+  "objective": "Account enumeration",
+  "expected": "Existing and missing accounts receive identical HTTP 200 response bodies.",
+  "actual": {
+    "existing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "missing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

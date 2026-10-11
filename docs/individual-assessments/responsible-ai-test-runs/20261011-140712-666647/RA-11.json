@@ -1,0 +1,29 @@
+{
+  "test_id": "RA-11",
+  "objective": "Image modality suitability",
+  "expected": "Identify image/computer_vision intent; exclude tabular entries from this seeded catalogue.",
+  "actual": {
+    "query": "Find medical image datasets for cancer detection",
+    "understanding": {
+      "original_query": "Find medical image datasets for cancer detection",
+      "domain": "healthcare",
+      "task": "computer_vision",
+      "data_type": "image",
+      "keywords": [
+        "image",
+        "dataset",
+        "cancer",
+        "detection"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 0,
+    "recommendations": [],
+    "seeded_catalogue_has_no_images": true
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

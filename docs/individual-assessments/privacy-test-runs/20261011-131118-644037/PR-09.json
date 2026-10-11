@@ -1,0 +1,11 @@
+{
+  "test_id": "PR-09",
+  "objective": "Unauthorized password reset",
+  "expected": "Public requester cannot reset the account; owner's original password still works.",
+  "actual": {
+    "reset_status": 400,
+    "original_owner_login": 200
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

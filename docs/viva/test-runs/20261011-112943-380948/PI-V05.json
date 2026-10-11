@@ -1,0 +1,15 @@
+{
+  "test_id": "PI-V05",
+  "objective": "Null domain",
+  "input_scenario": {
+    "user_query": "Find healthcare datasets for diabetes classification",
+    "controlled_model_response": "{\"domain\": null, \"task\": \"classification\", \"keywords\": [\"diabetes\"], \"data_type\": \"tabular\"}"
+  },
+  "expected": "Reject malformed fixture and use rule-based fallback.",
+  "actual": {
+    "source": "rule_based",
+    "parsed_rejected": true
+  },
+  "outcome": "PASS",
+  "scope": "Application guard or controlled fixture; no live provider resistance measured."
+}

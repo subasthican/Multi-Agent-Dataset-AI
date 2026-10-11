@@ -1,0 +1,11 @@
+{
+  "test_id": "PR-11",
+  "objective": "Expired reset token",
+  "expected": "Expired reset gets 400 and does not change the password.",
+  "actual": {
+    "expired_reset": 400,
+    "original_password_login": 200
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

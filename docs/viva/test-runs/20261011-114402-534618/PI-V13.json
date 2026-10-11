@@ -1,0 +1,15 @@
+{
+  "test_id": "PI-V13",
+  "objective": "Non-JSON model output",
+  "input_scenario": {
+    "user_query": "Find healthcare datasets for diabetes classification",
+    "controlled_model_response": "OVERRIDDEN"
+  },
+  "expected": "Reject malformed fixture and use rule-based fallback.",
+  "actual": {
+    "source": "rule_based",
+    "parsed_rejected": true
+  },
+  "outcome": "PASS",
+  "scope": "Application guard or controlled fixture; no live provider resistance measured."
+}

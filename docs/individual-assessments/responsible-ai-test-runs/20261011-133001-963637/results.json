@@ -1,0 +1,567 @@
+[
+  {
+    "test_id": "RA-01",
+    "objective": "Healthcare relevance",
+    "expected": "Identify healthcare/classification; top recommendation concerns diabetes.",
+    "actual": {
+      "query": "Find datasets for diabetes prediction",
+      "understanding": {
+        "original_query": "Find datasets for diabetes prediction",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "diabetes",
+          "prediction"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "c2340f59-d376-4d5a-9cea-246747f66663",
+            "name": "Diabetes Prediction Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+            "similarity": 0.6347695589065552,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 73.74,
+          "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 73.74%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-02",
+    "objective": "Finance relevance",
+    "expected": "Identify finance/classification; top recommendation concerns fraud.",
+    "actual": {
+      "query": "Find datasets for credit card fraud detection",
+      "understanding": {
+        "original_query": "Find datasets for credit card fraud detection",
+        "domain": "finance",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "credit",
+          "card",
+          "fraud",
+          "detection"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "6f33f25f-5a73-4b35-be9b-76c8087d210c",
+            "name": "Credit Card Fraud Dataset",
+            "domain": "finance",
+            "task": "classification",
+            "description": "Financial transaction data used to detect fraudulent activities and unusual spending patterns",
+            "similarity": 0.570496678352356,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 68.52,
+          "explanation": "Credit Card Fraud Dataset is recommended because it matches the finance domain and matches the classification task, with a relevance score of 68.52%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-03",
+    "objective": "Education relevance",
+    "expected": "Identify education/classification; top recommendation concerns student.",
+    "actual": {
+      "query": "Find datasets for student dropout prediction",
+      "understanding": {
+        "original_query": "Find datasets for student dropout prediction",
+        "domain": "education",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "student",
+          "prediction"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "f03c6471-13e6-409c-88e8-366e67a30923",
+            "name": "Student Performance Dataset",
+            "domain": "education",
+            "task": "classification",
+            "description": "Student demographics and grades used to predict academic performance and dropout risk",
+            "similarity": 0.6209592819213867,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://archive.ics.uci.edu/dataset/320/student+performance",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 73.05,
+          "explanation": "Student Performance Dataset is recommended because it matches the education domain and matches the classification task, with a relevance score of 73.05%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-04",
+    "objective": "Business relevance",
+    "expected": "Identify business/classification; top recommendation concerns churn.",
+    "actual": {
+      "query": "Find datasets for customer churn prediction",
+      "understanding": {
+        "original_query": "Find datasets for customer churn prediction",
+        "domain": "business",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "customer",
+          "churn",
+          "prediction"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "119b7e5c-708d-4e3b-b1a3-efe98152d8b3",
+            "name": "Customer Churn Dataset",
+            "domain": "business",
+            "task": "classification",
+            "description": "Customer subscription and usage records used to predict business customer churn",
+            "similarity": 0.7056640386581421,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 79.28,
+          "explanation": "Customer Churn Dataset is recommended because it matches the business domain and matches the classification task, with a relevance score of 79.28%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-05",
+    "objective": "Environment relevance",
+    "expected": "Identify environment/regression; top recommendation concerns solar.",
+    "actual": {
+      "query": "Find datasets for solar energy forecasting",
+      "understanding": {
+        "original_query": "Find datasets for solar energy forecasting",
+        "domain": "environment",
+        "task": "regression",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "energy",
+          "forecasting"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "016aab5a-238f-4488-951f-ade9b8791ada",
+            "name": "Solar Energy Forecast Dataset",
+            "domain": "environment",
+            "task": "regression",
+            "description": "Renewable energy generation data for predicting solar power output",
+            "similarity": 0.696269154548645,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://www.kaggle.com/datasets/anikannal/solar-power-generation-data",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 76.81,
+          "explanation": "Solar Energy Forecast Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 76.81%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-06",
+    "objective": "Automotive relevance",
+    "expected": "Identify automotive/classification; no unrelated results when seeded catalogue lacks automotive data.",
+    "actual": {
+      "query": "Find datasets for classifying car types",
+      "understanding": {
+        "original_query": "Find datasets for classifying car types",
+        "domain": "automotive",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "car",
+          "type"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 0,
+      "recommendations": []
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-07",
+    "objective": "Unsupported subject",
+    "expected": "Return no unrelated recommendations for tennis match outcomes.",
+    "actual": {
+      "query": "Find datasets for predicting professional tennis match outcomes",
+      "understanding": {
+        "original_query": "Find datasets for predicting professional tennis match outcomes",
+        "domain": "general",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "tennis",
+          "match",
+          "outcome"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [
+          "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+        ],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 0,
+      "recommendations": []
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-08",
+    "objective": "English paraphrase consistency",
+    "expected": "Two equivalent requests identify healthcare/classification and the same top dataset.",
+    "actual": [
+      {
+        "query": "Find healthcare datasets for diabetes classification",
+        "understanding": {
+          "original_query": "Find healthcare datasets for diabetes classification",
+          "domain": "healthcare",
+          "task": "classification",
+          "data_type": "tabular",
+          "keywords": [
+            "healthcare",
+            "dataset",
+            "diabete",
+            "classification"
+          ],
+          "entities": [],
+          "understanding_source": "rule_based",
+          "warnings": [],
+          "needs_task_selection": false
+        },
+        "recommendation_count": 1,
+        "recommendations": [
+          {
+            "dataset": {
+              "id": "c2340f59-d376-4d5a-9cea-246747f66663",
+              "name": "Diabetes Prediction Dataset",
+              "domain": "healthcare",
+              "task": "classification",
+              "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+              "similarity": 0.6683502197265625,
+              "source": "catalog",
+              "data_type": "tabular",
+              "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+              "license": null,
+              "metadata_verified": false
+            },
+            "score": 75.42,
+            "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 75.42%."
+          }
+        ]
+      },
+      {
+        "query": "Find medical data to classify diabetes",
+        "understanding": {
+          "original_query": "Find medical data to classify diabetes",
+          "domain": "healthcare",
+          "task": "classification",
+          "data_type": "tabular",
+          "keywords": [
+            "datum",
+            "diabete"
+          ],
+          "entities": [],
+          "understanding_source": "rule_based",
+          "warnings": [],
+          "needs_task_selection": false
+        },
+        "recommendation_count": 1,
+        "recommendations": [
+          {
+            "dataset": {
+              "id": "c2340f59-d376-4d5a-9cea-246747f66663",
+              "name": "Diabetes Prediction Dataset",
+              "domain": "healthcare",
+              "task": "classification",
+              "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+              "similarity": 0.6786223649978638,
+              "source": "catalog",
+              "data_type": "tabular",
+              "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+              "license": null,
+              "metadata_verified": false
+            },
+            "score": 73.93,
+            "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 73.93%."
+          }
+        ]
+      }
+    ],
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-09",
+    "objective": "Language limitation disclosure",
+    "expected": "Explicit unsupported-language warning and no recommendations for this Spanish request.",
+    "actual": {
+      "query": "Encuentra conjuntos de datos médicos para clasificar la diabetes",
+      "understanding": {
+        "original_query": "Encuentra conjuntos de datos médicos para clasificar la diabetes",
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular",
+        "keywords": [],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [
+          "Unsupported language: describe your dataset requirement in English."
+        ],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 0,
+      "recommendations": []
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-10",
+    "objective": "Ambiguous request",
+    "expected": "Disclose unclear intent or request task selection; return no unrelated recommendations.",
+    "actual": {
+      "query": "Find data to predict risk",
+      "understanding": {
+        "original_query": "Find data to predict risk",
+        "domain": "general",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "datum",
+          "risk"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [
+          "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+        ],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 0,
+      "recommendations": []
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-11",
+    "objective": "Image modality suitability",
+    "expected": "Identify image/computer_vision intent; exclude tabular entries from this seeded catalogue.",
+    "actual": {
+      "query": "Find medical image datasets for cancer detection",
+      "understanding": {
+        "original_query": "Find medical image datasets for cancer detection",
+        "domain": "healthcare",
+        "task": "computer_vision",
+        "data_type": "image",
+        "keywords": [
+          "image",
+          "dataset",
+          "cancer",
+          "detection"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 0,
+      "recommendations": [],
+      "seeded_catalogue_has_no_images": true
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-12",
+    "objective": "No suitable dataset",
+    "expected": "Return no unrelated recommendations for a fictional lunar mission.",
+    "actual": {
+      "query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+      "understanding": {
+        "original_query": "Find lunar basalt isotope datasets from fictional mission ZQX999",
+        "domain": "general",
+        "task": "machine_learning",
+        "data_type": "tabular",
+        "keywords": [
+          "basalt",
+          "isotope",
+          "dataset",
+          "mission"
+        ],
+        "entities": [
+          {
+            "text": "ZQX999",
+            "label": "CARDINAL"
+          }
+        ],
+        "understanding_source": "rule_based",
+        "warnings": [
+          "Domain unclear or outside the supported taxonomy; please specify healthcare, finance, education, business, environment or automotive."
+        ],
+        "needs_task_selection": true
+      },
+      "recommendation_count": 0,
+      "recommendations": []
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-13",
+    "objective": "Explanation consistency",
+    "expected": "Domain/task claims in recommendation explanations agree with dataset metadata.",
+    "actual": {
+      "query": "Find datasets for diabetes classification",
+      "understanding": {
+        "original_query": "Find datasets for diabetes classification",
+        "domain": "healthcare",
+        "task": "classification",
+        "data_type": "tabular",
+        "keywords": [
+          "dataset",
+          "diabetes",
+          "classification"
+        ],
+        "entities": [],
+        "understanding_source": "rule_based",
+        "warnings": [],
+        "needs_task_selection": false
+      },
+      "recommendation_count": 1,
+      "recommendations": [
+        {
+          "dataset": {
+            "id": "c2340f59-d376-4d5a-9cea-246747f66663",
+            "name": "Diabetes Prediction Dataset",
+            "domain": "healthcare",
+            "task": "classification",
+            "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+            "similarity": 0.6614887118339539,
+            "source": "catalog",
+            "data_type": "tabular",
+            "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+            "license": null,
+            "metadata_verified": false
+          },
+          "score": 77.07,
+          "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 77.07%."
+        }
+      ]
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-14",
+    "objective": "Comparable source scoring",
+    "expected": "FAISS and external-source ranking function give equivalent similarities for identical content (difference < 0.00001).",
+    "actual": {
+      "query": "healthcare classification diabetes",
+      "catalogue_entries": 10,
+      "compared_entries": 10,
+      "max_similarity_difference": 8.195638656616211e-08,
+      "tolerance": 1e-05,
+      "local_metric": "Normalized FAISS inner product (cosine)",
+      "external_ranking_function_metric": "Normalized cosine on identical local descriptions",
+      "scope": "Scoring-function parity, not live provider retrieval or demographic fairness."
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  },
+  {
+    "test_id": "RA-15",
+    "objective": "Discriminatory intent rejection",
+    "expected": "HTTP 400 before LLM or external discovery for explicit ethnicity-based unfair exclusion.",
+    "actual": {
+      "query": "Find education student datasets to unfairly deny school admission based on ethnicity",
+      "status": 400,
+      "body": {
+        "detail": "Dataset requests facilitating discrimination are not supported."
+      },
+      "llm_called": false,
+      "external_discovery_called": false
+    },
+    "outcome": "PASS",
+    "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "test_id": "PR-06",
+  "objective": "Password protection",
+  "expected": "Password is hashed and credentials are absent from account responses.",
+  "actual": {
+    "statuses": [
+      200,
+      200
+    ],
+    "password_hash_verified": true,
+    "credentials_absent_from_responses": true
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

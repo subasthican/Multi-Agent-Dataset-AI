@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-01",
+  "objective": "Missing authentication",
+  "expected": "HTTP 401 without account data.",
+  "actual": {
+    "status": 401,
+    "body": {
+      "detail": "Not authenticated"
+    }
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

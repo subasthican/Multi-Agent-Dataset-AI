@@ -1,0 +1,14 @@
+{
+  "test_id": "PR-05",
+  "objective": "Administrator authorization",
+  "expected": "Normal users get 403; administrator gets 200.",
+  "actual": {
+    "normal_user_statuses": [
+      403,
+      403
+    ],
+    "admin_status": 200
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

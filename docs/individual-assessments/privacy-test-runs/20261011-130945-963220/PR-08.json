@@ -1,0 +1,23 @@
+{
+  "test_id": "PR-08",
+  "objective": "Reset-token confidentiality",
+  "expected": "Reset token goes only to mocked private delivery, never the public response.",
+  "actual": {
+    "existing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "missing": {
+      "status": 200,
+      "body": {
+        "message": "If that email is registered, recovery instructions will be sent when email delivery is available."
+      }
+    },
+    "private_mock_delivery_calls": 1,
+    "public_token_absent": true
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

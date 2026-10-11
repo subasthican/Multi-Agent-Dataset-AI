@@ -1,0 +1,45 @@
+{
+  "test_id": "RA-05",
+  "objective": "Environment relevance",
+  "expected": "Identify environment/regression; top recommendation concerns solar.",
+  "actual": {
+    "query": "Find datasets for solar energy forecasting",
+    "understanding": {
+      "original_query": "Find datasets for solar energy forecasting",
+      "domain": "environment",
+      "task": "regression",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "energy",
+        "forecasting"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 1,
+    "recommendations": [
+      {
+        "dataset": {
+          "id": "a2cbe80f-82e8-4c5e-b8fb-e42a4e2df763",
+          "name": "Solar Energy Forecast Dataset",
+          "domain": "environment",
+          "task": "regression",
+          "description": "Renewable energy generation data for predicting solar power output",
+          "similarity": 0.696269154548645,
+          "source": "catalog",
+          "data_type": "tabular",
+          "url": "https://www.kaggle.com/datasets/anikannal/solar-power-generation-data",
+          "license": null,
+          "metadata_verified": false
+        },
+        "score": 76.81,
+        "explanation": "Solar Energy Forecast Dataset is recommended because it matches the environment domain and matches the regression task, with a relevance score of 76.81%."
+      }
+    ]
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

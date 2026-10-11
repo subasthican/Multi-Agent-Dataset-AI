@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-12",
+  "objective": "Session invalidation after password change",
+  "expected": "Old session rejected; fresh login and fresh session succeed.",
+  "actual": {
+    "password_change": 204,
+    "old_session": 401,
+    "fresh_login": 200,
+    "fresh_session": 200
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

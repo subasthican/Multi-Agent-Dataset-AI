@@ -1,0 +1,27 @@
+{
+  "test_id": "RA-06",
+  "objective": "Automotive relevance",
+  "expected": "Identify automotive/classification; no unrelated results when seeded catalogue lacks automotive data.",
+  "actual": {
+    "query": "Find datasets for classifying car types",
+    "understanding": {
+      "original_query": "Find datasets for classifying car types",
+      "domain": "automotive",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "car",
+        "type"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 0,
+    "recommendations": []
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

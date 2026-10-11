@@ -1,0 +1,14 @@
+{
+  "test_id": "PR-04",
+  "objective": "Cross-user isolation",
+  "expected": "Other-account access denied; each profile uses its own history.",
+  "actual": {
+    "other_account_status": 403,
+    "A_status": 200,
+    "B_status": 200,
+    "A_domain": "healthcare",
+    "B_domain": "finance"
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

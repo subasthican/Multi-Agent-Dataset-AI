@@ -1,0 +1,45 @@
+{
+  "test_id": "RA-13",
+  "objective": "Explanation consistency",
+  "expected": "Domain/task claims in recommendation explanations agree with dataset metadata.",
+  "actual": {
+    "query": "Find datasets for diabetes classification",
+    "understanding": {
+      "original_query": "Find datasets for diabetes classification",
+      "domain": "healthcare",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "diabetes",
+        "classification"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 1,
+    "recommendations": [
+      {
+        "dataset": {
+          "id": "e12fb7cc-4699-4e60-a6c9-df600c54b2c5",
+          "name": "Diabetes Prediction Dataset",
+          "domain": "healthcare",
+          "task": "classification",
+          "description": "Medical patient records containing glucose, age, BMI and health information for diabetes classification",
+          "similarity": 0.6614887118339539,
+          "source": "catalog",
+          "data_type": "tabular",
+          "url": "https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset",
+          "license": null,
+          "metadata_verified": false
+        },
+        "score": 77.07,
+        "explanation": "Diabetes Prediction Dataset is recommended because it matches the healthcare domain and matches the classification task, with a relevance score of 77.07%."
+      }
+    ]
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

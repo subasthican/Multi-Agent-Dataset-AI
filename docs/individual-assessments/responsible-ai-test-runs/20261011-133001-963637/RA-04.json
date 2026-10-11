@@ -1,0 +1,46 @@
+{
+  "test_id": "RA-04",
+  "objective": "Business relevance",
+  "expected": "Identify business/classification; top recommendation concerns churn.",
+  "actual": {
+    "query": "Find datasets for customer churn prediction",
+    "understanding": {
+      "original_query": "Find datasets for customer churn prediction",
+      "domain": "business",
+      "task": "classification",
+      "data_type": "tabular",
+      "keywords": [
+        "dataset",
+        "customer",
+        "churn",
+        "prediction"
+      ],
+      "entities": [],
+      "understanding_source": "rule_based",
+      "warnings": [],
+      "needs_task_selection": false
+    },
+    "recommendation_count": 1,
+    "recommendations": [
+      {
+        "dataset": {
+          "id": "119b7e5c-708d-4e3b-b1a3-efe98152d8b3",
+          "name": "Customer Churn Dataset",
+          "domain": "business",
+          "task": "classification",
+          "description": "Customer subscription and usage records used to predict business customer churn",
+          "similarity": 0.7056640386581421,
+          "source": "catalog",
+          "data_type": "tabular",
+          "url": "https://www.kaggle.com/datasets/blastchar/telco-customer-churn",
+          "license": null,
+          "metadata_verified": false
+        },
+        "score": 79.28,
+        "explanation": "Customer Churn Dataset is recommended because it matches the business domain and matches the classification task, with a relevance score of 79.28%."
+      }
+    ]
+  },
+  "outcome": "PASS",
+  "scope": "Real rule-based NLP, cached embeddings, FAISS, evaluation and request guards; temporary seeded SQLite with a synthetic account. LLM understanding disabled; no live Gemini or external catalogue calls. No protected-group fairness measurement."
+}

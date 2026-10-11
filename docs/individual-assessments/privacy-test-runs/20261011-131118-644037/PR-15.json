@@ -1,0 +1,14 @@
+{
+  "test_id": "PR-15",
+  "objective": "History deletion isolation",
+  "expected": "A deletes its own history while B's existing history stays unchanged.",
+  "actual": {
+    "delete_status": 204,
+    "A_before": 2,
+    "A_after": 0,
+    "B_before": 1,
+    "B_after": 1
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}

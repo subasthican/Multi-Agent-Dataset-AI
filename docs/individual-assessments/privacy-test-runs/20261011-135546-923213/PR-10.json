@@ -1,0 +1,13 @@
+{
+  "test_id": "PR-10",
+  "objective": "Reset-token hashing and single use",
+  "expected": "Only digest stored; first reset succeeds; token reuse fails.",
+  "actual": {
+    "digest_only_stored": true,
+    "first_reset": 204,
+    "reused_token": 400,
+    "new_password_login": 200
+  },
+  "outcome": "PASS",
+  "scope": "Real in-process routes/components, temporary synthetic SQLite. Email and catalogue retrieval mocked; no SMTP or live provider calls."
+}
